@@ -1,0 +1,63 @@
+@import './LexiconEditorStyles';
+
+.EditWrapper {
+  position: relative;
+
+  button.edit-wrapper-button {
+    font-family: "Lucida Sans", "Lucida Grande", 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
+    font-style: normal;
+    text-decoration: none;
+    color: white;
+    background-color: #bfbfbf;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+
+    body.windows & {
+      font-family: 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
+    }
+
+    @mixin small_text {
+      font-size: 13px;
+      line-height: 19px;
+
+      body.windows & {
+        font-size: 12px;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      color: white;
+      background-color: #acce19;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  .wrapped-lexicon-editor {
+    position: absolute;
+    border-radius: 4px;
+    padding: 4px;
+    border: thin solid #444;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    background-color: $lexicon_editor_background;
+    overflow: hidden;
+    left: 100%;
+    top: 0;
+    width: 500px;
+
+    margin-left: -20px;
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.1s margin-left, 0.1s visibility, 0.1s opacity;
+
+    &.is-visible {
+      margin-left: 8px;
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}

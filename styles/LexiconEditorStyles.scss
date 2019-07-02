@@ -1,0 +1,87 @@
+$lexicon_editor_background: #ddd;
+$input_background: white;
+
+#LexiconEditor {
+  font-family: 'helvetica neue';
+  font-size: 14px;
+  text-align: left;
+  padding-right: 10px;
+  background: $lexicon_editor_background;
+  max-height: 400px;
+  overflow-y: scroll;
+
+  h2 {
+    margin: 5px 0;
+    padding-left: 10px;
+    font-size: 16px;
+  }
+
+  #FormRow {
+    width: 100%;
+
+    label {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+
+      .label {
+        flex: 0 0;
+        font-weight: 300;
+        text-align: right;
+        padding-top: 2px;
+        padding-right: 5px;
+        min-width: 150px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      input, textarea, select {
+        flex: 1;
+        display: block;
+        font-family: 'helvetica neue';
+        font-weight: 400;
+        font-size: 14px;
+        width: 100%;
+        padding: 1px 5px;
+        box-sizing: border-box;
+        background: $input_background;
+        border-radius: 3px;
+      }
+    }
+
+    * {
+      flex: 1; // expandqq all children to full width
+    }
+  }
+
+  #ShortString, #LongString {
+    border: 1px solid $lexicon_editor_background;
+  }
+
+  #QuestionAndAnswer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #UnknownInputType {
+    color: orangered;
+  }
+
+  #QuestionAndAnswerCollection {
+    .innerEditorBox {
+      display: flex;
+      flex-direction: row;
+
+      .numberTab {
+        min-width: 20px;
+        flex: 0;
+        padding: 4px;
+        margin: 1px;
+        border-radius: 3px;
+        box-sizing: border-box;
+        background: $input_background;
+      }
+    }
+  }
+}
