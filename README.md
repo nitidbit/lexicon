@@ -28,6 +28,15 @@ import {
 } from 'lexicon';
 ```
 
+When you create an `EditWrapper`, you now need to specify the API endpoint it should use to make changes:
+
+```jsx
+<EditWrapper
+  // other props...
+  apiUpdateUrl="https://lexicon-editor.herokuapp.com/lexicon" // or whatever the correct URL is
+/>
+```
+
 ## Compilation
 
 Build the JS ouput before you commit to Github, so it's available to people using the package:
