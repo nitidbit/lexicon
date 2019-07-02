@@ -5,11 +5,16 @@ Client-side code and React components for interacting with a Lexicon.
 
 ## Installation
 
+With yarn:
+
 ```sh
-$ # with yarn
 $ yarn add git+ssh://git@github.com/nitidbit/lexicon.git
-$ # with npm
-$ npm install --save git+ssh://git@github.com/nitidbit/lexicon.git
+```
+
+With npm:
+
+```sh
+$ npm i -S git+ssh://git@github.com/nitidbit/lexicon.git
 ```
 
 ## Usage
@@ -39,8 +44,16 @@ When you create an `EditWrapper`, you now need to specify the API endpoint it sh
 
 ## Compilation
 
-Build the JS ouput before you commit to Github, so it's available to people using the package:
+Build the JS ouput before you commit to GitHub, so it's available to people using the package:
 
 ```sh
 $ tsc
 ```
+
+You should also make sure that all tests pass:
+
+```sh
+$ npm test
+```
+
+Tests are in `src/Lexicon.test.ts`.
