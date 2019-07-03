@@ -60,6 +60,7 @@ export default class LoginForm extends React.Component<LoginFormProps, LoginForm
 
   handleSubmission = async (e: FormEvent) => {
     e.preventDefault();
+    this.setState({ loading: true });
 
     try {
       const data: LoginAPIResponse = await (await fetch(this.props.endpoint, {

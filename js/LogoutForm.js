@@ -20,7 +20,6 @@ class LogoutForm extends react_1.default.Component {
             const token = localStorage.getItem('lexiconEditorToken');
             try {
                 const data = yield (yield fetch(this.props.endpoint, {
-                    method: 'POST',
                     mode: 'cors',
                     headers: {
                         'Authorization': `Bearer ${token}`,

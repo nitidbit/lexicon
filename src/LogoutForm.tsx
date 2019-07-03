@@ -41,6 +41,7 @@ export default class LogoutForm extends React.Component<LogoutFormProps, LogoutF
     return (
       <>
         <button onClick={this.doLogout}>Log out</button>
+        <br />
         <small>{status}</small>
       </>
     );
@@ -49,10 +50,10 @@ export default class LogoutForm extends React.Component<LogoutFormProps, LogoutF
   doLogout = async (e: FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('lexiconEditorToken');
+    this.setState({ loading: true });
 
     try {
       const data: LogoutAPIResponse = await (await fetch(this.props.endpoint, {
-        method: 'POST',
         mode: 'cors',
         headers: {
           'Authorization': `Bearer ${token}`,
