@@ -61,16 +61,18 @@ Tests are in `src/Lexicon.test.ts`.
 
 ## Motivation -- We want:
 
-- Clients can edit content for their apps without involving a developer.
-- Clients can see their changes in-place. I.e. They don't need to change a string, save, wait 10
+Clients can:
+- edit content for their apps without involving a developer.
+- manipulate lists of content, i.e. add, remove, or rearrange elements.
+- see their changes in-place. I.e. They don't need to change a string, save, wait 10
   minutes for Heroku to rebuild, and then see the results. The cycle is too long. But after their
   edits, a 10 minute Heroku build to publish them is OK.
-- Developers can organize string files however makes sense for the project, e.g. one big file for
+
+Developers can:
+- organize string files however makes sense for the project, e.g. one big file for
   everything, or one string file per code file.
-- Developers can use Lexicon in Ruby, HAML, or JS
-- Developers can include lists of content, e.g. a list of FAQs in the content which the client can
-  add to or rearrange.
-- Clients can add, remove, or rearrange elements in lists of content.
+- use Lexicon in Ruby, HAML, or JS
+- include lists of content, e.g. a list of FAQs which the client can manipulate
 
 
 ### Later
