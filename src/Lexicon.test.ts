@@ -1,133 +1,78 @@
-import * as Lexicon from './Lexicon'
+import { Lexicon } from './Lexicon';
 
 describe('Lexicon module', () => {
-  const SampleShape:any = new Lexicon.LexiconShape('SampleShape', {
-    shorty: Lexicon.ShortString,
-    parent: {
-      child: Lexicon.ShortString,
-    }
-  }, 'dir/sample.json');
-
-  const textContent = {
-    shorty: "SHORT STRING",
-    parent: {
-      child: "CHILD",
-      orphan: "ORPHAN",
-    },
-    unusedKey: "UNUSED KEY",
-  };
-
-  describe('new LexiconShape', () => {
-    test('returns Object with passed parameters', () => {
-      expect(SampleShape.shorty).toEqual({ _LexiconShapeName: 'ShortString', _isLeafItem: true});
-      expect(SampleShape.parent).toEqual({ child: Lexicon.ShortString });
-    });
-  });
-
-
-  describe('extract()', () => {
-    describe('with simple non-nested shapes', () => {
-      let SimpleShape = new Lexicon.LexiconShape('SimpleShape', { short: Lexicon.ShortString, long: Lexicon.LongString });
-
-      test('returns Object with only keys and values indicated in the shape', () => {
-        let content = {short: 'SHORT CONTENT', long: 'LONG CONTENT', unused: 'UNUSED CONTENT'};
-
-        expect(SimpleShape.extract(content)).toEqual({short: 'SHORT CONTENT', long: 'LONG CONTENT'});
-      });
-
-      test('missing values raise exception', () => {
-        let subject = () => { SimpleShape.extract({}) }
-        expect(subject).toThrow();
-      });
-    });
-
-    describe('with nested shapes', () => {
-      it('returns only the strings that have been declared in LexiconShape', () => {
-        expect(SampleShape.extract(textContent)).toEqual({
-          shorty: "SHORT STRING",
-          parent: {
-            child: "CHILD",
-          },
-        });
-      });
-    });
-
-    test('object shape with array element', () => {
-      let TestShape = new Lexicon.LexiconShape('TestShape', { collection: [Lexicon.ShortString] });
-      let Content = { collection: ['aaa', 'bbb', 'ccc'], shouldExclude: 'blah' };
-      expect(TestShape.extract(Content)).toEqual({ collection: ['aaa', 'bbb', 'ccc']});
-    });
-
-    describe('array shape', () => {
-      it('returns array content', () => {
-        let TestShape = new Lexicon.LexiconShape('TestShape', [Lexicon.ShortString]);
-        let Content = ['aaa', 'bbb', 'ccc'];
-        expect(TestShape.extract(Content)).toEqual(['aaa', 'bbb', 'ccc']);
-      });
-    });
-  });
-
-
-  describe('flatShape', () => {
-    const NestedLexiconShape = new Lexicon.LexiconShape('NestedLexiconShape', {
-      top: Lexicon.ShortString,
-      container: {
-        inside_a: Lexicon.LongString,
-        inside_b: Lexicon.LongString,
+  const lex = new Lexicon({
+    en: {
+      foo: 'bar',
+      nested: {
+        wom: 'bat',
       },
-    });
+    },
+    es: {
+      foo: 'bar_es',
+      nested: {
+        wom: 'bat_es',
+      },
+    },
+  }, 'en');
 
-    it('returns list of dotted.keys and text type', () => {
-      expect(NestedLexiconShape.flatShape(NestedLexiconShape)).toEqual([
-        ['top', Lexicon.ShortString],
-        ['container.inside_a', Lexicon.LongString],
-        ['container.inside_b', Lexicon.LongString],
-      ]);
-    });
-
-    xtest('works for arrays', () => {
-      let Shape = new Lexicon.LexiconShape('Shape', [Lexicon.ShortString]);
-      expect(Shape.flatShape(Shape)).toEqual([
-        ['0', Lexicon.ShortString],
-      ]);
+  describe('new Lexicon()', () => {
+    test('has the correct defaultLocale', () => {
+      expect(lex.defaultLocale).toEqual('en');
     });
   });
 
-  describe('fileAndKeyFor()', () => {
-
-    describe('when passing a single LexiconShape,', () => {
-
-      test('returns the filename and dotted key', () => {
-        expect(SampleShape.fileAndKeyFor('parent.child')).toEqual(['dir/sample.json', 'parent.child']);
-      });
-
+  describe('get()', () => {
+    test('works for a single key', () => {
+      expect(lex.get('foo')).toEqual('bar');
     });
 
-    describe('when passing a nested LexiconShape spread across multiple files,', () => {
-      const subShape = new Lexicon.LexiconShape('subShape', {
-        subKey: Lexicon.ShortString,
-      }, 'dir/subShape.json');
-      const subShape2 = new Lexicon.LexiconShape('subShape2', {
-        subKey2: Lexicon.ShortString,
-      });
-      const Shape = new Lexicon.LexiconShape('Shape', {
-        key1: Lexicon.ShortString,
-        subShape,
-        subShape2,
-        otherMessages: {
-          key: Lexicon.ShortString,
-        },
-      }, 'dir/shape.json');
+    test('returns null for keys that do not exist or are nested', () => {
+      expect(lex.get('blah')).toEqual(null);
+      expect(lex.get('nested')).toEqual(null);
+    });
 
-      test('returns the child shape\'s filename', () => {
-        expect(Shape.fileAndKeyFor('subShape.subKey')).toEqual(['dir/subShape.json', 'subKey']);
-      });
+    test('works for nested keys', () => {
+      expect(lex.get('nested.wom')).toEqual('bat');
+    });
+  });
 
-      test('children without their own filename inherit the parent\'s', () => {
-        expect(Shape.fileAndKeyFor('subShape2.subKey2')).toEqual(['dir/shape.json', 'subShape2.subKey2']);
-      });
+  describe('locale()', () => {
+    const es = lex.locale('es');
 
-      
+    test('returns a Lexicon with a new defaultLocale', () => {
+      expect(es.defaultLocale).toEqual('es');
+    });
+
+    test('returns a Lexicon that gives values from the new locale', () => {
+      expect(es.get('foo')).toEqual('bar_es');
+      expect(es.get('blah')).toEqual(null);
+      expect(es.get('nested.wom')).toEqual('bat_es');
+    });
+
+    test('can be called multiple times in a chain', () => {
+      const newLex = lex.locale('es').subset('nested').locale('en');
+      expect(newLex.get('wom')).toEqual('bat');
+      expect(newLex.defaultLocale).toEqual('en');
+    });
+  });
+
+  describe('subset()', () => {
+    const subset = lex.subset('nested');
+
+    test('retains the defaultLocale', () => {
+      expect(subset.defaultLocale).toEqual('en');
+      expect(lex.locale('es').subset('nested').defaultLocale).toEqual('es');
+    });
+
+    test('returns a new Lexicon that provides nested values', () => {
+      expect(subset.get('wom')).toEqual('bat');
+      expect(subset.locale('es').get('wom')).toEqual('bat_es');
+    });
+
+    test('returns null for non-existent or non-nested keys', () => {
+      expect(lex.subset('blah')).toEqual(null);
+      expect(lex.subset('foo')).toEqual(null);
     });
   });
 });
