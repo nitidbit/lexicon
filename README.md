@@ -42,6 +42,8 @@ When you create an `EditWrapper`, you now need to specify the API endpoint it sh
 />
 ```
 
+[See full documentation here.](docs.md)
+
 ## Compilation
 
 Build the JS ouput before you commit to GitHub, so it's available to people using the package:
