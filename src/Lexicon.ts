@@ -9,7 +9,7 @@ export type LocalesObject = {
   [lang: string]: RawLexiconObject,
 };
 
-function getNestedKeyInMap<T>(map: NestedMap<string, T>, key: string): T|NestedMap<string, T>|null {
+const getNestedKeyInMap = <T>(map: NestedMap<string, T>, key: string): T|NestedMap<string, T>|null => {
   const [first, ...rest] = key.split('.');
 
   if (!map.has(first)) return null;
@@ -24,9 +24,9 @@ function getNestedKeyInMap<T>(map: NestedMap<string, T>, key: string): T|NestedM
   } else {
     return val;
   }
-}
+};
 
-function convertRawLexiconObjectToMap(obj: RawLexiconObject): RawLexicon {
+const convertRawLexiconObjectToMap = (obj: RawLexiconObject): RawLexicon => {
   const lex: RawLexicon = new Map();
 
   for (const k in obj) {
@@ -42,7 +42,24 @@ function convertRawLexiconObjectToMap(obj: RawLexiconObject): RawLexicon {
   }
 
   return lex;
-}
+};
+
+const flattenMap = <T>(map: NestedMap<string, T>): Array<string> => {
+  const flatKeys: Array<string> = [];
+
+  const recurse = (map: NestedMap<string, T>, prefix: string) => {
+    for (const [k, v] of map.entries()) {
+      if (v instanceof Map) {
+        recurse(v, `${prefix}${k}.`);
+      } else {
+        flatKeys.push(`${prefix}${k}`);
+      }
+    }
+  };
+
+  recurse(map, '');
+  return flatKeys;
+};
 
 export class Lexicon {
   private locales: Locales;
@@ -79,8 +96,7 @@ export class Lexicon {
   subset(path: string): Lexicon|null {
     const newLocales: Locales = new Map();
 
-    for (let localeKey of this.locales.keys()) {
-      const localeMap = this.locales.get(localeKey);
+    for (const [localeKey, localeMap] of this.locales.entries()) {
       const sub = getNestedKeyInMap(localeMap, path);
       if (sub instanceof Map) {
         newLocales.set(localeKey, sub);
@@ -90,5 +106,35 @@ export class Lexicon {
     if (newLocales.size === 0) return null;
 
     return new Lexicon(newLocales, this.defaultLocale);
+  }
+
+  keysInLocale(locale: string = this.defaultLocale): Array<string> {
+    const localeMap = this.locales.get(locale);
+    if (localeMap === undefined) return [];
+    return flattenMap(localeMap);
+  }
+
+  update(key: string, newValue: string, locale: string = this.defaultLocale): boolean {
+    if (!this.locales.has(locale)) return false;
+
+    if (key.includes('.')) {
+      const firstPath = key.substr(0, key.lastIndexOf('.')),
+        tailKey = key.substr(key.lastIndexOf('.') + 1),
+        subset = this.locale(locale).subset(firstPath);
+
+      if (subset === null) {
+        return false;
+      } else {
+        return subset.update(tailKey, newValue, locale);
+      }
+    } else {
+      const localeMap = this.locales.get(locale);
+      if (!localeMap.has(key)) {
+        return false;
+      } else {
+        localeMap.set(key, newValue);
+        return true;
+      }
+    }
   }
 }
