@@ -1,142 +1,61 @@
-import * as React from "react";
-import _ from 'lodash';
+import * as React from 'react';
 
 import '../styles/LexiconEditorStyles.scss';
-import {LexiconShape} from './Lexicon';
-import * as Text from './Lexicon';
+import { Lexicon } from './Lexicon';
 
-export type ContentOnChangeCallback = (contentKey:Text.DottedKey, newValue:any) => void;
+export type ContentOnChangeCallback = (contentKey: string, newValue: any) => void;
 
-type HtmlOnChangeCallback = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-interface EditorProps { contentKey: Text.DottedKey,
-                        value: any,
-                        onChange: HtmlOnChangeCallback};
+type HtmlOnChangeCallback = (event: React.ChangeEvent<HTMLInputElement>) => void;
 
-function FormRow(props: {label:string, children:any}) {
-  return (
-    <div id="FormRow">
-      <label title={props.label}>
-        <span className="label">
-          { props.label }
-        </span>
-        { props.children }
-      </label>
-    </div>
-  );
-};
-
-
-//
-// Editors
-//
-
-const ShortString = function(props: EditorProps) {
-  return (
-    <input type="text" id="ShortString"
-      name={props.contentKey}
-      defaultValue={props.value}
-      onChange={props.onChange} />
-  );
-};
-
-function LongString(props: EditorProps) {
-  return (
-    <textarea id="LongString" name={props.contentKey} defaultValue={props.value} onChange={props.onChange} />
-  );
+interface EditorProps {
+  contentKey: string;
+  value: any;
+  onChange: HtmlOnChangeCallback;
 }
 
-function QuestionAndAnswerEditor(props: EditorProps) {
-  let questionKey = props.contentKey + '.question';
-  let answerKey = props.contentKey + '.answer';
-  return (
-    <div id="QuestionAndAnswerEditor">
+const FormRow = (props: { label: string, children: any }) => (
+  <div id="FormRow">
+    <label title={props.label}>
+      <span className="label">
+        {props.label}
+      </span>
+      {props.children}
+    </label>
+  </div>
+);
 
-      <ShortString contentKey={questionKey}
-        value={props.value.question}
-        onChange={props.onChange} />
+const ShortString = ({ contentKey, value, onChange }: EditorProps) => (
+  <input
+    type="text"
+    id="ShortString"
+    name={contentKey}
+    defaultValue={value}
+    onChange={onChange}
+  />
+);
 
-      <LongString contentKey={answerKey}
-        value={props.value.answer}
-        onChange={props.onChange} />
-    </div>
-  );
-}
-
-function QuestionAndAnswerCollection(props: EditorProps) {
-  let innerValues = props.value;
-  let innerProps = _.omit(props, ['value', 'contentKey']);
-
-  return (
-    <div id="QuestionAndAnswerCollection">
-      {
-        innerValues.map( (questionAndAnswer:any, index:number) => {
-          let innerContentKey = props.contentKey + `.${index}`;
-          return (
-            <div className="innerEditorBox" key={questionAndAnswer.question} >
-              <div className="numberTab"> { index } </div>
-              <QuestionAndAnswerEditor value={questionAndAnswer} contentKey={innerContentKey} {...innerProps} />
-            </div>
-          );
-        })
-      }
-    </div>
-  );
-};
-
-const INPUT_EDITORS:any = Object.freeze({
-  LongString,
-  ShortString,
-  QuestionAndAnswerEditor,
-  QuestionAndAnswerCollection,
-});
-
-
-function UnknownInputType(LexiconShape: LexiconShape) {
-  let unknownEditorComponent = function(props: EditorProps) {
-    return (
-      <div id="UnknownInputType">
-        (Unknown input type: { LexiconShape.name() })
-      </div>
-    );
-  }
-
-  return unknownEditorComponent;
-}
-
-
-const editorForType = function( LexiconShape:LexiconShape,
-                                contentKey:Text.DottedKey,
-                                value:any,
-                                onChange:HtmlOnChangeCallback) {
-  let inputComponent = INPUT_EDITORS[LexiconShape.name()] || UnknownInputType(LexiconShape);
-
-  return (
-    <FormRow key={contentKey} label={contentKey}>
-      { React.createElement(inputComponent, {contentKey, value, onChange} ) }
-    </FormRow>);
-};
-
-
-function LexiconEditor(props: {flatShape:object, lexicon:any, onChange:ContentOnChangeCallback}) {
-
-  let sendLexiconEditorChange:HtmlOnChangeCallback = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    let contentKey = event.target.name;
-    let newValue = event.target.value;
-    props.onChange(contentKey, newValue);
+const LexiconEditor = ({ lexicon, onChange }: { lexicon: Lexicon, onChange: ContentOnChangeCallback }) => {
+  const sendLexiconEditorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name: contentKey, value: newValue } = event.target;
+    onChange(contentKey, newValue);
   };
 
   return (
     <div id="LexiconEditor">
-      <h2> Content Editor </h2>
+      <h2>Content Editor</h2>
       {
-        _.map(props.flatShape, (row) => {
-          let contentKey = row[0] as Text.DottedKey;
-          let inputType = row[1] as Text.LexiconShape;
-          let theLemma = _.get(props.lexicon, contentKey);
-          return editorForType(inputType, contentKey, theLemma, sendLexiconEditorChange);
-        })
+        lexicon.keys().map((key: string) => (
+          <FormRow key={key} label={key}>
+            <ShortString
+              contentKey={key}
+              value={lexicon.get(key)}
+              onChange={sendLexiconEditorChange}
+            />
+          </FormRow>
+        ))
       }
-    </div>);
-}
+    </div>
+  );
+};
 
 export default LexiconEditor;
