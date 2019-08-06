@@ -108,8 +108,8 @@ export class Lexicon {
     return new Lexicon(newLocales, this.defaultLocale);
   }
 
-  keysInLocale(locale: string = this.defaultLocale): Array<string> {
-    const localeMap = this.locales.get(locale);
+  keys(): Array<string> {
+    const localeMap = this.locales.get(this.defaultLocale);
     if (localeMap === undefined) return [];
     return flattenMap(localeMap);
   }

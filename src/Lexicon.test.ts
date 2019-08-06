@@ -15,7 +15,7 @@ describe('Lexicon module', () => {
     es: {
       foo: 'bar_es',
       nested: {
-        wom: 'bat_es',
+        wom: 'murciélago',
       },
       array: [
         { text: 'uno' },
@@ -61,7 +61,7 @@ describe('Lexicon module', () => {
     test('returns a Lexicon that gives values from the new locale', () => {
       expect(es.get('foo')).toEqual('bar_es');
       expect(es.get('blah')).toEqual(null);
-      expect(es.get('nested.wom')).toEqual('bat_es');
+      expect(es.get('nested.wom')).toEqual('murciélago');
       expect(es.get('array.0.text')).toEqual('uno');
       expect(es.get('array.1.text')).toEqual('dos');
     });
@@ -83,7 +83,7 @@ describe('Lexicon module', () => {
 
     test('returns a new Lexicon that provides nested values', () => {
       expect(subset.get('wom')).toEqual('bat');
-      expect(subset.locale('es').get('wom')).toEqual('bat_es');
+      expect(subset.locale('es').get('wom')).toEqual('murciélago');
     });
 
     test('returns null for non-existent or non-nested keys', () => {
@@ -92,14 +92,10 @@ describe('Lexicon module', () => {
     });
   });
 
-  describe('keysInLocale()', () => {
-    test('returns an array of dotted keys for the specified locale', () => {
-      expect(lex.keysInLocale('en')).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text']);
-      expect(lex.keysInLocale('es')).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text', 'onlyExistsInSpanish']);
-    });
-
-    test('uses the default locale if none is specified', () => {
-      expect(lex.keysInLocale()).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text']);
+  describe('keys()', () => {
+    test('returns an array of dotted keys for the default locale', () => {
+      expect(lex.keys()).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text']);
+      expect(lex.locale('es').keys()).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text', 'onlyExistsInSpanish']);
     });
   });
 
