@@ -1,37 +1,23 @@
 import React from 'react';
-import { LexiconShape } from './Lexicon';
+import { Lexicon } from './Lexicon';
 import '../styles/EditWrapperStyles.scss';
-declare type EditWrapperProps = {
+interface EditWrapperProps {
     component: React.FunctionComponent<{
-        lexicon: any;
+        lexicon: Lexicon;
     }> | React.ComponentClass<{
-        lexicon: any;
-    }, any>;
-    lexicon: any;
-    lexiconShape: LexiconShape;
+        lexicon: Lexicon;
+    }>;
+    lexicon: Lexicon;
     allowEditing?: boolean;
-    apiUpdateUrl: string;
-    apiToken?: string;
-};
-declare type EditWrapperState = {
-    isEditorVisible: boolean;
-    lexicon: any;
-    isSaving: boolean;
-    unsavedChanges: {
-        filename: string;
-        key: string;
-        newValue: string;
-    }[];
-    errorMessage?: string;
-    justSaved: boolean;
-};
-declare class EditWrapper extends React.Component<EditWrapperProps, EditWrapperState> {
-    constructor(props: EditWrapperProps);
-    getToken(): string;
-    allowEditing(): boolean;
-    toggleEditor: () => void;
-    render(): JSX.Element;
-    updateText: (contentKey: string, newValue: string) => void;
-    saveChanges: () => void;
 }
-export default EditWrapper;
+interface EditWrapperState {
+    isEditorVisible: boolean;
+}
+export default class EditWrapper extends React.Component<EditWrapperProps, EditWrapperState> {
+    constructor(props: EditWrapperProps);
+    toggleEditor: () => void;
+    allowEditing(): boolean;
+    updateText(): void;
+    render(): JSX.Element;
+}
+export {};

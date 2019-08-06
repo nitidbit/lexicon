@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 import '../styles/LexiconEditorStyles.scss';
 import { Lexicon } from './Lexicon';

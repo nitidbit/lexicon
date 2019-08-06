@@ -1,10 +1,9 @@
 /// <reference types="react" />
 import '../styles/LexiconEditorStyles.scss';
-import * as Text from './Lexicon';
-export declare type ContentOnChangeCallback = (contentKey: Text.DottedKey, newValue: any) => void;
-declare function LexiconEditor(props: {
-    flatShape: object;
-    lexicon: any;
+import { Lexicon } from './Lexicon';
+export declare type ContentOnChangeCallback = (contentKey: string, newValue: any) => void;
+declare const LexiconEditor: ({ lexicon, onChange }: {
+    lexicon: Lexicon;
     onChange: ContentOnChangeCallback;
-}): JSX.Element;
+}) => JSX.Element;
 export default LexiconEditor;

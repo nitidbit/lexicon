@@ -1,22 +1,21 @@
-export declare type Lexicon = any;
-declare type LexiconSubShape = {
-    [key: string]: string;
-};
-export declare class LexiconShape {
-    _LexiconShapeName: string;
-    _isLeafItem: boolean;
-    _arrayShape: any;
-    _filename?: string;
-    constructor(name: string, shape: object | 'LeafItem', filename?: string);
-    toString(): string;
-    inspect(): string;
-    name(): string;
-    extract(textContent: Lexicon): any;
-    flatShape(shape: LexiconShape, prefix?: string): FlatShape;
-    fileAndKeyFor(ikey: DottedKey, root?: LexiconShape | LexiconSubShape): [string | undefined, DottedKey];
+interface NestedMap<K, V> extends Map<K, V | NestedMap<K, V>> {
 }
-export declare const ShortString: LexiconShape;
-export declare const LongString: LexiconShape;
-export declare type FlatShape = Array<[DottedKey, LexiconShape]>;
-export declare type DottedKey = string;
+export declare type RawLexicon = NestedMap<string, string>;
+export declare type RawLexiconObject = {
+    [key: string]: string | Array<RawLexiconObject> | RawLexiconObject;
+};
+export declare type Locales = Map<string, RawLexicon>;
+export declare type LocalesObject = {
+    [lang: string]: RawLexiconObject;
+};
+export declare class Lexicon {
+    private locales;
+    defaultLocale: string;
+    constructor(locales: LocalesObject | Locales, defaultLocale: string);
+    locale(locale: string): Lexicon | null;
+    get(key: string): string | null;
+    subset(path: string): Lexicon | null;
+    keys(): Array<string>;
+    update(key: string, newValue: string, locale?: string): boolean;
+}
 export {};

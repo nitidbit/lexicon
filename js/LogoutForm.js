@@ -18,6 +18,7 @@ class LogoutForm extends react_1.default.Component {
         this.doLogout = (e) => __awaiter(this, void 0, void 0, function* () {
             e.preventDefault();
             const token = localStorage.getItem('lexiconEditorToken');
+            this.setState({ loading: true });
             try {
                 const data = yield (yield fetch(this.props.endpoint, {
                     mode: 'cors',
@@ -65,6 +66,7 @@ class LogoutForm extends react_1.default.Component {
         }
         return (react_1.default.createElement(react_1.default.Fragment, null,
             react_1.default.createElement("button", { onClick: this.doLogout }, "Log out"),
+            react_1.default.createElement("br", null),
             react_1.default.createElement("small", null, status)));
     }
 }
