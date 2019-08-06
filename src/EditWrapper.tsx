@@ -12,6 +12,7 @@ interface EditWrapperProps {
 
 interface EditWrapperState {
   isEditorVisible: boolean;
+  lexicon: Lexicon;
 }
 
 export default class EditWrapper extends React.Component<EditWrapperProps, EditWrapperState> {
@@ -20,6 +21,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
 
     this.state = {
       isEditorVisible: false,
+      lexicon: props.lexicon,
     };
   }
 
@@ -31,24 +33,36 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     return true;
   }
 
-  updateText() {}
+  updateText = (contentKey: string, newValue: string) => {
+    this.setState(oldState => {
+      const newLexicon = oldState.lexicon.clone();
+      newLexicon.update(contentKey, newValue);
+      return { lexicon: newLexicon };
+    });
+  }
+
+  switchLocale = (newLocale: string) => {
+    this.setState({ lexicon: this.state.lexicon.locale(newLocale) });
+  }
 
   render() {
-    const { component, lexicon, children } = this.props,
-      { isEditorVisible } = this.state;
+    const { component, children } = this.props,
+      { isEditorVisible, lexicon } = this.state;
 
     if (this.allowEditing()) {
       return (
         <div className="EditWrapper">
           {React.createElement(component, { lexicon }, children)}
           <button onClick={this.toggleEditor} className="edit-wrapper-button">
-            { isEditorVisible ? 'HideEditor' : 'Edit Content' }
+            { isEditorVisible ? 'Hide Editor' : 'Edit Content' }
           </button>
 
           <div className={`wrapped-lexicon-editor${this.state.isEditorVisible ? ' is-visible' : ''}`}>
             <LexiconEditor
               lexicon={lexicon}
               onChange={this.updateText}
+              selectedLocale={lexicon.defaultLocale}
+              switchLocale={this.switchLocale}
             />
           </div>
         </div>

@@ -9,15 +9,18 @@ const FormRow = (props) => (react_1.default.createElement("div", { id: "FormRow"
     react_1.default.createElement("label", { title: props.label },
         react_1.default.createElement("span", { className: "label" }, props.label),
         props.children)));
-const ShortString = ({ contentKey, value, onChange }) => (react_1.default.createElement("input", { type: "text", id: "ShortString", name: contentKey, defaultValue: value, onChange: onChange }));
-const LexiconEditor = ({ lexicon, onChange }) => {
+const Field = ({ contentKey, value, onChange }) => (react_1.default.createElement("input", { type: "text", id: "ShortString", name: contentKey, value: value, onChange: onChange }));
+const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }) => {
     const sendLexiconEditorChange = (event) => {
         const { name: contentKey, value: newValue } = event.target;
         onChange(contentKey, newValue);
     };
     return (react_1.default.createElement("div", { id: "LexiconEditor" },
         react_1.default.createElement("h2", null, "Content Editor"),
+        lexicon.locales().map((locale) => (react_1.default.createElement("label", { htmlFor: `localeRadio__${locale}`, key: locale },
+            react_1.default.createElement("input", { type: "radio", id: `localeRadio__${locale}`, value: locale, checked: locale == selectedLocale, onChange: (e) => switchLocale(e.target.value) }),
+            locale))),
         lexicon.keys().map((key) => (react_1.default.createElement(FormRow, { key: key, label: key },
-            react_1.default.createElement(ShortString, { contentKey: key, value: lexicon.get(key), onChange: sendLexiconEditorChange }))))));
+            react_1.default.createElement(Field, { contentKey: key, value: lexicon.get(key), onChange: sendLexiconEditorChange }))))));
 };
 exports.default = LexiconEditor;

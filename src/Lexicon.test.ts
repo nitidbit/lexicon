@@ -116,4 +116,32 @@ describe('Lexicon module', () => {
       expect(lex.update('nested.wom', 'foobar', 'fakeLanguage')).toEqual(false);
     });
   });
+
+  describe('clone()', () => {
+    test('returns a copy of the Lexicon', () => {
+      const cloned = lex.clone();
+      for (const k of cloned.keys()) {
+        expect(cloned.get(k)).toEqual(lex.get(k));
+      }
+
+      for (const k of cloned.locale('es').keys()) {
+        expect(cloned.locale('es').get(k)).toEqual(lex.locale('es').get(k));
+      }
+    });
+
+    test('returns an independent copy', () => {
+      const clone1 = lex.clone(),
+        clone2 = lex.clone();
+      clone1.update('foo', 'abc');
+      expect(clone1.get('foo')).toEqual('abc');
+      expect(clone2.get('foo')).toEqual('bar');
+      expect(lex.get('foo')).toEqual('bar');
+    });
+  });
+
+  describe('locales()', () => {
+    test('returns a list of defined locales', () => {
+      expect(lex.locales()).toEqual(['en', 'es']);
+    });
+  });
 });

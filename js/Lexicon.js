@@ -49,26 +49,38 @@ const flattenMap = (map) => {
     recurse(map, '');
     return flatKeys;
 };
+const cloneNestedMap = (map) => {
+    const shallow = new Map(map);
+    for (const [key, value] of shallow) {
+        if (value instanceof Map) {
+            shallow.set(key, cloneNestedMap(value));
+        }
+    }
+    return shallow;
+};
 class Lexicon {
-    constructor(locales, defaultLocale) {
+    constructor(_locales, defaultLocale) {
         this.defaultLocale = defaultLocale;
-        if (locales instanceof Map) {
-            this.locales = locales;
+        if (_locales instanceof Map) {
+            this._locales = _locales;
         }
         else {
-            this.locales = new Map();
-            for (let lang in locales) {
-                this.locales.set(lang, convertRawLexiconObjectToMap(locales[lang]));
+            this._locales = new Map();
+            for (let lang in _locales) {
+                this._locales.set(lang, convertRawLexiconObjectToMap(_locales[lang]));
             }
         }
     }
     locale(locale) {
-        if (!this.locales.has(locale))
+        if (!this._locales.has(locale))
             return null;
-        return new Lexicon(this.locales, locale);
+        return new Lexicon(this._locales, locale);
+    }
+    locales() {
+        return [...this._locales.keys()];
     }
     get(key) {
-        const locale = this.locales.get(this.defaultLocale);
+        const locale = this._locales.get(this.defaultLocale);
         const val = getNestedKeyInMap(locale, key);
         if (val instanceof Map) {
             return null;
@@ -79,7 +91,7 @@ class Lexicon {
     }
     subset(path) {
         const newLocales = new Map();
-        for (const [localeKey, localeMap] of this.locales.entries()) {
+        for (const [localeKey, localeMap] of this._locales.entries()) {
             const sub = getNestedKeyInMap(localeMap, path);
             if (sub instanceof Map) {
                 newLocales.set(localeKey, sub);
@@ -90,13 +102,13 @@ class Lexicon {
         return new Lexicon(newLocales, this.defaultLocale);
     }
     keys() {
-        const localeMap = this.locales.get(this.defaultLocale);
+        const localeMap = this._locales.get(this.defaultLocale);
         if (localeMap === undefined)
             return [];
         return flattenMap(localeMap);
     }
     update(key, newValue, locale = this.defaultLocale) {
-        if (!this.locales.has(locale))
+        if (!this._locales.has(locale))
             return false;
         if (key.includes('.')) {
             const firstPath = key.substr(0, key.lastIndexOf('.')), tailKey = key.substr(key.lastIndexOf('.') + 1), subset = this.locale(locale).subset(firstPath);
@@ -108,7 +120,7 @@ class Lexicon {
             }
         }
         else {
-            const localeMap = this.locales.get(locale);
+            const localeMap = this._locales.get(locale);
             if (!localeMap.has(key)) {
                 return false;
             }
@@ -117,6 +129,13 @@ class Lexicon {
                 return true;
             }
         }
+    }
+    clone() {
+        const newMap = new Map(this._locales);
+        for (const [lang, lexicon] of newMap) {
+            newMap.set(lang, cloneNestedMap(lexicon));
+        }
+        return new Lexicon(newMap, this.defaultLocale);
     }
 }
 exports.Lexicon = Lexicon;
