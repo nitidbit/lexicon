@@ -1,7 +1,7 @@
 import { Lexicon } from './Lexicon';
 
 describe('Lexicon module', () => {
-  const lex = new Lexicon({
+  const lexObj = {
     en: {
       foo: 'bar',
       nested: {
@@ -10,7 +10,8 @@ describe('Lexicon module', () => {
       array: [
         { text: 'one' },
         { text: 'two' },
-      ]
+      ],
+      template: '\\#{escaped} \\\\ #{foo} #{bar.baz} #{{{manyBrackets}}}'
     },
     es: {
       foo: 'bar_es',
@@ -23,7 +24,9 @@ describe('Lexicon module', () => {
       ],
       onlyExistsInSpanish: 'hola, ¿cómo estás?'
     },
-  }, 'en');
+  };
+
+  const lex = new Lexicon(lexObj, 'en', 'blah.json');
 
   describe('new Lexicon()', () => {
     test('has the correct defaultLocale', () => {
@@ -49,6 +52,14 @@ describe('Lexicon module', () => {
       expect(lex.get('array.0.text')).toEqual('one');
       expect(lex.get('array.1.text')).toEqual('two');
     });
+
+    test('works for templates', () => {
+      expect(lex.get('template', {
+        foo: 'foo',
+        bar: { baz: 'baz' },
+        '{{manyBrackets}}': 'qux'
+      })).toEqual('#{escaped} \\ foo baz qux');
+    })
   });
 
   describe('locale()', () => {
@@ -94,7 +105,7 @@ describe('Lexicon module', () => {
 
   describe('keys()', () => {
     test('returns an array of dotted keys for the default locale', () => {
-      expect(lex.keys()).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text']);
+      expect(lex.keys()).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text', 'template']);
       expect(lex.locale('es').keys()).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text', 'onlyExistsInSpanish']);
     });
   });
@@ -142,6 +153,12 @@ describe('Lexicon module', () => {
   describe('locales()', () => {
     test('returns a list of defined locales', () => {
       expect(lex.locales()).toEqual(['en', 'es']);
+    });
+  });
+
+  describe('asObject()', () => {
+    test('returns the correct representation of the Lexicon', () => {
+      expect(new Lexicon(lexObj, 'en', 'blah.json').asObject()).toEqual(lexObj);
     });
   });
 });

@@ -24,11 +24,6 @@ Everything that was exported from different files (`Lexicon.ts`, `EditWrapper.ts
 ```ts
 import {
   Lexicon,
-  LexiconShape,
-  ShortString,
-  LongString,
-  FlatShape,
-  DottedKey,
   EditWrapper,
 } from 'lexicon';
 ```

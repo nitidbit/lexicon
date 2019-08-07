@@ -1,5 +1,4 @@
-interface NestedMap<K, V> extends Map<K, V | NestedMap<K, V>> {
-}
+import { NestedMap } from './util';
 export declare type RawLexicon = NestedMap<string, string>;
 export declare type RawLexiconObject = {
     [key: string]: string | Array<RawLexiconObject> | RawLexiconObject;
@@ -14,10 +13,9 @@ export declare class Lexicon {
     constructor(_locales: LocalesObject | Locales, defaultLocale: string);
     locale(locale: string): Lexicon | null;
     locales(): Array<string>;
-    get(key: string): string | null;
+    get(key: string, data?: unknown): string | null;
     subset(path: string): Lexicon | null;
     keys(): Array<string>;
     update(key: string, newValue: string, locale?: string): boolean;
     clone(): Lexicon;
 }
-export {};
