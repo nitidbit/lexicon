@@ -18,9 +18,44 @@ const convertRawLexiconObjectToMap = (obj) => {
     }
     return lex;
 };
+const convertRawLexiconMapToObject = (map) => {
+    const obj = {};
+    const convertValue = (val) => {
+        if (typeof val == 'string') {
+            return val;
+        }
+        else {
+            const numericKeys = [...val.keys()].every(k => k.match(/^\d+$/)), consecutiveKeys = numericKeys && ([...val.keys()]
+                .map(k => parseInt(k))
+                .sort((a, b) => a - b)
+                .every((n, i, a) => i == 0 ? true : (n - a[i - 1] == 1)));
+            if (numericKeys && consecutiveKeys) {
+                // array!
+                const arr = new Array(val.size);
+                for (const [k, v] of val) {
+                    arr[parseInt(k)] = convertValue(v);
+                }
+                return arr;
+            }
+            else {
+                // object!
+                const obj = {};
+                for (const [k, v] of val) {
+                    obj[k] = convertValue(v);
+                }
+                return obj;
+            }
+        }
+    };
+    for (const [k, v] of map) {
+        obj[k] = convertValue(v);
+    }
+    return obj;
+};
 class Lexicon {
-    constructor(_locales, defaultLocale) {
+    constructor(_locales, defaultLocale, filename) {
         this.defaultLocale = defaultLocale;
+        this.filename = filename;
         if (_locales instanceof Map) {
             this._locales = _locales;
         }
@@ -34,7 +69,7 @@ class Lexicon {
     locale(locale) {
         if (!this._locales.has(locale))
             return null;
-        return new Lexicon(this._locales, locale);
+        return new Lexicon(this._locales, locale, this.filename);
     }
     locales() {
         return [...this._locales.keys()];
@@ -56,7 +91,7 @@ class Lexicon {
     }
     subset(path) {
         const newLocales = new Map();
-        for (const [localeKey, localeMap] of this._locales.entries()) {
+        for (const [localeKey, localeMap] of this._locales) {
             const sub = util_1.getNestedKeyInMap(localeMap, path);
             if (sub instanceof Map) {
                 newLocales.set(localeKey, sub);
@@ -64,7 +99,7 @@ class Lexicon {
         }
         if (newLocales.size === 0)
             return null;
-        return new Lexicon(newLocales, this.defaultLocale);
+        return new Lexicon(newLocales, this.defaultLocale, this.filename);
     }
     keys() {
         const localeMap = this._locales.get(this.defaultLocale);
@@ -100,7 +135,14 @@ class Lexicon {
         for (const [lang, lexicon] of newMap) {
             newMap.set(lang, util_1.cloneNestedMap(lexicon));
         }
-        return new Lexicon(newMap, this.defaultLocale);
+        return new Lexicon(newMap, this.defaultLocale, this.filename);
+    }
+    asObject() {
+        const obj = {};
+        for (const [lang, locale] of this._locales) {
+            obj[lang] = convertRawLexiconMapToObject(locale);
+        }
+        return obj;
     }
 }
 exports.Lexicon = Lexicon;

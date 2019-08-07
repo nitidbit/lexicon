@@ -10,7 +10,8 @@ export declare type LocalesObject = {
 export declare class Lexicon {
     private _locales;
     defaultLocale: string;
-    constructor(_locales: LocalesObject | Locales, defaultLocale: string);
+    filename: string;
+    constructor(_locales: LocalesObject | Locales, defaultLocale: string, filename: string);
     locale(locale: string): Lexicon | null;
     locales(): Array<string>;
     get(key: string, data?: unknown): string | null;
@@ -18,4 +19,5 @@ export declare class Lexicon {
     keys(): Array<string>;
     update(key: string, newValue: string, locale?: string): boolean;
     clone(): Lexicon;
+    asObject(): LocalesObject;
 }
