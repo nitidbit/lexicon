@@ -138,7 +138,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
           buttonEnabled = false;
           break;
         case SavingState.Available:
-          buttonText = 'Save';
+          buttonText = 'Save changes';
           buttonEnabled = true;
           break;
         case SavingState.InProgress:
@@ -150,7 +150,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
           buttonEnabled = false;
           break;
         case SavingState.Error:
-          buttonText = this.state.errorMessage;
+          buttonText = 'Save changes';
           buttonEnabled = true;
           break;
       }
@@ -172,6 +172,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
             <button onClick={this.saveChanges} disabled={ !buttonEnabled }>
               {buttonText}
             </button>
+            { this.state.savingState == SavingState.Error && <p>{this.state.errorMessage}</p> }
           </div>
         </div>
       );

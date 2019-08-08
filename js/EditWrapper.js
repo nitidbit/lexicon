@@ -116,7 +116,7 @@ class EditWrapper extends react_1.default.Component {
                     buttonEnabled = false;
                     break;
                 case SavingState.Available:
-                    buttonText = 'Save';
+                    buttonText = 'Save changes';
                     buttonEnabled = true;
                     break;
                 case SavingState.InProgress:
@@ -128,7 +128,7 @@ class EditWrapper extends react_1.default.Component {
                     buttonEnabled = false;
                     break;
                 case SavingState.Error:
-                    buttonText = this.state.errorMessage;
+                    buttonText = 'Save changes';
                     buttonEnabled = true;
                     break;
             }
@@ -137,7 +137,8 @@ class EditWrapper extends react_1.default.Component {
                 react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Editor' : 'Edit Content'),
                 react_1.default.createElement("div", { className: `wrapped-lexicon-editor${this.state.isEditorVisible ? ' is-visible' : ''}` },
                     react_1.default.createElement(LexiconEditor_1.default, { lexicon: lexicon, onChange: this.updateText, selectedLocale: lexicon.defaultLocale, switchLocale: this.switchLocale }),
-                    react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText))));
+                    react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText),
+                    this.state.savingState == SavingState.Error && react_1.default.createElement("p", null, this.state.errorMessage))));
         }
         return react_1.default.createElement(component, { lexicon }, children);
     }
