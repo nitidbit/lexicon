@@ -93,7 +93,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     this.setState({ lexicon: this.state.lexicon.locale(newLocale) });
   }
 
-  saveChanges = async () => {
+  saveChanges = () => {
     this.setState({ savingState: SavingState.InProgress });
 
     const fetchOptions: RequestInit = {
@@ -112,17 +112,16 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       }),
     };
 
-    try {
-      const response = await fetch(this.props.apiUpdateUrl, fetchOptions);
-      const json = (await response.json()) as LexiconAPIResponse;
-      if (json.successful) {
-        this.setState({ savingState: SavingState.Done, unsavedChanges: new Map() });
-      } else {
-        this.setState({ savingState: SavingState.Error, errorMessage: json.error });
-      }
-    } catch(e) {
-      this.setState({ savingState: SavingState.Error, errorMessage: e.toString() });
-    }
+    fetch(this.props.apiUpdateUrl, fetchOptions)
+      .then(response => response.json())
+      .catch(error => this.setState({ savingState: SavingState.Error, errorMessage: error.toString() }))
+      .then((json: LexiconAPIResponse) => {
+        if (json.successful) {
+          this.setState({ savingState: SavingState.Done, unsavedChanges: new Map() });
+        } else {
+          this.setState({ savingState: SavingState.Error, errorMessage: json.error });
+        }
+      });
   }
 
   render() {

@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -52,7 +44,7 @@ class EditWrapper extends react_1.default.Component {
         this.switchLocale = (newLocale) => {
             this.setState({ lexicon: this.state.lexicon.locale(newLocale) });
         };
-        this.saveChanges = () => __awaiter(this, void 0, void 0, function* () {
+        this.saveChanges = () => {
             this.setState({ savingState: SavingState.InProgress });
             const fetchOptions = {
                 method: 'PUT',
@@ -69,20 +61,18 @@ class EditWrapper extends react_1.default.Component {
                     })),
                 }),
             };
-            try {
-                const response = yield fetch(this.props.apiUpdateUrl, fetchOptions);
-                const json = (yield response.json());
+            fetch(this.props.apiUpdateUrl, fetchOptions)
+                .then(response => response.json())
+                .catch(error => this.setState({ savingState: SavingState.Error, errorMessage: error.toString() }))
+                .then((json) => {
                 if (json.successful) {
                     this.setState({ savingState: SavingState.Done, unsavedChanges: new Map() });
                 }
                 else {
                     this.setState({ savingState: SavingState.Error, errorMessage: json.error });
                 }
-            }
-            catch (e) {
-                this.setState({ savingState: SavingState.Error, errorMessage: e.toString() });
-            }
-        });
+            });
+        };
         this.state = {
             isEditorVisible: false,
             lexicon: props.lexicon,

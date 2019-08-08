@@ -37,7 +37,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     allowEditing(): boolean;
     updateText: (contentKey: string, newValue: string) => void;
     switchLocale: (newLocale: string) => void;
-    saveChanges: () => Promise<void>;
+    saveChanges: () => void;
     render(): JSX.Element;
 }
 export {};
