@@ -17,6 +17,7 @@ class LoginForm extends react_1.default.Component {
         super(props);
         this.handleSubmission = (e) => __awaiter(this, void 0, void 0, function* () {
             e.preventDefault();
+            this.setState({ loading: true });
             try {
                 const data = yield (yield fetch(this.props.endpoint, {
                     method: 'POST',

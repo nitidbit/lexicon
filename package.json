@@ -1,12 +1,12 @@
 {
   "private": true,
   "name": "lexicon",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "",
   "main": "js/index.js",
   "typings": "js/index",
   "scripts": {
-    "test": "jest --verbose --silent --no-watchman"
+    "test": "jest --verbose --no-watchman"
   },
   "jest": {
     "roots": [
@@ -21,7 +21,6 @@
   "dependencies": {
     "@types/lodash": "^4.14.135",
     "@types/react": "^16.8.22",
-    "axios": "^0.19.0",
     "lodash": "^4.17.11",
     "react": "^16.8.6"
   },
