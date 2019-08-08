@@ -70,11 +70,18 @@ class EditWrapper extends react_1.default.Component {
                 }
             });
         };
+        this.changePosition = (e) => {
+            const newPos = e.target.value;
+            if (newPos == 'left' || newPos == 'bottom' || newPos == 'right') {
+                this.setState({ position: newPos });
+            }
+        };
         this.state = {
             isEditorVisible: false,
             lexicon: props.lexicon,
             unsavedChanges: new Map(),
             savingState: SavingState.NoChanges,
+            position: 'left',
         };
     }
     getToken() {
@@ -122,7 +129,9 @@ class EditWrapper extends react_1.default.Component {
             return (react_1.default.createElement("div", { className: "EditWrapper" },
                 react_1.default.createElement(component, { lexicon }, children),
                 react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Editor' : 'Edit Content'),
-                react_1.default.createElement("div", { className: `wrapped-lexicon-editor${this.state.isEditorVisible ? ' is-visible' : ''}` },
+                react_1.default.createElement("div", { className: `wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}` },
+                    react_1.default.createElement("h2", { className: "wrapper-heading" }, "Content Editor"),
+                    react_1.default.createElement("select", { onChange: this.changePosition }, [['left', '\u25e7'], ['bottom', '\u2b13'], ['right', '\u25e8']].map(([pos, icon]) => (react_1.default.createElement("option", { value: pos, selected: this.state.position == pos }, icon)))),
                     react_1.default.createElement(LexiconEditor_1.default, { lexicon: lexicon, onChange: this.updateText, selectedLocale: lexicon.defaultLocale, switchLocale: this.switchLocale }),
                     react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText),
                     this.state.savingState == SavingState.Error && react_1.default.createElement("p", null, this.state.errorMessage))));

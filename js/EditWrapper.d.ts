@@ -32,6 +32,7 @@ interface EditWrapperState {
     unsavedChanges: EditWrapperChanges;
     savingState: SavingState;
     errorMessage?: string;
+    position: 'left' | 'bottom' | 'right';
 }
 export default class EditWrapper extends React.Component<EditWrapperProps, EditWrapperState> {
     constructor(props: EditWrapperProps);
@@ -41,6 +42,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     updateText: (contentKey: string, newValue: string) => void;
     switchLocale: (newLocale: string) => void;
     saveChanges: () => void;
+    changePosition: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     render(): JSX.Element;
 }
 export {};

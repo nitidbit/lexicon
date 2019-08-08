@@ -16,7 +16,6 @@ const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }) => {
         onChange(contentKey, newValue);
     };
     return (react_1.default.createElement("div", { id: "LexiconEditor" },
-        react_1.default.createElement("h2", null, "Content Editor"),
         lexicon.locales().map((locale) => (react_1.default.createElement("label", { htmlFor: `localeRadio__${locale}`, key: locale },
             react_1.default.createElement("input", { type: "radio", id: `localeRadio__${locale}`, value: locale, checked: locale == selectedLocale, onChange: (e) => switchLocale(e.target.value) }),
             locale))),

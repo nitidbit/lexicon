@@ -2,6 +2,7 @@ import React from 'react';
 
 import '../styles/LexiconEditorStyles.scss';
 import { Lexicon } from './Lexicon';
+import { JSXElement } from '@babel/types';
 
 export type ContentOnChangeCallback = (contentKey: string, newValue: string) => void;
 export type SwitchLocaleCallback = (newLocale: string) => void;
@@ -50,7 +51,6 @@ const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }: Lexi
 
   return (
     <div id="LexiconEditor">
-      <h2>Content Editor</h2>
       {
         lexicon.locales().map((locale: string) => (
           <label htmlFor={`localeRadio__${locale}`} key={locale}>

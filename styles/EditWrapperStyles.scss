@@ -1,8 +1,6 @@
 @import './LexiconEditorStyles';
 
 .EditWrapper {
-  position: relative;
-
   button.edit-wrapper-button {
     font-family: "Lucida Sans", "Lucida Grande", 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
     font-style: normal;
@@ -38,26 +36,50 @@
   }
 
   .wrapped-lexicon-editor {
-    position: absolute;
+    position: fixed;
     border-radius: 4px;
     padding: 4px;
     border: thin solid #444;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     background-color: $lexicon_editor_background;
     overflow: hidden;
-    left: 100%;
-    top: 0;
-    width: 500px;
+    box-sizing: border-box;
 
-    margin-left: -20px;
     visibility: hidden;
     opacity: 0;
-    transition: 0.1s margin-left, 0.1s visibility, 0.1s opacity;
+    transition: 0.1s visibility, 0.1s opacity;
 
     &.is-visible {
-      margin-left: 8px;
       visibility: visible;
       opacity: 1;
+    }
+
+    &.docked-left {
+      width: 30vw;
+      height: calc(100vh - 16px);
+      top: 8px;
+      left: 8px;
+    }
+
+    &.docked-right {
+      width: 30vw;
+      height: calc(100vh - 16px);
+      top: 8px;
+      right: 8px;
+    }
+
+    &.docked-bottom {
+      width: calc(100vw - 16px);
+      height: 30vh;
+      left: 8px;
+      bottom: 8px;
+    }
+
+    .wrapper-heading {
+      display: inline;
+      margin: 5px 0;
+      padding-left: 10px;
+      font-size: 16px;
     }
   }
 }

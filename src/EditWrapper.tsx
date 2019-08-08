@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import { Lexicon } from './Lexicon';
 import LexiconEditor from './LexiconEditor';
@@ -29,6 +29,7 @@ interface EditWrapperState {
   unsavedChanges: EditWrapperChanges;
   savingState: SavingState;
   errorMessage?: string;
+  position: 'left' | 'bottom' | 'right';
 }
 
 interface LexiconAPIResponse {
@@ -45,6 +46,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       lexicon: props.lexicon,
       unsavedChanges: new Map(),
       savingState: SavingState.NoChanges,
+      position: 'left',
     };
   }
 
@@ -126,6 +128,14 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       });
   }
 
+  changePosition = (e: ChangeEvent<HTMLSelectElement>) => {
+    const newPos = e.target.value;
+
+    if (newPos == 'left' || newPos == 'bottom' || newPos == 'right') {
+      this.setState({ position: newPos });
+    }
+  }
+
   render() {
     const { component, children } = this.props,
       { isEditorVisible, lexicon } = this.state;
@@ -163,7 +173,19 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
             { isEditorVisible ? 'Hide Editor' : 'Edit Content' }
           </button>
 
-          <div className={`wrapped-lexicon-editor${this.state.isEditorVisible ? ' is-visible' : ''}`}>
+          <div className={`wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`}>
+            <h2 className="wrapper-heading">Content Editor</h2>
+
+            <select onChange={this.changePosition}>
+              {
+                [['left', '\u25e7'], ['bottom', '\u2b13'], ['right', '\u25e8']].map(([pos, icon]) => (
+                  <option value={pos} selected={this.state.position == pos}>
+                    {icon}
+                  </option>
+                ))
+              }
+            </select>
+
             <LexiconEditor
               lexicon={lexicon}
               onChange={this.updateText}
