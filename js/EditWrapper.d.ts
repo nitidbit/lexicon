@@ -11,6 +11,9 @@ interface EditWrapperProps {
     allowEditing?: boolean;
     apiToken?: string;
     apiUpdateUrl: string;
+    extraHeaders?: {
+        [header: string]: string;
+    };
 }
 declare type EditWrapperChanges = Map<string, {
     originalValue: string;

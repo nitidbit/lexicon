@@ -10,6 +10,7 @@ interface EditWrapperProps {
   allowEditing?: boolean;
   apiToken?: string;
   apiUpdateUrl: string;
+  extraHeaders?: { [header: string]: string };
 }
 
 type EditWrapperChanges = Map<string, { originalValue: string, newValue: string }>;
@@ -102,6 +103,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       headers: {
         'Authorization': `Bearer ${this.getToken()}`,
         'Content-Type': 'application/json',
+        ...this.props.extraHeaders,
       },
       body: JSON.stringify({
         changes: [...this.state.unsavedChanges.entries()].map(([key, { newValue }]) => ({

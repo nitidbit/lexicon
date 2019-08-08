@@ -49,10 +49,7 @@ class EditWrapper extends react_1.default.Component {
             const fetchOptions = {
                 method: 'PUT',
                 mode: 'cors',
-                headers: {
-                    'Authorization': `Bearer ${this.getToken()}`,
-                    'Content-Type': 'application/json',
-                },
+                headers: Object.assign({ 'Authorization': `Bearer ${this.getToken()}`, 'Content-Type': 'application/json' }, this.props.extraHeaders),
                 body: JSON.stringify({
                     changes: [...this.state.unsavedChanges.entries()].map(([key, { newValue }]) => ({
                         filename: this.state.lexicon.filename,
