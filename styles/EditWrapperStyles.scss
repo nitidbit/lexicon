@@ -1,6 +1,8 @@
 @import './LexiconEditorStyles';
 
 .EditWrapper {
+  position: relative;
+
   button.edit-wrapper-button {
     font-family: "Lucida Sans", "Lucida Grande", 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
     font-style: normal;
@@ -43,8 +45,8 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     background-color: $lexicon_editor_background;
     overflow: hidden;
-    right: 20px;
-    top: 20px;
+    left: 100%;
+    top: 0;
     width: 500px;
 
     margin-left: -20px;
