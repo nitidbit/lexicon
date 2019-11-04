@@ -19,7 +19,7 @@ class EditWrapper extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.toggleEditor = () => {
-            this.setState(Object.assign({}, this.state, { isEditorVisible: !this.state.isEditorVisible }));
+            this.setState(Object.assign(Object.assign({}, this.state), { isEditorVisible: !this.state.isEditorVisible }));
         };
         this.updateText = (contentKey, newValue) => {
             this.setState(oldState => {
@@ -101,7 +101,7 @@ class EditWrapper extends react_1.default.Component {
         }
     }
     render() {
-        const { component, children } = this.props, { isEditorVisible, lexicon } = this.state;
+        const { component, children, OptionalLogoutButton } = this.props, { isEditorVisible, lexicon } = this.state;
         if (this.allowEditing()) {
             let buttonText, buttonEnabled;
             switch (this.state.savingState) {
@@ -128,7 +128,9 @@ class EditWrapper extends react_1.default.Component {
             }
             return (react_1.default.createElement("div", { className: "EditWrapper" },
                 react_1.default.createElement(component, { lexicon }, children),
-                react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Editor' : 'Edit Content'),
+                react_1.default.createElement("div", { className: 'buttons' },
+                    react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Editor' : 'Edit Content'),
+                    OptionalLogoutButton && react_1.default.createElement(OptionalLogoutButton, null)),
                 react_1.default.createElement("div", { className: `wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}` },
                     react_1.default.createElement("h2", { className: "wrapper-heading" }, "Content Editor"),
                     react_1.default.createElement("select", { onChange: this.changePosition }, [['left', '\u25e7'], ['bottom', '\u2b13'], ['right', '\u25e8']].map(([pos, icon]) => (react_1.default.createElement("option", { value: pos, selected: this.state.position == pos }, icon)))),

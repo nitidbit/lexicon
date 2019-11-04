@@ -1,37 +1,42 @@
 @import './LexiconEditorStyles';
 
 .EditWrapper {
-  button.edit-wrapper-button {
-    font-family: "Lucida Sans", "Lucida Grande", 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
-    font-style: normal;
-    text-decoration: none;
-    color: white;
-    background-color: #bfbfbf;
-    padding: 2px 8px;
-    border-radius: 3px;
-    border: none;
-    cursor: pointer;
+  .buttons {
+    display: flex;
+    justify-content: space-between;
 
-    body.windows & {
-      font-family: 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
-    }
-
-    @mixin small_text {
-      font-size: 13px;
-      line-height: 19px;
+    button.edit-wrapper-button {
+      font-family: "Lucida Sans", "Lucida Grande", 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
+      font-style: normal;
+      text-decoration: none;
+      color: white;
+      background-color: #bfbfbf;
+      padding: 2px 8px;
+      border-radius: 3px;
+      border: none;
+      cursor: pointer;
 
       body.windows & {
-        font-size: 12px;
+        font-family: 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
       }
-    }
 
-    &:hover:not(:disabled) {
-      color: white;
-      background-color: #acce19;
-    }
+      @mixin small_text {
+        font-size: 13px;
+        line-height: 19px;
 
-    &:disabled {
-      cursor: not-allowed;
+        body.windows & {
+          font-size: 12px;
+        }
+      }
+
+      &:hover:not(:disabled) {
+        color: white;
+        background-color: #acce19;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+      }
     }
   }
 

@@ -9,7 +9,7 @@ const convertRawLexiconObjectToMap = (obj) => {
             lex.set(k, val);
         }
         else if (val instanceof Array) {
-            const obj = val.reduce((acc, v, i) => (Object.assign({}, acc, { [i]: v })), {});
+            const obj = val.reduce((acc, v, i) => (Object.assign(Object.assign({}, acc), { [i]: v })), {});
             lex.set(k, convertRawLexiconObjectToMap(obj));
         }
         else {

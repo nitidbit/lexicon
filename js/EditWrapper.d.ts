@@ -14,6 +14,7 @@ interface EditWrapperProps {
     extraHeaders?: {
         [header: string]: string;
     };
+    OptionalLogoutButton?: React.FC<any>;
 }
 declare type EditWrapperChanges = Map<string, {
     originalValue: string;

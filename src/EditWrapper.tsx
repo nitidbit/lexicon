@@ -11,6 +11,7 @@ interface EditWrapperProps {
   apiToken?: string;
   apiUpdateUrl: string;
   extraHeaders?: { [header: string]: string };
+  OptionalLogoutButton?: React.FC<any>
 }
 
 type EditWrapperChanges = Map<string, { originalValue: string, newValue: string }>;
@@ -137,7 +138,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
   }
 
   render() {
-    const { component, children } = this.props,
+    const { component, children, OptionalLogoutButton } = this.props,
       { isEditorVisible, lexicon } = this.state;
 
     if (this.allowEditing()) {
@@ -169,9 +170,12 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       return (
         <div className="EditWrapper">
           {React.createElement(component, { lexicon }, children)}
-          <button onClick={this.toggleEditor} className="edit-wrapper-button">
-            { isEditorVisible ? 'Hide Editor' : 'Edit Content' }
-          </button>
+          <div className='buttons'>
+            <button onClick={this.toggleEditor} className="edit-wrapper-button">
+              { isEditorVisible ? 'Hide Editor' : 'Edit Content' }
+            </button>
+            { OptionalLogoutButton && <OptionalLogoutButton /> }
+          </div>
 
           <div className={`wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`}>
             <h2 className="wrapper-heading">Content Editor</h2>
