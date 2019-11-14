@@ -3,29 +3,26 @@ lexicon
 
 Client-side code and React components for interacting with a Lexicon.
 
+`Lexicon` — a container for your translated strings and data.
+`EditWrapper` — a React component that adds an "Edit Content" button which allows users to edit strings and data.
+
 ## Installation
 
 With yarn:
-
-```sh
-$ yarn add git+ssh://git@github.com/nitidbit/lexicon.git
-```
+  yarn add git+ssh://git@github.com/nitidbit/lexicon.git
 
 With npm:
-
-```sh
-$ npm i -S git+ssh://git@github.com/nitidbit/lexicon.git
-```
+  npm i -S git+ssh://git@github.com/nitidbit/lexicon.git
 
 ## Usage
 
-Everything that was exported from different files (`Lexicon.ts`, `EditWrapper.tsx`, etc.) is now available from the package. This shows all the things you can import (real usage will probably not need them all):
-
 ```ts
-import {
-  Lexicon,
-  EditWrapper,
-} from 'lexicon';
+import { Lexicon EditWrapper } from 'lexicon';
+import myStrings from './MyStrings.json';
+
+const myLexicon = new Lexicon(myStrings, 'en', 'app/javascript/components/MyStrings.json');
+
+console.log('Hello', myLexicon.get('salutation'))
 ```
 
 When you create an `EditWrapper`, you now need to specify the API endpoint it should use to make changes:
@@ -37,14 +34,91 @@ When you create an `EditWrapper`, you now need to specify the API endpoint it sh
 />
 ```
 
-[See full documentation here.](docs.md)
+Creating a Lexicon
+------------------
 
-## Compilation
+```ts
+import { Lexicon } from 'lexicon';
+
+const lex = new Lexicon({
+  en: {
+    message: 'Hello, world!',
+    subComponent: {
+      template: 'There are #{count} widgets.',
+    },
+    faq: [
+      { question: 'What is the meaning of life, the universe, and everything?', answer: '42' },
+    ],
+  },
+  es: {
+    message: '¡Hola, mundo!',
+    subComponent: {
+      template: 'Hay #{count} aparatos.',
+    },
+    faq: [
+      { question: '¿Cuál es el significado de la vida, el universo, y todo?', answer: '42' },
+    ],
+  },
+}, 'sampleLexicon.json', 'en');
+```
+
+The Lexicon constructor accepts a dictionary of locales, a default locale, and the filename where it is stored (this only matters for the server).
+
+Accessing data
+--------------
+
+Using `lex` from the previous example:
+
+```ts
+// using default locale
+lex.get('message')                                  // => 'Hello, world!'
+// nested keys
+lex.get('subComponent.template')                    // => 'There are #{count} widgets.'
+// templates
+lex.get('subComponent.template', { count: 5 })      // => 'There are 5 widgets.'
+// different locale
+const spanish = lex.locale('es');
+spanish.get('message')                              // => '¡Hola, mundo!'
+// subset
+const subset = lex.subset('subComponent');
+subset.get('template', { count: 6 })                // => 'There are 6 widgets.'
+// arrays
+lex.get('faq.0.question')                           // => 'What is the meaning of life,
+                                                    //     the universe, and everything?'
+
+// modifications (should only be used by the editor)
+lex.update('message', 'Hi, world!')                 // => true (key exists)
+lex.update('key that does not exist', 'blah')       // => false
+// optionally specify locale
+lex.update('message', '¡Buenos días, mundo!', 'es') // => true
+lex.get('message') // => 'Hi, world!'
+spanish.get('message') // => 'Buenos días, mundo!'
+
+// other methods and properties
+lex.defaultLocale                                   // => 'en'
+spanish.defaultLocale                               // => 'es'
+lex.locales()                                       // => ['en', 'es']
+lex.keys()                                          // => ['message', 'subComponent.template',
+                                                    //     'faq.0.question', 'faq.0.answer']
+lex.asObject()                                      // => same object passed into constructor
+
+const clone = lex.clone();
+clone.update('subComponent.template', 'There are #{count} gadgets.');
+// modifications to clone do not affect original
+clone.get('subComponent.template')                  // => 'There are #{count} gadgets.'
+lex.get('subComponent.template')                    // => 'There are #{count} widgets.'
+```
+
+
+## For Developers of the Lexicon NPM Package
+If you are just using Lexicon in your project, ignore this section.
+
+### Compilation
 
 Build the JS ouput before you commit to GitHub, so it's available to people using the package:
 
 ```sh
-$ tsc
+$ npx tsc
 ```
 
 You should also make sure that all tests pass:
@@ -56,7 +130,7 @@ $ npm test
 Tests are in `src/Lexicon.test.ts`.
 
 
-## Motivation -- We want:
+### Motivation -- We want:
 
 Clients can:
 - edit content for their apps without involving a developer.
