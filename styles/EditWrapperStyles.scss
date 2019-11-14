@@ -1,42 +1,37 @@
 @import './LexiconEditorStyles';
 
+@mixin button {
+  font-family: "Lucida Sans", "Lucida Grande", 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
+  font-style: normal;
+  text-decoration: none;
+  color: white;
+  background-color: #bfbfbf;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+
+  body.windows & {
+    font-family: 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
+  }
+
+  &:hover:not(:disabled) {
+    color: white;
+    background-color: $green;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
 .EditWrapper {
   .buttons {
     display: flex;
     justify-content: space-between;
 
     button.edit-wrapper-button, div.edit-wrapper-button, {
-      font-family: "Lucida Sans", "Lucida Grande", 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
-      font-style: normal;
-      text-decoration: none;
-      color: white;
-      background-color: #bfbfbf;
-      padding: 2px 8px;
-      border-radius: 3px;
-      border: none;
-      cursor: pointer;
-
-      body.windows & {
-        font-family: 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
-      }
-
-      @mixin small_text {
-        font-size: 13px;
-        line-height: 19px;
-
-        body.windows & {
-          font-size: 12px;
-        }
-      }
-
-      &:hover:not(:disabled) {
-        color: white;
-        background-color: #acce19;
-      }
-
-      &:disabled {
-        cursor: not-allowed;
-      }
+      @include button;
     }
   }
 
@@ -85,6 +80,16 @@
       margin: 5px 0;
       padding-left: 10px;
       font-size: 16px;
+    }
+
+    button {
+      @include button;
+//       color: grey;
+      background-color: $clickable;
+
+      &:disabled {
+        background-color: $gray_80;
+      }
     }
   }
 }

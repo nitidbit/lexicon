@@ -1,5 +1,10 @@
-$lexicon_editor_background: #ddd;
+$gray_80: #ddd; // 80%
+$gray_75: #bfbfbf; // 75%
+$green: #acce19;
+
+$lexicon_editor_background: $gray_80;
 $input_background: white;
+$clickable: $green;
 
 #LexiconEditor {
   font-family: 'helvetica neue';
@@ -47,16 +52,13 @@ $input_background: white;
         box-sizing: border-box;
         background: $input_background;
         border-radius: 3px;
+        border: 1px solid $lexicon_editor_background;
       }
     }
 
     * {
       flex: 1; // expandqq all children to full width
     }
-  }
-
-  #ShortString, #LongString {
-    border: 1px solid $lexicon_editor_background;
   }
 
   #QuestionAndAnswer {

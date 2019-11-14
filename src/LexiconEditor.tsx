@@ -7,7 +7,7 @@ import { JSXElement } from '@babel/types';
 export type ContentOnChangeCallback = (contentKey: string, newValue: string) => void;
 export type SwitchLocaleCallback = (newLocale: string) => void;
 
-type HtmlOnChangeCallback = (event: React.ChangeEvent<HTMLInputElement>) => void;
+type HtmlOnChangeCallback = (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 
 const FormRow = (props: { label: string, children: any }) => (
   <div id="FormRow">
@@ -27,9 +27,7 @@ interface FieldProps {
 }
 
 const Field = ({ contentKey, value, onChange }: FieldProps) => (
-  <input
-    type="text"
-    id="ShortString"
+  <textarea
     name={contentKey}
     value={value}
     onChange={onChange}
@@ -44,7 +42,7 @@ export interface LexiconEditorProps {
 }
 
 const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }: LexiconEditorProps) => {
-  const sendLexiconEditorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const sendLexiconEditorChange = (event) => {
     const { name: contentKey, value: newValue } = event.target;
     onChange(contentKey, newValue);
   };

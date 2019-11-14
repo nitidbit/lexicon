@@ -6,7 +6,8 @@
   "main": "js/index.js",
   "typings": "js/index",
   "scripts": {
-    "test": "jest --verbose --no-watchman"
+    "test": "jest --verbose --no-watchman",
+    "watch": "tsc --watch"
   },
   "jest": {
     "roots": [

@@ -9,7 +9,7 @@ const FormRow = (props) => (react_1.default.createElement("div", { id: "FormRow"
     react_1.default.createElement("label", { title: props.label },
         react_1.default.createElement("span", { className: "label" }, props.label),
         props.children)));
-const Field = ({ contentKey, value, onChange }) => (react_1.default.createElement("input", { type: "text", id: "ShortString", name: contentKey, value: value, onChange: onChange }));
+const Field = ({ contentKey, value, onChange }) => (react_1.default.createElement("textarea", { name: contentKey, value: value, onChange: onChange }));
 const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }) => {
     const sendLexiconEditorChange = (event) => {
         const { name: contentKey, value: newValue } = event.target;
