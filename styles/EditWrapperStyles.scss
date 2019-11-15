@@ -40,38 +40,17 @@
     }
   }
 
-  hgroup {
-    display: flex;
-    flex-direction: row;
-
-    h2 {
-      @include lexicon-font;
-      flex: auto;
-    }
-
-    .position {
-      flex: 0 0 auto;
-
-      label {
-        color: $gray_50;
-        font-size: 20px;
-
-        &.selected {
-          color: $gray_25;
-        }
-      }
-    }
-  }
-
   .wrapped-lexicon-editor {
     position: fixed;
     border-radius: 4px;
-    padding: 4px;
-    border: thin solid #444;
+    border: thin solid $gray_25;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     background-color: $lexicon_editor_background;
     overflow: hidden;
     box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
 
     visibility: hidden;
     opacity: 0;
@@ -103,19 +82,45 @@
       bottom: 8px;
     }
 
-    .wrapper-heading {
-      display: inline;
-      margin: 5px 0;
-      padding-left: 10px;
-      font-size: 16px;
+    hgroup {
+      flex: 0 0 auto; // make small at top
+      display: flex; // layout title and position buttons within
+      flex-direction: row;
+
+      .wrapper-heading {
+        @include lexicon-font;
+        display: inline;
+        margin: 5px 0;
+        padding-left: 10px;
+        font-size: 16px;
+        flex: auto;
+      }
+
+      .position {
+        flex: 0 0 auto;
+
+        label {
+          color: $gray_50;
+          font-size: 20px;
+
+          &.selected {
+            color: $gray_25;
+          }
+        }
+      }
+    }
+
+    .LexiconEditor {
+      flex: 1;
     }
 
     .save-box {
-      text-align: center;
+      flex: 0 0 auto;
+      text-align: right;
 
       button {
         @include button;
-        margin-top: 8px;
+        margin: 8px;
         width: 200px;
         background-color: $clickable;
 
