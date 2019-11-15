@@ -10,11 +10,11 @@ Client-side code and React components for interacting with a Lexicon.
 
 With yarn:
 
-  yarn add git+ssh://git@github.com/nitidbit/lexicon.git
+    yarn add git+ssh://git@github.com/nitidbit/lexicon.git
 
 With npm:
 
-  npm i -S git+ssh://git@github.com/nitidbit/lexicon.git
+    npm i -S git+ssh://git@github.com/nitidbit/lexicon.git
 
 ## Usage
 
