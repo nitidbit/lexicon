@@ -102,10 +102,32 @@
         label {
           color: $gray_50;
           font-size: 20px;
+          cursor: pointer;
+          padding: 2px 6px;
 
           &.selected {
             color: $gray_25;
           }
+
+          &:hover {
+            background-color: $clickable;
+            border-radius: 20px;
+          }
+
+          input {
+            display: none;
+          }
+        }
+      }
+
+      .close-btn {
+        font-size: 20px;
+        cursor: pointer;
+        padding: 0 8px;
+
+        &:hover {
+          background-color: $clickable;
+          border-radius: 20px;
         }
       }
     }

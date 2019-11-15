@@ -188,12 +188,15 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
                   [ ['left', '\u25e7'],
                     ['bottom', '\u2b13'],
                     ['right', '\u25e8']].map(([pos, icon]) => (
-                    <label className={this.state.position == pos ? 'selected' : ''}> {icon}
+                    <label className={this.state.position == pos ? 'selected' : ''}>{icon}
                       <input type="radio" name={pos} onClick={this.changePosition} />
                     </label>
                   ))
                 }
               </div>
+              <label className="close-btn"> &times;
+                <button onClick={this.toggleEditor}/>
+              </label>
           </hgroup>
 
             <LexiconEditor
