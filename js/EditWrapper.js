@@ -71,7 +71,7 @@ class EditWrapper extends react_1.default.Component {
             });
         };
         this.changePosition = (e) => {
-            const newPos = e.target.value;
+            const newPos = e.target.name;
             if (newPos == 'left' || newPos == 'bottom' || newPos == 'right') {
                 this.setState({ position: newPos });
             }
@@ -106,7 +106,7 @@ class EditWrapper extends react_1.default.Component {
             let buttonText, buttonEnabled;
             switch (this.state.savingState) {
                 case SavingState.NoChanges:
-                    buttonText = 'Save changes';
+                    buttonText = 'Nothing to Save';
                     buttonEnabled = false;
                     break;
                 case SavingState.Available:
@@ -132,11 +132,18 @@ class EditWrapper extends react_1.default.Component {
                     react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Editor' : 'Edit Content'),
                     OptionalLogoutButton && react_1.default.createElement(OptionalLogoutButton, null)),
                 react_1.default.createElement("div", { className: `wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}` },
-                    react_1.default.createElement("h2", { className: "wrapper-heading" }, "Content Editor"),
-                    react_1.default.createElement("select", { onChange: this.changePosition }, [['left', '\u25e7'], ['bottom', '\u2b13'], ['right', '\u25e8']].map(([pos, icon]) => (react_1.default.createElement("option", { value: pos, selected: this.state.position == pos }, icon)))),
+                    react_1.default.createElement("hgroup", null,
+                        react_1.default.createElement("h2", { className: "wrapper-heading" }, "Content Editor"),
+                        react_1.default.createElement("div", { className: "position" }, [['left', '\u25e7'],
+                            ['bottom', '\u2b13'],
+                            ['right', '\u25e8']].map(([pos, icon]) => (react_1.default.createElement("label", { className: this.state.position == pos ? 'selected' : '' },
+                            " ",
+                            icon,
+                            react_1.default.createElement("input", { type: "radio", name: pos, onClick: this.changePosition })))))),
                     react_1.default.createElement(LexiconEditor_1.default, { lexicon: lexicon, onChange: this.updateText, selectedLocale: lexicon.defaultLocale, switchLocale: this.switchLocale }),
-                    react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText),
-                    this.state.savingState == SavingState.Error && react_1.default.createElement("p", null, this.state.errorMessage))));
+                    react_1.default.createElement("div", { className: "save-box" },
+                        react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText)),
+                    this.state.savingState == SavingState.Error && react_1.default.createElement("p", { className: "error-message" }, this.state.errorMessage))));
         }
         return react_1.default.createElement(component, { lexicon }, children);
     }

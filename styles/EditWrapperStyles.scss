@@ -1,19 +1,24 @@
 @import './LexiconEditorStyles';
 
+@mixin lexicon-font {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+
+  body.windows & {
+    font-family: 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
+  }
+}
+
 @mixin button {
-  font-family: "Lucida Sans", "Lucida Grande", 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
+  @include lexicon-font;
   font-style: normal;
   text-decoration: none;
   color: white;
-  background-color: #bfbfbf;
+  background-color: $gray_75;
   padding: 2px 8px;
   border-radius: 3px;
   border: none;
   cursor: pointer;
 
-  body.windows & {
-    font-family: 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
-  }
 
   &:hover:not(:disabled) {
     color: white;
@@ -35,6 +40,29 @@
     }
   }
 
+  hgroup {
+    display: flex;
+    flex-direction: row;
+
+    h2 {
+      @include lexicon-font;
+      flex: auto;
+    }
+
+    .position {
+      flex: 0 0 auto;
+
+      label {
+        color: $gray_50;
+        font-size: 20px;
+
+        &.selected {
+          color: $gray_25;
+        }
+      }
+    }
+  }
+
   .wrapped-lexicon-editor {
     position: fixed;
     border-radius: 4px;
@@ -47,7 +75,7 @@
 
     visibility: hidden;
     opacity: 0;
-    transition: 0.1s visibility, 0.1s opacity;
+    transition: 0.1s visibility, 0.1s opacity, 0.1s position;
 
     &.is-visible {
       visibility: visible;
@@ -69,7 +97,7 @@
     }
 
     &.docked-bottom {
-      width: calc(100vw - 16px);
+      width: calc(100vw - 32px);
       height: 30vh;
       left: 8px;
       bottom: 8px;
@@ -82,14 +110,25 @@
       font-size: 16px;
     }
 
-    button {
-      @include button;
-//       color: grey;
-      background-color: $clickable;
+    .save-box {
+      text-align: center;
 
-      &:disabled {
-        background-color: $gray_80;
+      button {
+        @include button;
+        margin-top: 8px;
+        width: 200px;
+        background-color: $clickable;
+
+        &:disabled {
+          background-color: $gray_75;
+        }
       }
+    }
+
+    .error-message {
+      padding: 4px;
+      color: $dark_orange;
+      font-size: 14px;
     }
   }
 }

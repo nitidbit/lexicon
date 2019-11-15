@@ -129,8 +129,8 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       });
   }
 
-  changePosition = (e: ChangeEvent<HTMLSelectElement>) => {
-    const newPos = e.target.value;
+  changePosition = (e: React.MouseEvent<HTMLInputElement>) => {
+    const newPos = (e.target as HTMLInputElement).name;
 
     if (newPos == 'left' || newPos == 'bottom' || newPos == 'right') {
       this.setState({ position: newPos });
@@ -146,7 +146,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
 
       switch (this.state.savingState) {
         case SavingState.NoChanges:
-          buttonText = 'Save changes';
+          buttonText = 'Nothing to Save';
           buttonEnabled = false;
           break;
         case SavingState.Available:
@@ -169,6 +169,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
 
       return (
         <div className="EditWrapper">
+          { /* User's component with an "Edit Content" button */ }
           {React.createElement(component, { lexicon }, children)}
           <div className='buttons'>
             <button onClick={this.toggleEditor} className="edit-wrapper-button">
@@ -177,18 +178,23 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
             { OptionalLogoutButton && <OptionalLogoutButton /> }
           </div>
 
+          { /* Content Editor on the side */ }
           <div className={`wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`}>
-            <h2 className="wrapper-heading">Content Editor</h2>
+            <hgroup>
+              <h2 className="wrapper-heading">Content Editor</h2>
 
-            <select onChange={this.changePosition}>
-              {
-                [['left', '\u25e7'], ['bottom', '\u2b13'], ['right', '\u25e8']].map(([pos, icon]) => (
-                  <option value={pos} selected={this.state.position == pos}>
-                    {icon}
-                  </option>
-                ))
-              }
-            </select>
+              <div className="position">
+                {
+                  [ ['left', '\u25e7'],
+                    ['bottom', '\u2b13'],
+                    ['right', '\u25e8']].map(([pos, icon]) => (
+                    <label className={this.state.position == pos ? 'selected' : ''}> {icon}
+                      <input type="radio" name={pos} onClick={this.changePosition} />
+                    </label>
+                  ))
+                }
+              </div>
+          </hgroup>
 
             <LexiconEditor
               lexicon={lexicon}
@@ -196,10 +202,12 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
               selectedLocale={lexicon.defaultLocale}
               switchLocale={this.switchLocale}
             />
-            <button onClick={this.saveChanges} disabled={ !buttonEnabled }>
-              {buttonText}
-            </button>
-            { this.state.savingState == SavingState.Error && <p>{this.state.errorMessage}</p> }
+            <div className="save-box">
+              <button onClick={this.saveChanges} disabled={ !buttonEnabled }>
+                {buttonText}
+              </button>
+            </div>
+            { this.state.savingState == SavingState.Error && <p className="error-message">{this.state.errorMessage}</p> }
           </div>
         </div>
       );
