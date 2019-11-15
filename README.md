@@ -3,15 +3,17 @@ lexicon
 
 Client-side code and React components for interacting with a Lexicon.
 
-`Lexicon` — a container for your translated strings and data.
-`EditWrapper` — a React component that adds an "Edit Content" button which allows users to edit strings and data.
+- `Lexicon` — a container for your translated strings and data.
+- `EditWrapper` — a React component that adds an "Edit Content" button which allows users to edit strings and data.
 
 ## Installation
 
 With yarn:
+
   yarn add git+ssh://git@github.com/nitidbit/lexicon.git
 
 With npm:
+
   npm i -S git+ssh://git@github.com/nitidbit/lexicon.git
 
 ## Usage
@@ -116,12 +118,15 @@ If you are just using Lexicon in your project, ignore this section.
 ### Compilation
 
 While developing, run tsc in the background, watching your changes and recompiling
+
     npm run watch
 
 Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to people using the package. This is already done if you've been running `npm run watch`
+
     npm run tsc
 
 You should also make sure that all tests pass:
+
     npm test
 
 Tests are in `src/Lexicon.test.ts`.
