@@ -7,6 +7,7 @@
   "typings": "js/index",
   "scripts": {
     "test": "jest --verbose --no-watchman",
+    "tsc": "tsc",
     "watch": "tsc --watch"
   },
   "jest": {

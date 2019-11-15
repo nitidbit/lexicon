@@ -115,19 +115,28 @@ If you are just using Lexicon in your project, ignore this section.
 
 ### Compilation
 
-Build the JS ouput before you commit to GitHub, so it's available to people using the package:
+While developing, run tsc in the background, watching your changes and recompiling
+    npm run watch
 
-```sh
-$ npx tsc
-```
+Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to people using the package. This is already done if you've been running `npm run watch`
+    npm run tsc
 
 You should also make sure that all tests pass:
-
-```sh
-$ npm test
-```
+    npm test
 
 Tests are in `src/Lexicon.test.ts`.
+
+### Marking versions
+Let's use [semantic versioning](https://semver.org).
+MAJOR version when you make incompatible API changes,
+MINOR version when you add functionality in a backwards compatible manner, and
+PATCH version when you make backwards compatible bug fixes.
+
+When Lexicon is in a good state, mark a new version with:
+
+    git tag <major>.<minor>.<patch>
+    git push origin <major>.<minor>.<patch>
+
 
 
 ### Motivation -- We want:
