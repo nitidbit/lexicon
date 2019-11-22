@@ -127,7 +127,7 @@ class EditWrapper extends react_1.default.Component {
                     break;
             }
             return (react_1.default.createElement("div", { className: "EditWrapper" },
-                react_1.default.createElement(component, { lexicon }, children),
+                component && react_1.default.createElement(component, { lexicon }, children),
                 react_1.default.createElement("div", { className: 'buttons' },
                     react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Editor' : 'Edit Content'),
                     OptionalLogoutButton && react_1.default.createElement(OptionalLogoutButton, null)),

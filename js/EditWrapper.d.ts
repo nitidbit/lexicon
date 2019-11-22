@@ -2,12 +2,12 @@ import React from 'react';
 import { Lexicon } from './Lexicon';
 import '../styles/EditWrapperStyles.scss';
 interface EditWrapperProps {
-    component: React.FunctionComponent<{
+    lexicon: Lexicon;
+    component?: React.FunctionComponent<{
         lexicon: Lexicon;
     }> | React.ComponentClass<{
         lexicon: Lexicon;
     }>;
-    lexicon: Lexicon;
     allowEditing?: boolean;
     apiToken?: string;
     apiUpdateUrl: string;

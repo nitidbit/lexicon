@@ -5,8 +5,8 @@ import LexiconEditor from './LexiconEditor';
 import '../styles/EditWrapperStyles.scss';
 
 interface EditWrapperProps {
-  component: React.FunctionComponent<{ lexicon: Lexicon }> | React.ComponentClass<{ lexicon: Lexicon }>;
   lexicon: Lexicon;
+  component?: React.FunctionComponent<{ lexicon: Lexicon }> | React.ComponentClass<{ lexicon: Lexicon }>;
   allowEditing?: boolean;
   apiToken?: string;
   apiUpdateUrl: string;
@@ -170,7 +170,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       return (
         <div className="EditWrapper">
           { /* User's component with an "Edit Content" button */ }
-          {React.createElement(component, { lexicon }, children)}
+          { component && React.createElement(component, { lexicon }, children)}
           <div className='buttons'>
             <button onClick={this.toggleEditor} className="edit-wrapper-button">
               { isEditorVisible ? 'Hide Editor' : 'Edit Content' }
