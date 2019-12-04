@@ -102,7 +102,20 @@ class EditWrapper extends react_1.default.Component {
     }
     render() {
         const { component, children, OptionalLogoutButton } = this.props, { isEditorVisible, lexicon } = this.state;
-        if (this.allowEditing()) {
+        // Did the caller pass just a component, or a [component, {with: props}]?
+        let renderedComponent = null;
+        let renderedComponentProps = {};
+        if (Array.isArray(component)) {
+            renderedComponent = component[0];
+            renderedComponentProps = component[1];
+        }
+        else {
+            renderedComponent = component;
+        }
+        if (!this.allowEditing()) {
+            return react_1.default.createElement(renderedComponent, Object.assign({ lexicon }, renderedComponentProps), children);
+        }
+        else {
             let buttonText, buttonEnabled;
             switch (this.state.savingState) {
                 case SavingState.NoChanges:
@@ -126,8 +139,18 @@ class EditWrapper extends react_1.default.Component {
                     buttonEnabled = true;
                     break;
             }
+            // Did the caller pass just a component, or a [component, {with: props}]?
+            let renderedComponent = null;
+            let renderedComponentProps = {};
+            if (Array.isArray(component)) {
+                renderedComponent = component[0];
+                renderedComponentProps = component[1];
+            }
+            else {
+                renderedComponent = component;
+            }
             return (react_1.default.createElement("div", { className: "EditWrapper" },
-                component && react_1.default.createElement(component, { lexicon }, children),
+                react_1.default.createElement(renderedComponent, Object.assign({ lexicon }, renderedComponentProps), children),
                 react_1.default.createElement("div", { className: 'buttons' },
                     react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Editor' : 'Edit Content'),
                     OptionalLogoutButton && react_1.default.createElement(OptionalLogoutButton, null)),
@@ -147,7 +170,6 @@ class EditWrapper extends react_1.default.Component {
                         react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText)),
                     this.state.savingState == SavingState.Error && react_1.default.createElement("p", { className: "error-message" }, this.state.errorMessage))));
         }
-        return react_1.default.createElement(component, { lexicon }, children);
     }
 }
 exports.default = EditWrapper;

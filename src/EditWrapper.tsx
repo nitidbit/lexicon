@@ -5,8 +5,13 @@ import LexiconEditor from './LexiconEditor';
 import '../styles/EditWrapperStyles.scss';
 
 interface EditWrapperProps {
+  component:                                                    // This is the React component rendered inside the wrapper.
+    React.FunctionComponent<{ lexicon: Lexicon }>               // You can pass just a React Class component
+    | React.ComponentClass<{ lexicon: Lexicon }>                // or a React function
+    | [React.FunctionComponent<{ lexicon: Lexicon }>, Object]   // or a [Component, {with: extra_props}]
+    | [React.ComponentClass<{ lexicon: Lexicon }>, Object]
+    ;
   lexicon: Lexicon;
-  component?: React.FunctionComponent<{ lexicon: Lexicon }> | React.ComponentClass<{ lexicon: Lexicon }>;
   allowEditing?: boolean;
   apiToken?: string;
   apiUpdateUrl: string;
@@ -141,7 +146,20 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     const { component, children, OptionalLogoutButton } = this.props,
       { isEditorVisible, lexicon } = this.state;
 
-    if (this.allowEditing()) {
+    // Did the caller pass just a component, or a [component, {with: props}]?
+    let renderedComponent = null;
+    let renderedComponentProps = {};
+    if (Array.isArray(component)) {
+      renderedComponent = component[0];
+      renderedComponentProps = component[1];
+    } else {
+      renderedComponent = component;
+    }
+
+    if (! this.allowEditing()) {
+      return React.createElement(renderedComponent, { lexicon, ...renderedComponentProps }, children);
+
+    } else {
       let buttonText: string, buttonEnabled: boolean;
 
       switch (this.state.savingState) {
@@ -167,10 +185,22 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
           break;
       }
 
+      // Did the caller pass just a component, or a [component, {with: props}]?
+      let renderedComponent = null;
+      let renderedComponentProps = {};
+      if (Array.isArray(component)) {
+        renderedComponent = component[0];
+        renderedComponentProps = component[1];
+      } else {
+        renderedComponent = component;
+      }
+
       return (
         <div className="EditWrapper">
           { /* User's component with an "Edit Content" button */ }
-          { component && React.createElement(component, { lexicon }, children)}
+
+          { React.createElement(renderedComponent, { lexicon, ...renderedComponentProps }, children)}
+
           <div className='buttons'>
             <button onClick={this.toggleEditor} className="edit-wrapper-button">
               { isEditorVisible ? 'Hide Editor' : 'Edit Content' }
@@ -215,7 +245,5 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
         </div>
       );
     }
-
-    return React.createElement(component, { lexicon }, children);
   }
 }
