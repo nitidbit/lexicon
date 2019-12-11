@@ -1,17 +1,26 @@
 import { NestedMap, getNestedKeyInMap, flattenMap, cloneNestedMap, evaluateTemplate } from './util';
 
-export type RawLexicon = NestedMap<string, string>;
+// RawLexiconObject -- the content inside a lexicon string file, in Object form, excluding locale
+// identifiers. I.e. everything underneath { "en": ... }
 export type RawLexiconObject = {
-  [key: string]: string | Array<RawLexiconObject> | RawLexiconObject,
+  [key: string]: string
+  | Array<RawLexiconObject>
+  | RawLexiconObject,
 };
 
-export type Locales = Map<string, RawLexicon>;
+// RawLexiconMap -- The content inside a lexicon string file, in Map() form.
+//   After loading the RawLexiconObject, we convert and store it as a Map.
+export type RawLexiconMap = NestedMap<string, string>;
+
+
+// e.g. { "en": ..., "es": ... }
+export type Locales = Map<string, RawLexiconMap>;
 export type LocalesObject = {
   [lang: string]: RawLexiconObject,
 };
 
-const convertRawLexiconObjectToMap = (obj: RawLexiconObject): RawLexicon => {
-  const lex: RawLexicon = new Map();
+const convertRawLexiconObjectToMap = (obj: RawLexiconObject): RawLexiconMap => {
+  const lex: RawLexiconMap = new Map();
 
   for (const k in obj) {
     const val = obj[k];
@@ -28,10 +37,10 @@ const convertRawLexiconObjectToMap = (obj: RawLexiconObject): RawLexicon => {
   return lex;
 };
 
-const convertRawLexiconMapToObject = (map: RawLexicon): RawLexiconObject => {
+const convertRawLexiconMapToObject = (map: RawLexiconMap): RawLexiconObject => {
   const obj: RawLexiconObject = {};
 
-  const convertValue = (val: string | RawLexicon): string | Array<RawLexiconObject> | RawLexiconObject => {
+  const convertValue = (val: string | RawLexiconMap): string | Array<RawLexiconObject> | RawLexiconObject => {
     if (typeof val == 'string') {
       return val;
     } else {

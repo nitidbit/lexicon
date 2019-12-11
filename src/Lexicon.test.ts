@@ -7,7 +7,7 @@ describe('Lexicon module', () => {
       nested: {
         wom: 'bat',
       },
-      array: [
+      arrayOfObjects: [
         { text: 'one' },
         { text: 'two' },
       ],
@@ -18,7 +18,7 @@ describe('Lexicon module', () => {
       nested: {
         wom: 'murciélago',
       },
-      array: [
+      arrayOfObjects: [
         { text: 'uno' },
         { text: 'dos' },
       ],
@@ -48,9 +48,9 @@ describe('Lexicon module', () => {
       expect(lex.get('nested.wom')).toEqual('bat');
     });
 
-    test('works for arrays', () => {
-      expect(lex.get('array.0.text')).toEqual('one');
-      expect(lex.get('array.1.text')).toEqual('two');
+    test('works for arrays of objects', () => {
+      expect(lex.get('arrayOfObjects.0.text')).toEqual('one');
+      expect(lex.get('arrayOfObjects.1.text')).toEqual('two');
     });
 
     test('works for templates', () => {
@@ -73,8 +73,8 @@ describe('Lexicon module', () => {
       expect(es.get('foo')).toEqual('bar_es');
       expect(es.get('blah')).toEqual(null);
       expect(es.get('nested.wom')).toEqual('murciélago');
-      expect(es.get('array.0.text')).toEqual('uno');
-      expect(es.get('array.1.text')).toEqual('dos');
+      expect(es.get('arrayOfObjects.0.text')).toEqual('uno');
+      expect(es.get('arrayOfObjects.1.text')).toEqual('dos');
     });
 
     test('can be called multiple times in a chain', () => {
@@ -105,8 +105,8 @@ describe('Lexicon module', () => {
 
   describe('keys()', () => {
     test('returns an array of dotted keys for the default locale', () => {
-      expect(lex.keys()).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text', 'template']);
-      expect(lex.locale('es').keys()).toEqual(['foo', 'nested.wom', 'array.0.text', 'array.1.text', 'onlyExistsInSpanish']);
+      expect(lex.keys()).toEqual(['foo', 'nested.wom', 'arrayOfObjects.0.text', 'arrayOfObjects.1.text', 'template']);
+      expect(lex.locale('es').keys()).toEqual(['foo', 'nested.wom', 'arrayOfObjects.0.text', 'arrayOfObjects.1.text', 'onlyExistsInSpanish']);
     });
   });
 
