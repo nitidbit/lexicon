@@ -96,14 +96,14 @@ export class Lexicon {
     return [...this._locales.keys()];
   }
 
-  get(key: string, data?: unknown): string | null {
+  get(key: string, templateSubstitutions?: unknown): string | null {
     const locale = this._locales.get(this.defaultLocale);
     const val = getNestedKeyInMap(locale, key);
     if (val instanceof Map) {
       return null;
     } else {
-      if (data !== undefined) {
-        return evaluateTemplate(val, data);
+      if (templateSubstitutions !== undefined) {
+        return evaluateTemplate(val, templateSubstitutions);
       } else {
         return val;
       }

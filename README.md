@@ -115,6 +115,17 @@ lex.get('subComponent.template')                    // => 'There are #{count} wi
 ## For Developers of the Lexicon NPM Package
 If you are just using Lexicon in your project, ignore this section.
 
+### Editing Lexicon and your project at the same time
+Create a symbolic link from your projects folder to your lexicon folder
+    cd myproject
+    rm -rf node_modules/lexicon
+    ln -s /Users/my-home/path/to/lexicon node_modules/lexicon
+
+Check it worked:
+    ls -l node_modules |grep lexicon
+should output this which shows it's a symbolic link:
+    lrwxr-xr-x    1 winstonw  staff     44 Dec 11 11:40 lexicon@ -> /Users/winstonw/clients/nitidbit/git/lexicon
+
 ### Compilation
 
 While developing, run tsc in the background, watching your changes and recompiling

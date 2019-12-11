@@ -47,7 +47,7 @@ export const cloneNestedMap = <K, V>(map: NestedMap<K, V>): NestedMap<K, V> => {
   return shallow;
 };
 
-export const evaluateTemplate = (template: string, data: unknown): string => {
+export const evaluateTemplate = (template: string, substitutions: unknown): string => {
   let escaped = false;
   let replaced = '';
 
@@ -71,7 +71,7 @@ export const evaluateTemplate = (template: string, data: unknown): string => {
       }
 
       const path = template.substring(startPos, i - 1),
-        value = get(data, path);
+        value = get(substitutions, path);
 
       replaced += value;
       i--;
