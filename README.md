@@ -6,17 +6,13 @@ Client-side code and React components for interacting with a Lexicon.
 - `Lexicon` — a container for your translated strings and data.
 - `EditWrapper` — a React component that adds an "Edit Content" button which allows users to edit strings and data.
 
-## Installation
-
-With yarn:
-
+Installation
+------------
     yarn add git+ssh://git@github.com/nitidbit/lexicon.git
-
-With npm:
-
     npm i -S git+ssh://git@github.com/nitidbit/lexicon.git
 
-## Usage
+Usage
+-----
 
 ```ts
 import { Lexicon EditWrapper } from 'lexicon';
@@ -111,8 +107,9 @@ clone.get('subComponent.template')                  // => 'There are #{count} ga
 lex.get('subComponent.template')                    // => 'There are #{count} widgets.'
 ```
 
+Developing the Lexicon NPM Package
+----------------------------------
 
-## For Developers of the Lexicon NPM Package
 If you are just using Lexicon in your project, ignore this section.
 
 ### Editing Lexicon and your project at the same time
@@ -154,6 +151,8 @@ When Lexicon is in a good state, mark a new version with:
     git push origin <major>.<minor>.<patch>
 
 
+Thoughts
+--------
 
 ### Motivation -- We want:
 
