@@ -46,7 +46,7 @@ exports.cloneNestedMap = (map) => {
     }
     return shallow;
 };
-exports.evaluateTemplate = (template, data) => {
+exports.evaluateTemplate = (template, substitutions) => {
     let escaped = false;
     let replaced = '';
     for (let i = 0; i < template.length; i++) {
@@ -72,7 +72,7 @@ exports.evaluateTemplate = (template, data) => {
                     level--;
                 i++;
             }
-            const path = template.substring(startPos, i - 1), value = get_1.default(data, path);
+            const path = template.substring(startPos, i - 1), value = get_1.default(substitutions, path);
             replaced += value;
             i--;
             continue;

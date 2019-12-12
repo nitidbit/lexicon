@@ -66,29 +66,38 @@ class Lexicon {
             }
         }
     }
-    locale(locale) {
-        if (!this._locales.has(locale))
+    // Return a new Lexicon with same contens, but different default language code
+    locale(languageCode) {
+        if (!this._locales.has(languageCode))
             return null;
-        return new Lexicon(this._locales, locale, this.filename);
+        return new Lexicon(this._locales, languageCode, this.filename);
     }
+    // Return language codes for available locales
     locales() {
         return [...this._locales.keys()];
     }
-    get(key, data) {
+    // Return a value from the Lexicon, in the current locale.
+    // If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
+    //    e.g. "hello #{name}" -> "hello Winston"
+    get(key, templateSubstitutions) {
         const locale = this._locales.get(this.defaultLocale);
         const val = util_1.getNestedKeyInMap(locale, key);
         if (val instanceof Map) {
             return null;
         }
         else {
-            if (data !== undefined) {
-                return util_1.evaluateTemplate(val, data);
+            if (templateSubstitutions !== undefined) {
+                return util_1.evaluateTemplate(val, templateSubstitutions);
             }
             else {
                 return val;
             }
         }
     }
+    // Return a new Lexicon, with the "root" starting at a different place.
+    // E.g.
+    //   a = Lexicon({greeting: "hi", secondLevel: {title: "Mister"}})
+    //   a.subset('secondLevel') // --> Lexicon({title: "Mister"})
     subset(path) {
         const newLocales = new Map();
         for (const [localeKey, localeMap] of this._locales) {
