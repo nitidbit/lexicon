@@ -2,22 +2,22 @@ import get from 'lodash/get';
 
 export interface NestedMap<K, V> extends Map<K, V | NestedMap<K, V>> {}
 
-export const getNestedKeyInMap = <T>(map: NestedMap<string, T>, key: string): T | NestedMap<string, T> | null => {
-  const [first, ...rest] = key.split('.');
+// export const getNestedKeyInMap = <T>(map: NestedMap<string, T>, key: string): T | NestedMap<string, T> | null => {
+//   const [first, ...rest] = key.split('.');
 
-  if (!map.has(first)) return null;
-  // foo bar baz
-  const val = map.get(first);
-  if (rest.length > 0) {
-    if (val instanceof Map) {
-      return getNestedKeyInMap(val, rest.join('.'));
-    } else {
-      return null;
-    }
-  } else {
-    return val;
-  }
-};
+//   if (!map.has(first)) return null; // malformed key
+
+//   const val = map.get(first);
+//   if (rest.length == 0) {
+//     return val; // we found the item
+//   }
+
+//   if (val instanceof Map) {
+//     return getNestedKeyInMap(val, rest.join('.'));
+//   } else {
+//     return null;
+//   }
+// };
 
 export const flattenMap = <T>(map: NestedMap<string, T>): Array<string> => {
   const flatKeys: Array<string> = [];
@@ -47,7 +47,7 @@ export const cloneNestedMap = <K, V>(map: NestedMap<K, V>): NestedMap<K, V> => {
   return shallow;
 };
 
-export const evaluateTemplate = (template: string, substitutions: unknown): string => {
+export const evaluateTemplate = (template: string, substitutions: object): string => {
   let escaped = false;
   let replaced = '';
 

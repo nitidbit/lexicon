@@ -11,7 +11,9 @@ describe('Lexicon module', () => {
         { text: 'one' },
         { text: 'two' },
       ],
-      template: '\\#{escaped} \\\\ #{foo} #{bar.baz} #{{{manyBrackets}}}'
+      arrayOfStrings: [ "ichi", "ni", "san" ],
+      template: '\\#{escaped} \\\\ #{foo} #{bar.baz} #{{{manyBrackets}}}',
+      onlyExistsInEnglish: 'EN only'
     },
     es: {
       foo: 'bar_es',
@@ -29,8 +31,8 @@ describe('Lexicon module', () => {
   const lex = new Lexicon(lexObj, 'en', 'blah.json');
 
   describe('new Lexicon()', () => {
-    test('has the correct defaultLocale', () => {
-      expect(lex.defaultLocale).toEqual('en');
+    test('has the correct currentLocaleCode', () => {
+      expect(lex.currentLocaleCode).toEqual('en');
     });
   });
 
@@ -39,9 +41,8 @@ describe('Lexicon module', () => {
       expect(lex.get('foo')).toEqual('bar');
     });
 
-    test('returns null for keys that do not exist or are nested', () => {
-      expect(lex.get('blah')).toEqual(null);
-      expect(lex.get('nested')).toEqual(null);
+    test('returns warning for keys that do not exist', () => {
+      expect(lex.get('blah')).toEqual('[no content for "blah"]');
     });
 
     test('works for nested keys', () => {
@@ -51,6 +52,12 @@ describe('Lexicon module', () => {
     test('works for arrays of objects', () => {
       expect(lex.get('arrayOfObjects.0.text')).toEqual('one');
       expect(lex.get('arrayOfObjects.1.text')).toEqual('two');
+    });
+
+    test('works for arrays of strings', () => {
+      expect(lex.get('arrayOfStrings.0')).toEqual('ichi');
+      expect(lex.get('arrayOfStrings.1')).toEqual('ni');
+      expect(lex.get('arrayOfStrings.2')).toEqual('san');
     });
 
     test('works for templates', () => {
@@ -65,31 +72,34 @@ describe('Lexicon module', () => {
   describe('locale()', () => {
     const es = lex.locale('es');
 
-    test('returns a Lexicon with a new defaultLocale', () => {
-      expect(es.defaultLocale).toEqual('es');
+    test('returns a Lexicon with a new currentLocaleCode', () => {
+      expect(es.currentLocaleCode).toEqual('es');
     });
 
     test('returns a Lexicon that gives values from the new locale', () => {
       expect(es.get('foo')).toEqual('bar_es');
-      expect(es.get('blah')).toEqual(null);
       expect(es.get('nested.wom')).toEqual('murciélago');
       expect(es.get('arrayOfObjects.0.text')).toEqual('uno');
       expect(es.get('arrayOfObjects.1.text')).toEqual('dos');
     });
 
+    test('returns English data when the localized data is missing', () => {
+      expect(es.get('onlyExistsInEnglish')).toEqual('EN only');
+    });
+
     test('can be called multiple times in a chain', () => {
       const newLex = lex.locale('es').subset('nested').locale('en');
       expect(newLex.get('wom')).toEqual('bat');
-      expect(newLex.defaultLocale).toEqual('en');
+      expect(newLex.currentLocaleCode).toEqual('en');
     });
   });
 
   describe('subset()', () => {
     const subset = lex.subset('nested');
 
-    test('retains the defaultLocale', () => {
-      expect(subset.defaultLocale).toEqual('en');
-      expect(lex.locale('es').subset('nested').defaultLocale).toEqual('es');
+    test('retains the currentLocaleCode', () => {
+      expect(subset.currentLocaleCode).toEqual('en');
+      expect(lex.locale('es').subset('nested').currentLocaleCode).toEqual('es');
     });
 
     test('returns a new Lexicon that provides nested values', () => {

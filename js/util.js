@@ -4,24 +4,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const get_1 = __importDefault(require("lodash/get"));
-exports.getNestedKeyInMap = (map, key) => {
-    const [first, ...rest] = key.split('.');
-    if (!map.has(first))
-        return null;
-    // foo bar baz
-    const val = map.get(first);
-    if (rest.length > 0) {
-        if (val instanceof Map) {
-            return exports.getNestedKeyInMap(val, rest.join('.'));
-        }
-        else {
-            return null;
-        }
-    }
-    else {
-        return val;
-    }
-};
+// export const getNestedKeyInMap = <T>(map: NestedMap<string, T>, key: string): T | NestedMap<string, T> | null => {
+//   const [first, ...rest] = key.split('.');
+//   if (!map.has(first)) return null; // malformed key
+//   const val = map.get(first);
+//   if (rest.length == 0) {
+//     return val; // we found the item
+//   }
+//   if (val instanceof Map) {
+//     return getNestedKeyInMap(val, rest.join('.'));
+//   } else {
+//     return null;
+//   }
+// };
 exports.flattenMap = (map) => {
     const flatKeys = [];
     const recurse = (map, prefix) => {
