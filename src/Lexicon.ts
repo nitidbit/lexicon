@@ -96,15 +96,20 @@ export class Lexicon {
     }
   }
 
-  locale(locale: string): Lexicon | null {
-    if (!this._locales.has(locale)) return null;
-    return new Lexicon(this._locales, locale, this.filename);
+  // Return a new Lexicon with same contens, but different default language code
+  locale(languageCode: string): Lexicon | null {
+    if (!this._locales.has(languageCode)) return null;
+    return new Lexicon(this._locales, languageCode, this.filename);
   }
 
+  // Return language codes for available locales
   locales(): Array<string> {
     return [...this._locales.keys()];
   }
 
+  // Return a value from the Lexicon, in the current locale.
+  // If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
+  //    e.g. "hello #{name}" -> "hello Winston"
   get(key: string, templateSubstitutions?: unknown): string | null {
     const locale = this._locales.get(this.defaultLocale);
     const val = getNestedKeyInMap(locale, key);
@@ -119,6 +124,10 @@ export class Lexicon {
     }
   }
 
+  // Return a new Lexicon, with the "root" starting at a different place.
+  // E.g.
+  //   a = Lexicon({greeting: "hi", secondLevel: {title: "Mister"}})
+  //   a.subset('secondLevel') // --> Lexicon({title: "Mister"})
   subset(path: string): Lexicon | null {
     const newLocales: Locales = new Map();
 
