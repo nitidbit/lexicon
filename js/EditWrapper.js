@@ -25,7 +25,8 @@ class EditWrapper extends react_1.default.Component {
             this.setState(oldState => {
                 const newLexicon = oldState.lexicon.clone();
                 newLexicon.update(contentKey, newValue);
-                const newChanges = new Map(oldState.unsavedChanges), fullPath = `${oldState.lexicon.defaultLocale}.${contentKey}`;
+                const newChanges = new Map(oldState.unsavedChanges);
+                const fullPath = `${oldState.lexicon.defaultLocale}.${contentKey}`;
                 if (newChanges.has(fullPath)) {
                     if (newChanges.get(fullPath).originalValue == newValue) {
                         newChanges.delete(fullPath);
@@ -38,7 +39,11 @@ class EditWrapper extends react_1.default.Component {
                 else {
                     newChanges.set(fullPath, { originalValue: oldState.lexicon.get(contentKey), newValue });
                 }
-                return { lexicon: newLexicon, unsavedChanges: newChanges, savingState: newChanges.size == 0 ? SavingState.NoChanges : SavingState.Available };
+                return {
+                    lexicon: newLexicon,
+                    unsavedChanges: newChanges,
+                    savingState: newChanges.size == 0 ? SavingState.NoChanges : SavingState.Available
+                };
             });
         };
         this.switchLocale = (newLocale) => {

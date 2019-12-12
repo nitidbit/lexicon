@@ -44,8 +44,8 @@ const convertRawLexiconMapToObject = (map: RawLexiconMap): RawLexiconObject => {
     if (typeof val == 'string') {
       return val;
     } else {
-      const numericKeys = [...val.keys()].every(k => k.match(/^\d+$/)),
-        consecutiveKeys = numericKeys && (
+      const numericKeys = [...val.keys()].every(k => k.match(/^\d+$/) != null);
+      const consecutiveKeys = numericKeys && (
           [...val.keys()]
             .map(k => parseInt(k))
             .sort((a, b) => a - b)
@@ -80,11 +80,11 @@ const convertRawLexiconMapToObject = (map: RawLexiconMap): RawLexiconObject => {
 export class Lexicon {
   private _locales: Locales;
   public defaultLocale: string;
-  public filename: string;
+  private _filename: string;
 
   constructor(_locales: LocalesObject | Locales, defaultLocale: string, filename: string) {
     this.defaultLocale = defaultLocale;
-    this.filename = filename;
+    this._filename = filename;
 
     if (_locales instanceof Map) {
       this._locales = _locales;
@@ -99,12 +99,16 @@ export class Lexicon {
   // Return a new Lexicon with same contens, but different default language code
   locale(languageCode: string): Lexicon | null {
     if (!this._locales.has(languageCode)) return null;
-    return new Lexicon(this._locales, languageCode, this.filename);
+    return new Lexicon(this._locales, languageCode, this._filename);
   }
 
   // Return language codes for available locales
   locales(): Array<string> {
     return [...this._locales.keys()];
+  }
+
+  filename(): string {
+    return this._filename;
   }
 
   // Return a value from the Lexicon, in the current locale.
@@ -140,7 +144,7 @@ export class Lexicon {
 
     if (newLocales.size === 0) return null;
 
-    return new Lexicon(newLocales, this.defaultLocale, this.filename);
+    return new Lexicon(newLocales, this.defaultLocale, this._filename);
   }
 
   keys(): Array<string> {
@@ -179,7 +183,7 @@ export class Lexicon {
       newMap.set(lang, cloneNestedMap(lexicon));
     }
 
-    return new Lexicon(newMap, this.defaultLocale, this.filename);
+    return new Lexicon(newMap, this.defaultLocale, this._filename);
   }
 
   asObject(): LocalesObject {

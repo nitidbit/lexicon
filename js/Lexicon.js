@@ -25,7 +25,8 @@ const convertRawLexiconMapToObject = (map) => {
             return val;
         }
         else {
-            const numericKeys = [...val.keys()].every(k => k.match(/^\d+$/)), consecutiveKeys = numericKeys && ([...val.keys()]
+            const numericKeys = [...val.keys()].every(k => k.match(/^\d+$/) != null);
+            const consecutiveKeys = numericKeys && ([...val.keys()]
                 .map(k => parseInt(k))
                 .sort((a, b) => a - b)
                 .every((n, i, a) => i == 0 ? true : (n - a[i - 1] == 1)));
@@ -55,7 +56,7 @@ const convertRawLexiconMapToObject = (map) => {
 class Lexicon {
     constructor(_locales, defaultLocale, filename) {
         this.defaultLocale = defaultLocale;
-        this.filename = filename;
+        this._filename = filename;
         if (_locales instanceof Map) {
             this._locales = _locales;
         }
@@ -70,11 +71,14 @@ class Lexicon {
     locale(languageCode) {
         if (!this._locales.has(languageCode))
             return null;
-        return new Lexicon(this._locales, languageCode, this.filename);
+        return new Lexicon(this._locales, languageCode, this._filename);
     }
     // Return language codes for available locales
     locales() {
         return [...this._locales.keys()];
+    }
+    filename() {
+        return this._filename;
     }
     // Return a value from the Lexicon, in the current locale.
     // If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
@@ -108,7 +112,7 @@ class Lexicon {
         }
         if (newLocales.size === 0)
             return null;
-        return new Lexicon(newLocales, this.defaultLocale, this.filename);
+        return new Lexicon(newLocales, this.defaultLocale, this._filename);
     }
     keys() {
         const localeMap = this._locales.get(this.defaultLocale);
@@ -144,7 +148,7 @@ class Lexicon {
         for (const [lang, lexicon] of newMap) {
             newMap.set(lang, util_1.cloneNestedMap(lexicon));
         }
-        return new Lexicon(newMap, this.defaultLocale, this.filename);
+        return new Lexicon(newMap, this.defaultLocale, this._filename);
     }
     asObject() {
         const obj = {};

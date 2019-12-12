@@ -10,10 +10,11 @@ export declare type LocalesObject = {
 export declare class Lexicon {
     private _locales;
     defaultLocale: string;
-    filename: string;
+    private _filename;
     constructor(_locales: LocalesObject | Locales, defaultLocale: string, filename: string);
     locale(languageCode: string): Lexicon | null;
     locales(): Array<string>;
+    filename(): string;
     get(key: string, templateSubstitutions?: unknown): string | null;
     subset(path: string): Lexicon | null;
     keys(): Array<string>;
