@@ -115,7 +115,17 @@ describe('Lexicon module', () => {
 
   describe('keys()', () => {
     test('returns an array of dotted keys for the default locale', () => {
-      expect(lex.keys()).toEqual(['foo', 'nested.wom', 'arrayOfObjects.0.text', 'arrayOfObjects.1.text', 'template']);
+      expect(lex.keys()).toEqual([
+        'foo',
+        'nested.wom',
+        'arrayOfObjects.0.text',
+        'arrayOfObjects.1.text',
+        'arrayOfStrings.0',
+        'arrayOfStrings.1',
+        'arrayOfStrings.2',
+        'template',
+        'onlyExistsInEnglish',
+      ]);
       expect(lex.locale('es').keys()).toEqual(['foo', 'nested.wom', 'arrayOfObjects.0.text', 'arrayOfObjects.1.text', 'onlyExistsInSpanish']);
     });
   });

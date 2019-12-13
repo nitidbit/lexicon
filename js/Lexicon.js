@@ -6,19 +6,23 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = require("./util");
-const _ = __importStar(require("lodash"));
+const util = __importStar(require("./util"));
+const lodash_1 = __importDefault(require("lodash"));
 const DEFAULT_LOCALE_CODE = 'en';
 const convertRawLexiconObjectToMap = (obj) => {
     const lex = new Map();
     for (const k in obj) {
         const val = obj[k];
-        if (_.isString(val)
-            || _.isNull(val)
-            || _.isNumber(val)
-            || _.isBoolean(val)
-            || _.isArray(val)) {
+        if (lodash_1.default.isString(val)
+            || lodash_1.default.isNull(val)
+            || lodash_1.default.isNumber(val)
+            || lodash_1.default.isBoolean(val)
+            || lodash_1.default.isArray(val)) {
             lex.set(k, val);
             //     } else if (val instanceof Array) {
             // //       const obj = val.reduce((acc, v, i) => ({ ...acc, [i]: v }), {});
@@ -34,7 +38,7 @@ const convertRawLexiconObjectToMap = (obj) => {
 const convertRawLexiconMapToObject = (map) => {
     const obj = {};
     const convertValue = (val) => {
-        if (_.isString(val)) {
+        if (lodash_1.default.isString(val)) {
             return val;
         }
         else {
@@ -70,7 +74,7 @@ class Lexicon {
     constructor(_locales, localeCode, filename) {
         this.currentLocaleCode = localeCode;
         this._filename = filename;
-        if (_.isMap(_locales)) {
+        if (lodash_1.default.isMap(_locales)) {
             this._contentByLocale = _locales;
         }
         else {
@@ -99,14 +103,14 @@ class Lexicon {
     get(key, templateSubstitutions) {
         const localizedContent = this._contentByLocale.get(this.currentLocaleCode);
         let val = getNested(localizedContent, key);
-        if (_.isUndefined(val)) { // could not find data--try English
+        if (lodash_1.default.isUndefined(val)) { // could not find data--try English
             const defaultContent = this._contentByLocale.get(DEFAULT_LOCALE_CODE);
             val = getNested(defaultContent, key);
-            if (_.isUndefined(val)) { // still couldn't find it--return a clue of the problem
+            if (lodash_1.default.isUndefined(val)) { // still couldn't find it--return a clue of the problem
                 return `[no content for "${key}"]`;
             }
         }
-        if (_.isString(val) && !_.isUndefined(templateSubstitutions)) {
+        if (lodash_1.default.isString(val) && !lodash_1.default.isUndefined(templateSubstitutions)) {
             val = util_1.evaluateTemplate(val, templateSubstitutions);
         }
         return val;
@@ -119,7 +123,7 @@ class Lexicon {
         const newLocales = new Map();
         for (const [localeKey, localeMap] of this._contentByLocale) {
             const sub = getNested(localeMap, nestedKey);
-            if (_.isMap(sub)) {
+            if (lodash_1.default.isMap(sub)) {
                 newLocales.set(localeKey, sub);
             }
         }
@@ -131,7 +135,19 @@ class Lexicon {
         const localeMap = this._contentByLocale.get(this.currentLocaleCode);
         if (localeMap === undefined)
             return [];
-        return util_1.flattenMap(localeMap);
+        const flatKeys = [];
+        const recurse = (c, prefix) => {
+            for (const [k, v] of util.entries(c)) {
+                if (util.isCollection(v)) {
+                    recurse(v, `${prefix}${k}.`);
+                }
+                else {
+                    flatKeys.push(`${prefix}${k}`);
+                }
+            }
+        };
+        recurse(localeMap, '');
+        return flatKeys;
     }
     update(key, newValue, locale = this.currentLocaleCode) {
         if (!this._contentByLocale.has(locale))
@@ -173,25 +189,20 @@ class Lexicon {
 }
 exports.Lexicon = Lexicon;
 function getFromCollection(collection, key) {
-    if (_.isMap(collection))
+    if (lodash_1.default.isMap(collection))
         return collection.get(key);
     return collection[key];
 }
-function isCollection(maybeCollection) {
-    return _.isMap(maybeCollection)
-        || _.isArray(maybeCollection)
-        || _.isObject(maybeCollection);
-}
 // Like lodash.get(data, 'my.keys.0') but works with Maps too.
 function getNested(data, nestedKey) {
-    if (_.isNull(nestedKey) || _.isUndefined(nestedKey))
+    if (lodash_1.default.isNull(nestedKey) || lodash_1.default.isUndefined(nestedKey))
         throw new Error("'nestedKey' is null/undefined");
-    if (_.isNull(data) || _.isUndefined(data))
+    if (lodash_1.default.isNull(data) || lodash_1.default.isUndefined(data))
         throw new Error("'data' is null/undefined");
-    if (!isCollection(data)) {
+    if (!util.isCollection(data)) {
         return undefined; // content not found
     }
-    if (_.isString(nestedKey)) {
+    if (lodash_1.default.isString(nestedKey)) {
         nestedKey = nestedKey.split('.');
     }
     const [firstKey, ...rest] = nestedKey;

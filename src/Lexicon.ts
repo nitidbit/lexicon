@@ -1,5 +1,6 @@
-import { NestedMap, flattenMap, cloneNestedMap, evaluateTemplate } from './util';
-import * as _ from 'lodash';
+import { Collection, NestedMap, flattenMap, cloneNestedMap, evaluateTemplate } from './util';
+import * as util from './util';
+import _ from 'lodash';
 
 type LocaleCode = string;
 const DEFAULT_LOCALE_CODE = 'en';
@@ -177,7 +178,20 @@ export class Lexicon {
   keys(): Array<string> {
     const localeMap = this._contentByLocale.get(this.currentLocaleCode);
     if (localeMap === undefined) return [];
-    return flattenMap(localeMap);
+
+    const flatKeys: Array<string> = [];
+    const recurse = (c: Collection, prefix: string) => {
+      for (const [k, v] of util.entries(c)) {
+        if (util.isCollection(v)) {
+          recurse(v, `${prefix}${k}.`);
+        } else {
+          flatKeys.push(`${prefix}${k}`);
+        }
+      }
+    };
+
+    recurse(localeMap, '');
+    return flatKeys;
   }
 
   update(key: string, newValue: string, locale: LocaleCode = this.currentLocaleCode): boolean {
@@ -222,17 +236,9 @@ export class Lexicon {
   }
 }
 
-type Collection = Map<string, any> | Array<any> | object;
-
 function getFromCollection(collection: Collection, key: string) {
   if (_.isMap(collection)) return collection.get(key);
   return collection[key];
-}
-
-function isCollection(maybeCollection: any): boolean {
-  return _.isMap(maybeCollection)
-    || _.isArray(maybeCollection)
-    || _.isObject(maybeCollection)
 }
 
 // Like lodash.get(data, 'my.keys.0') but works with Maps too.
@@ -240,7 +246,7 @@ function getNested(data: Collection, nestedKey: NestedKey): any {
   if (_.isNull(nestedKey) || _.isUndefined(nestedKey)) throw new Error("'nestedKey' is null/undefined")
   if (_.isNull(data) || _.isUndefined(data)) throw new Error("'data' is null/undefined")
 
-  if (!isCollection(data)) {
+  if (!util.isCollection(data)) {
     return undefined; // content not found
   }
 

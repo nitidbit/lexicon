@@ -1,4 +1,9 @@
 import get from 'lodash/get';
+import _ from 'lodash';
+
+//
+//      NestedMap and related functions
+//
 
 export interface NestedMap<K, V> extends Map<K, V | NestedMap<K, V>> {}
 
@@ -46,6 +51,35 @@ export const cloneNestedMap = <K, V>(map: NestedMap<K, V>): NestedMap<K, V> => {
 
   return shallow;
 };
+
+//
+//      Collection and related functions
+//
+
+export type Collection = Map<string, any> | Array<any> | object;
+
+export function isCollection(maybeCollection: any): boolean {
+  return _.isMap(maybeCollection)
+    || _.isArray(maybeCollection)
+    || _.isObject(maybeCollection)
+}
+
+
+// Equivalent to lodash.keys(), but works with Maps
+export function keys(c: Collection) {
+  if (_.isMap(c)) return c.keys();
+  return _.keys(c);
+}
+
+// Equivalent to lodash.entries(), but works with Maps
+export function entries(c: Collection) {
+  if (_.isMap(c)) return c.entries();
+  return _.entries(c);
+}
+
+//
+//      Other functions
+//
 
 export const evaluateTemplate = (template: string, substitutions: object): string => {
   let escaped = false;

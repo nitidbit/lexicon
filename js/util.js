@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const get_1 = __importDefault(require("lodash/get"));
+const lodash_1 = __importDefault(require("lodash"));
 // export const getNestedKeyInMap = <T>(map: NestedMap<string, T>, key: string): T | NestedMap<string, T> | null => {
 //   const [first, ...rest] = key.split('.');
 //   if (!map.has(first)) return null; // malformed key
@@ -41,6 +42,29 @@ exports.cloneNestedMap = (map) => {
     }
     return shallow;
 };
+function isCollection(maybeCollection) {
+    return lodash_1.default.isMap(maybeCollection)
+        || lodash_1.default.isArray(maybeCollection)
+        || lodash_1.default.isObject(maybeCollection);
+}
+exports.isCollection = isCollection;
+// Equivalent to lodash.keys(), but works with Maps
+function keys(c) {
+    if (lodash_1.default.isMap(c))
+        return c.keys();
+    return lodash_1.default.keys(c);
+}
+exports.keys = keys;
+// Equivalent to lodash.entries(), but works with Maps
+function entries(c) {
+    if (lodash_1.default.isMap(c))
+        return c.entries();
+    return lodash_1.default.entries(c);
+}
+exports.entries = entries;
+//
+//      Other functions
+//
 exports.evaluateTemplate = (template, substitutions) => {
     let escaped = false;
     let replaced = '';
