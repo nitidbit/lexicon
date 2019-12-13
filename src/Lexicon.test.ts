@@ -107,9 +107,9 @@ describe('Lexicon module', () => {
       expect(subset.locale('es').get('wom')).toEqual('murciélago');
     });
 
-    test('returns null for non-existent or non-nested keys', () => {
-      expect(lex.subset('blah')).toEqual(null);
-      expect(lex.subset('foo')).toEqual(null);
+    test('returns empty Lexicon for non-existent or non-nested keys', () => {
+      expect(lex.subset('blah')).toBeInstanceOf(Lexicon);
+      expect(lex.subset('foo')).toBeInstanceOf(Lexicon);
     });
   });
 

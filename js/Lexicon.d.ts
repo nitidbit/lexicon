@@ -1,13 +1,14 @@
-import { NestedMap } from './util';
+import { NestedKey } from './util';
 declare type LocaleCode = string;
-declare type NestedKey = Array<LocaleCode> | string;
 export declare type RawLexiconObject = {
     [key: string]: null | string | number | boolean | object | Array<any>;
 };
-export declare type RawLexiconMap = NestedMap<string, any>;
-export declare type Locales = Map<LocaleCode, RawLexiconMap>;
+export declare type RawLexiconMap = {
+    [lang: string]: object | Map<any, any>;
+};
+export declare type Locales = LocalesObject;
 export declare type LocalesObject = {
-    [lang: string]: RawLexiconObject;
+    [lang: string]: object | Map<any, any>;
 };
 export declare class Lexicon {
     private _contentByLocale;
@@ -18,7 +19,7 @@ export declare class Lexicon {
     locales(): Array<LocaleCode>;
     filename(): string;
     get(key: NestedKey, templateSubstitutions?: object): string | null;
-    subset(nestedKey: string): Lexicon | null;
+    subset(nestedKey: NestedKey): Lexicon | null;
     keys(): Array<string>;
     update(key: string, newValue: string, locale?: LocaleCode): boolean;
     clone(): Lexicon;

@@ -15,7 +15,7 @@ Usage
 -----
 
 ```ts
-import { Lexicon EditWrapper } from 'lexicon';
+import { Lexicon, EditWrapper } from 'lexicon';
 import myStrings from './MyStrings.json';
 
 const myLexicon = new Lexicon(myStrings, 'en', 'app/javascript/components/MyStrings.json');
@@ -129,17 +129,13 @@ While developing, run tsc in the background, watching your changes and recompili
 
     npm run watch
 
-Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to people using the package. This is already done if you've been running `npm run watch`
-
-    npm run tsc
-
 You should also make sure that all tests pass:
 
     npm test
 
 Tests are in `src/Lexicon.test.ts`.
 
-### Marking versions
+### Deploying new versions
 Let's use [semantic versioning](https://semver.org).
 MAJOR version when you make incompatible API changes,
 MINOR version when you add functionality in a backwards compatible manner, and
@@ -147,6 +143,12 @@ PATCH version when you make backwards compatible bug fixes.
 
 When Lexicon is in a good state, mark a new version with:
 
+    change src/index.ts > VERSION
+
+Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to
+people using the package. This is already done if you've been running `npm run watch`
+
+    npm run tsc
     git tag <major>.<minor>.<patch>
     git push origin <major>.<minor>.<patch>
 
