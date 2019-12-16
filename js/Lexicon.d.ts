@@ -1,23 +1,28 @@
-import { NestedMap } from './util';
+import { NestedKey } from './util';
+declare type LocaleCode = string;
 export declare type RawLexiconObject = {
-    [key: string]: string | Array<RawLexiconObject> | RawLexiconObject;
+    [key: string]: null | string | number | boolean | object | Array<any>;
 };
-export declare type RawLexiconMap = NestedMap<string, string>;
-export declare type Locales = Map<string, RawLexiconMap>;
+export declare type RawLexiconMap = {
+    [lang: string]: object | Map<any, any>;
+};
+export declare type Locales = LocalesObject;
 export declare type LocalesObject = {
-    [lang: string]: RawLexiconObject;
+    [lang: string]: object | Map<any, any>;
 };
 export declare class Lexicon {
-    private _locales;
-    defaultLocale: string;
-    filename: string;
-    constructor(_locales: LocalesObject | Locales, defaultLocale: string, filename: string);
-    locale(languageCode: string): Lexicon | null;
-    locales(): Array<string>;
-    get(key: string, templateSubstitutions?: unknown): string | null;
-    subset(path: string): Lexicon | null;
+    private _contentByLocale;
+    currentLocaleCode: string;
+    private _filename;
+    constructor(_locales: LocalesObject | Locales, localeCode: string, filename: string);
+    locale(languageCode: LocaleCode): Lexicon | null;
+    locales(): Array<LocaleCode>;
+    filename(): string;
+    get(key: NestedKey, templateSubstitutions?: object): string | null;
+    subset(nestedKey: NestedKey): Lexicon | null;
     keys(): Array<string>;
-    update(key: string, newValue: string, locale?: string): boolean;
+    update(key: string, newValue: string, locale?: LocaleCode): boolean;
     clone(): Lexicon;
     asObject(): LocalesObject;
 }
+export {};

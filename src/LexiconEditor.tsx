@@ -4,7 +4,7 @@ import '../styles/LexiconEditorStyles.scss';
 import { Lexicon } from './Lexicon';
 import { JSXElement } from '@babel/types';
 
-export type ContentOnChangeCallback = (contentKey: string, newValue: string) => void;
+export type ContentChangeCallback = (contentKey: string, newValue: string) => void;
 export type SwitchLocaleCallback = (newLocale: string) => void;
 
 type HtmlOnChangeCallback = (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -36,7 +36,7 @@ const Field = ({ contentKey, value, onChange }: FieldProps) => (
 
 export interface LexiconEditorProps {
   lexicon: Lexicon;
-  onChange: ContentOnChangeCallback;
+  onChange: ContentChangeCallback;
   selectedLocale: string;
   switchLocale: SwitchLocaleCallback;
 }

@@ -81,8 +81,8 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       const newLexicon = oldState.lexicon.clone();
       newLexicon.update(contentKey, newValue);
 
-      const newChanges = new Map(oldState.unsavedChanges),
-        fullPath = `${oldState.lexicon.defaultLocale}.${contentKey}`;
+      const newChanges = new Map(oldState.unsavedChanges);
+      const fullPath = `${oldState.lexicon.currentLocaleCode}.${contentKey}`;
       if (newChanges.has(fullPath)) {
         if (newChanges.get(fullPath).originalValue == newValue) {
           newChanges.delete(fullPath);
@@ -94,7 +94,11 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
         newChanges.set(fullPath, { originalValue: oldState.lexicon.get(contentKey), newValue });
       }
 
-      return { lexicon: newLexicon, unsavedChanges: newChanges, savingState: newChanges.size == 0 ? SavingState.NoChanges : SavingState.Available };
+      return {
+        lexicon: newLexicon,
+        unsavedChanges: newChanges,
+        savingState: newChanges.size == 0 ? SavingState.NoChanges : SavingState.Available 
+      };
     });
   }
 
@@ -232,7 +236,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
             <LexiconEditor
               lexicon={lexicon}
               onChange={this.updateText}
-              selectedLocale={lexicon.defaultLocale}
+              selectedLocale={lexicon.currentLocaleCode}
               switchLocale={this.switchLocale}
             />
             <div className="save-box">
