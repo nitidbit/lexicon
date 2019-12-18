@@ -32,6 +32,10 @@ When you create an `EditWrapper`, you now need to specify the API endpoint it sh
 />
 ```
 
+Here is a diagram of how all the pieces of Lexicon fit together
+
+<img src="https://raw.githubusercontent.com/nitidbit/lexicon/master/LexiconDiagram.pdf"/>
+
 Creating a Lexicon
 ------------------
 
