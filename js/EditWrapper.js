@@ -51,19 +51,21 @@ class EditWrapper extends react_1.default.Component {
         };
         this.saveChanges = () => {
             this.setState({ savingState: SavingState.InProgress });
-            const fetchOptions = {
+            const headers = Object.assign({ 'Authorization': `Bearer ${this.getToken()}`, 'Content-Type': 'application/json' }, this.props.extraHeaders);
+            const data = {
+                changes: [...this.state.unsavedChanges.entries()].map(([key, { newValue }]) => ({
+                    filename: this.state.lexicon.filename(),
+                    key,
+                    newValue,
+                }))
+            };
+            console.log('!!! data=', data);
+            fetch(this.props.apiUpdateUrl, {
                 method: 'PUT',
                 mode: 'cors',
-                headers: Object.assign({ 'Authorization': `Bearer ${this.getToken()}`, 'Content-Type': 'application/json' }, this.props.extraHeaders),
-                body: JSON.stringify({
-                    changes: [...this.state.unsavedChanges.entries()].map(([key, { newValue }]) => ({
-                        filename: this.state.lexicon.filename,
-                        key,
-                        newValue,
-                    })),
-                }),
-            };
-            fetch(this.props.apiUpdateUrl, fetchOptions)
+                headers: headers,
+                body: JSON.stringify(data),
+            })
                 .then(response => response.json())
                 .catch(error => this.setState({ savingState: SavingState.Error, errorMessage: error.toString() }))
                 .then((json) => {
@@ -164,7 +166,7 @@ class EditWrapper extends react_1.default.Component {
                         react_1.default.createElement("h2", { className: "wrapper-heading" }, "Content Editor"),
                         react_1.default.createElement("div", { className: "position" }, [['left', '\u25e7'],
                             ['bottom', '\u2b13'],
-                            ['right', '\u25e8']].map(([pos, icon]) => (react_1.default.createElement("label", { className: this.state.position == pos ? 'selected' : '' },
+                            ['right', '\u25e8']].map(([pos, icon]) => (react_1.default.createElement("label", { key: pos, className: this.state.position == pos ? 'selected' : '' },
                             icon,
                             react_1.default.createElement("input", { type: "radio", name: pos, onClick: this.changePosition }))))),
                         react_1.default.createElement("label", { className: "close-btn" },

@@ -77,6 +77,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
   }
 
   updateText = (contentKey: string, newValue: string) => {
+
     this.setState(oldState => {
       const newLexicon = oldState.lexicon.clone();
       newLexicon.update(contentKey, newValue);
@@ -109,24 +110,24 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
   saveChanges = () => {
     this.setState({ savingState: SavingState.InProgress });
 
-    const fetchOptions: RequestInit = {
+    const headers = {
+      'Authorization': `Bearer ${this.getToken()}`,
+      'Content-Type': 'application/json',
+      ...this.props.extraHeaders };
+    const data = {
+      changes: [...this.state.unsavedChanges.entries()].map(([key, { newValue }]) => ({
+        filename: this.state.lexicon.filename(),
+        key,
+        newValue,
+      }))};
+    console.log('!!! data=', data);
+
+    fetch(this.props.apiUpdateUrl, {
       method: 'PUT',
       mode: 'cors',
-      headers: {
-        'Authorization': `Bearer ${this.getToken()}`,
-        'Content-Type': 'application/json',
-        ...this.props.extraHeaders,
-      },
-      body: JSON.stringify({
-        changes: [...this.state.unsavedChanges.entries()].map(([key, { newValue }]) => ({
-          filename: this.state.lexicon.filename,
-          key,
-          newValue,
-        })),
-      }),
-    };
-
-    fetch(this.props.apiUpdateUrl, fetchOptions)
+      headers: headers,
+      body: JSON.stringify(data),
+    })
       .then(response => response.json())
       .catch(error => this.setState({ savingState: SavingState.Error, errorMessage: error.toString() }))
       .then((json: LexiconAPIResponse) => {
@@ -222,7 +223,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
                   [ ['left', '\u25e7'],
                     ['bottom', '\u2b13'],
                     ['right', '\u25e8']].map(([pos, icon]) => (
-                    <label className={this.state.position == pos ? 'selected' : ''}>{icon}
+                    <label key={pos} className={this.state.position == pos ? 'selected' : ''}>{icon}
                       <input type="radio" name={pos} onClick={this.changePosition} />
                     </label>
                   ))
