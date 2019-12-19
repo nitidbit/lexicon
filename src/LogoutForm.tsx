@@ -49,7 +49,7 @@ export default class LogoutForm extends React.Component<LogoutFormProps, LogoutF
 
   doLogout = async (e: FormEvent) => {
     e.preventDefault();
-    const token = localStorage.getItem('lexiconEditorToken');
+    const token = sessionStorage.getItem('lexiconServerToken');
     this.setState({ loading: true });
 
     try {
@@ -61,7 +61,7 @@ export default class LogoutForm extends React.Component<LogoutFormProps, LogoutF
       })).json();
       if (data.successful) {
         this.setState({ loading: false, successful: true });
-        localStorage.removeItem('lexiconEditorToken');
+        sessionStorage.removeItem('lexiconServerToken');
       } else {
         this.setState({
           loading: false,

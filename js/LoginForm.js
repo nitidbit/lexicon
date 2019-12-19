@@ -28,7 +28,7 @@ class LoginForm extends react_1.default.Component {
                     body: JSON.stringify({ password: this.state.password }),
                 })).json();
                 if (data.successful) {
-                    localStorage.setItem('lexiconEditorToken', data.token);
+                    sessionStorage.setItem('lexiconServerToken', data.token);
                     this.setState({ loading: false, successful: true });
                 }
                 else {

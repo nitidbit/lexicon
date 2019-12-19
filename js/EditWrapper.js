@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const LexiconEditor_1 = __importDefault(require("./LexiconEditor"));
 require("../styles/EditWrapperStyles.scss");
+const util_1 = require("./util");
 var SavingState;
 (function (SavingState) {
     SavingState[SavingState["NoChanges"] = 0] = "NoChanges";
@@ -83,6 +84,11 @@ class EditWrapper extends react_1.default.Component {
                 this.setState({ position: newPos });
             }
         };
+        let lexiconServerToken = util_1.getURLParameter('lexiconServerToken');
+        if (lexiconServerToken) {
+            console.log('!!! lexiconServerToken=', lexiconServerToken);
+            sessionStorage.setItem('lexiconServerToken', lexiconServerToken);
+        }
         this.state = {
             isEditorVisible: false,
             lexicon: props.lexicon,
@@ -96,7 +102,7 @@ class EditWrapper extends react_1.default.Component {
             return this.props.apiToken;
         }
         else {
-            return localStorage.lexiconEditorToken;
+            return sessionStorage.lexiconServerToken;
         }
     }
     allowEditing() {
@@ -104,7 +110,7 @@ class EditWrapper extends react_1.default.Component {
             return this.props.allowEditing;
         }
         else {
-            return localStorage.hasOwnProperty('lexiconEditorToken');
+            return sessionStorage.hasOwnProperty('lexiconServerToken');
         }
     }
     render() {

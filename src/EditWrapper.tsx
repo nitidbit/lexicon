@@ -3,6 +3,7 @@ import React, { ChangeEvent } from 'react';
 import { Lexicon } from './Lexicon';
 import LexiconEditor from './LexiconEditor';
 import '../styles/EditWrapperStyles.scss';
+import { getURLParameter } from './util';
 
 interface EditWrapperProps {
   component:                                                    // This is the React component rendered inside the wrapper.
@@ -47,6 +48,12 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
   constructor(props: EditWrapperProps) {
     super(props);
 
+    let lexiconServerToken = getURLParameter('lexiconServerToken')
+    if (lexiconServerToken) {
+      console.log('!!! lexiconServerToken=', lexiconServerToken);
+      sessionStorage.setItem('lexiconServerToken', lexiconServerToken);
+    }
+
     this.state = {
       isEditorVisible: false,
       lexicon: props.lexicon,
@@ -64,7 +71,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     if ('apiToken' in this.props) {
       return this.props.apiToken;
     } else {
-      return localStorage.lexiconEditorToken;
+      return sessionStorage.lexiconServerToken;
     }
   }
 
@@ -72,7 +79,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     if ('allowEditing' in this.props) {
       return this.props.allowEditing;
     } else {
-      return localStorage.hasOwnProperty('lexiconEditorToken');
+      return sessionStorage.hasOwnProperty('lexiconServerToken');
     }
   }
 

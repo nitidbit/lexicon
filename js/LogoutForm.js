@@ -17,7 +17,7 @@ class LogoutForm extends react_1.default.Component {
         super(props);
         this.doLogout = (e) => __awaiter(this, void 0, void 0, function* () {
             e.preventDefault();
-            const token = localStorage.getItem('lexiconEditorToken');
+            const token = sessionStorage.getItem('lexiconServerToken');
             this.setState({ loading: true });
             try {
                 const data = yield (yield fetch(this.props.endpoint, {
@@ -28,7 +28,7 @@ class LogoutForm extends react_1.default.Component {
                 })).json();
                 if (data.successful) {
                     this.setState({ loading: false, successful: true });
-                    localStorage.removeItem('lexiconEditorToken');
+                    sessionStorage.removeItem('lexiconServerToken');
                 }
                 else {
                     this.setState({

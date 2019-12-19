@@ -72,7 +72,7 @@ export default class LoginForm extends React.Component<LoginFormProps, LoginForm
         body: JSON.stringify({ password: this.state.password }),
       })).json();
       if (data.successful) {
-        localStorage.setItem('lexiconEditorToken', data.token);
+        sessionStorage.setItem('lexiconServerToken', data.token);
         this.setState({ loading: false, successful: true });
       } else {
         this.setState({

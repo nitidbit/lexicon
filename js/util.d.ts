@@ -13,3 +13,4 @@ export declare function set(c: Collection, key: any, value: any): Collection;
 export declare function size(c: Collection): Number;
 export declare function clone(c: Collection): any;
 export declare const evaluateTemplate: (template: string, substitutions: object) => string;
+export declare function getURLParameter(name: any): string;

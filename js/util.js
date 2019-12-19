@@ -160,3 +160,12 @@ exports.evaluateTemplate = (template, substitutions) => {
     }
     return replaced;
 };
+// Extract and return a query parameter from the current 'location'
+// e.g. at http://example.com?myvar=999
+//      getURLParameter('myvar')        // returns: '999'
+//      getURLParameter('missing')      // returns: null
+// from https://stackoverflow.com/questions/11582512/how-to-get-url-parameters-with-javascript
+function getURLParameter(name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+}
+exports.getURLParameter = getURLParameter;
