@@ -86,8 +86,10 @@ class EditWrapper extends react_1.default.Component {
         };
         let lexiconServerToken = util_1.getURLParameter('lexiconServerToken');
         if (lexiconServerToken) {
-            console.log('!!! lexiconServerToken=', lexiconServerToken);
             sessionStorage.setItem('lexiconServerToken', lexiconServerToken);
+            if (document.location.protocol != 'https:') {
+                console.error('You must use HTTPS otherwise the lexiconServerToken passed unsecurely');
+            }
         }
         this.state = {
             isEditorVisible: false,

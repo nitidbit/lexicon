@@ -50,8 +50,10 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
 
     let lexiconServerToken = getURLParameter('lexiconServerToken')
     if (lexiconServerToken) {
-      console.log('!!! lexiconServerToken=', lexiconServerToken);
       sessionStorage.setItem('lexiconServerToken', lexiconServerToken);
+      if (document.location.protocol != 'https:') {
+        console.error('You must use HTTPS otherwise the lexiconServerToken passed unsecurely');
+      }
     }
 
     this.state = {
