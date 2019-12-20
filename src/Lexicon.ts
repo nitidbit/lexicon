@@ -6,7 +6,7 @@ type LocaleCode = string; // e.g. 'en', 'es'
 const DEFAULT_LOCALE_CODE = 'en';
 
 export type ContentByLocale = {
-  [lang: string]: object | Map<any, any>,
+  [localeCode: LocaleCode]: object | Map<any, any>,
 };
 
 export class Lexicon {
@@ -29,15 +29,6 @@ export class Lexicon {
   locale(localeCode: LocaleCode): Lexicon | null {
     if (!util.has(this._contentByLocale, localeCode)) return null;
     return new Lexicon(this._contentByLocale, localeCode, this._filename, this._rootKeyPath);
-  }
-
-  // Return language codes for available locales
-  locales(): Array<LocaleCode> {
-    return util.keys(this._contentByLocale) as Array<string>;
-  }
-
-  filename(): string {
-    return this._filename;
   }
 
   /*
@@ -64,11 +55,6 @@ export class Lexicon {
     return val;
   }
 
-  private _fullKey(localeCode:LocaleCode, keyPath:KeyPath) {
-    var parts = _.compact([localeCode, this._rootKeyPath, keyPath]);
-    return parts.join('.');
-  }
-
   /* Return a new Lexicon, with the "root" starting at a different place.
      E.g.
        a = Lexicon({greeting: "hi", secondLevel: {title: "Mister"}})
@@ -79,7 +65,13 @@ export class Lexicon {
     return new Lexicon(this._contentByLocale, this.currentLocaleCode, this._filename, rootPathExcludingLocale);
   }
 
-  /*
+  private _fullKey(localeCode:LocaleCode, keyPath:KeyPath) {
+    var parts = _.compact([localeCode, this._rootKeyPath, keyPath]);
+    return parts.join('.');
+  }
+
+  /* Used by LexiconEditor
+
      Returns the filename and KeyPath of the item in question.
      The returned keyPath might be different from the input because you're looking
      at a Lexicon subset, with some keys hidden.
@@ -91,6 +83,20 @@ export class Lexicon {
     };
   }
 
+  /* Used by LexiconEditor
+     Return language codes for available locales
+   */
+  locales(): Array<LocaleCode> {
+    return util.keys(this._contentByLocale) as Array<string>;
+  }
+
+  /* Used by LexiconEditor */
+  filename(): string {
+    return this._filename;
+  }
+
+
+  /* Used by LexiconEditor */
   keys(): Array<string> {
     const localeMap = util.get(this._contentByLocale, this.currentLocaleCode);
     if (localeMap === undefined) return [];
@@ -110,6 +116,7 @@ export class Lexicon {
     return flatKeys;
   }
 
+  /* Used by LexiconEditor */
   update(key: string, newValue: any, localeCode: LocaleCode = this.currentLocaleCode): boolean {
     let fullPath = this._fullKey(localeCode, key);
     if (! util.has(this._contentByLocale, fullPath)) {
@@ -120,10 +127,12 @@ export class Lexicon {
     return true; // success
   }
 
+  /* Used by LexiconEditor */
   clone(): Lexicon {
     return new Lexicon(_.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);
   }
 
+  /* Used by LexiconEditor */
   asObject(): ContentByLocale {
     return this._contentByLocale;
   }

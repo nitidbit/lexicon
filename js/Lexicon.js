@@ -27,13 +27,6 @@ class Lexicon {
             return null;
         return new Lexicon(this._contentByLocale, localeCode, this._filename, this._rootKeyPath);
     }
-    // Return language codes for available locales
-    locales() {
-        return util.keys(this._contentByLocale);
-    }
-    filename() {
-        return this._filename;
-    }
     /*
        Return a value from the Lexicon, in the current locale.
        If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
@@ -53,10 +46,6 @@ class Lexicon {
         }
         return val;
     }
-    _fullKey(localeCode, keyPath) {
-        var parts = lodash_1.default.compact([localeCode, this._rootKeyPath, keyPath]);
-        return parts.join('.');
-    }
     /* Return a new Lexicon, with the "root" starting at a different place.
        E.g.
          a = Lexicon({greeting: "hi", secondLevel: {title: "Mister"}})
@@ -66,7 +55,12 @@ class Lexicon {
         let rootPathExcludingLocale = this._fullKey(null, keyPath);
         return new Lexicon(this._contentByLocale, this.currentLocaleCode, this._filename, rootPathExcludingLocale);
     }
-    /*
+    _fullKey(localeCode, keyPath) {
+        var parts = lodash_1.default.compact([localeCode, this._rootKeyPath, keyPath]);
+        return parts.join('.');
+    }
+    /* Used by LexiconEditor
+  
        Returns the filename and KeyPath of the item in question.
        The returned keyPath might be different from the input because you're looking
        at a Lexicon subset, with some keys hidden.
@@ -77,6 +71,17 @@ class Lexicon {
             keyPath: this._fullKey(this.currentLocaleCode, keyPath),
         };
     }
+    /* Used by LexiconEditor
+       Return language codes for available locales
+     */
+    locales() {
+        return util.keys(this._contentByLocale);
+    }
+    /* Used by LexiconEditor */
+    filename() {
+        return this._filename;
+    }
+    /* Used by LexiconEditor */
     keys() {
         const localeMap = util.get(this._contentByLocale, this.currentLocaleCode);
         if (localeMap === undefined)
@@ -95,6 +100,7 @@ class Lexicon {
         recurse(localeMap, '');
         return flatKeys;
     }
+    /* Used by LexiconEditor */
     update(key, newValue, localeCode = this.currentLocaleCode) {
         let fullPath = this._fullKey(localeCode, key);
         if (!util.has(this._contentByLocale, fullPath)) {
@@ -103,9 +109,11 @@ class Lexicon {
         util.set(this._contentByLocale, fullPath, newValue);
         return true; // success
     }
+    /* Used by LexiconEditor */
     clone() {
         return new Lexicon(lodash_1.default.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);
     }
+    /* Used by LexiconEditor */
     asObject() {
         return this._contentByLocale;
     }

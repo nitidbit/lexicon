@@ -1,7 +1,7 @@
 import { KeyPath } from './util';
 declare type LocaleCode = string;
 export declare type ContentByLocale = {
-    [lang: string]: object | Map<any, any>;
+    [localeCode: LocaleCode]: object | Map<any, any>;
 };
 export declare class Lexicon {
     private _contentByLocale;
@@ -10,15 +10,15 @@ export declare class Lexicon {
     private _rootKeyPath;
     constructor(contentByLocale: ContentByLocale, localeCode: LocaleCode, filename: string, subset?: KeyPath);
     locale(localeCode: LocaleCode): Lexicon | null;
-    locales(): Array<LocaleCode>;
-    filename(): string;
     get(key: KeyPath, templateSubstitutions?: object): string | null;
-    private _fullKey;
     subset(keyPath: KeyPath): Lexicon | null;
+    private _fullKey;
     source(keyPath: KeyPath): {
         filename: string;
         keyPath: KeyPath;
     };
+    locales(): Array<LocaleCode>;
+    filename(): string;
     keys(): Array<string>;
     update(key: string, newValue: any, localeCode?: LocaleCode): boolean;
     clone(): Lexicon;
