@@ -14,8 +14,8 @@ interface EditWrapperProps {
     ;
   lexicon: Lexicon;
   allowEditing?: boolean;
-  apiToken?: string;
   apiUpdateUrl: string;
+  apiToken?: string;
   extraHeaders?: { [header: string]: string };
   OptionalLogoutButton?: React.FC<any>
 }
@@ -78,11 +78,13 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
   }
 
   allowEditing(): boolean {
+    let result;
     if ('allowEditing' in this.props) {
-      return this.props.allowEditing;
+      result = this.props.allowEditing;
     } else {
-      return sessionStorage.hasOwnProperty('lexiconServerToken');
+      result = sessionStorage.hasOwnProperty('lexiconServerToken');
     }
+    return result;
   }
 
   updateText = (contentKey: string, newValue: string) => {
@@ -129,7 +131,6 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
         key,
         newValue,
       }))};
-    console.log('!!! data=', data);
 
     fetch(this.props.apiUpdateUrl, {
       method: 'PUT',

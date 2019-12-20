@@ -14,8 +14,8 @@ interface EditWrapperProps {
     }>, Object];
     lexicon: Lexicon;
     allowEditing?: boolean;
-    apiToken?: string;
     apiUpdateUrl: string;
+    apiToken?: string;
     extraHeaders?: {
         [header: string]: string;
     };

@@ -60,7 +60,6 @@ class EditWrapper extends react_1.default.Component {
                     newValue,
                 }))
             };
-            console.log('!!! data=', data);
             fetch(this.props.apiUpdateUrl, {
                 method: 'PUT',
                 mode: 'cors',
@@ -108,12 +107,14 @@ class EditWrapper extends react_1.default.Component {
         }
     }
     allowEditing() {
+        let result;
         if ('allowEditing' in this.props) {
-            return this.props.allowEditing;
+            result = this.props.allowEditing;
         }
         else {
-            return sessionStorage.hasOwnProperty('lexiconServerToken');
+            result = sessionStorage.hasOwnProperty('lexiconServerToken');
         }
+        return result;
     }
     render() {
         const { component, children, OptionalLogoutButton } = this.props, { isEditorVisible, lexicon } = this.state;
