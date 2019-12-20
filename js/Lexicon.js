@@ -53,8 +53,8 @@ class Lexicon {
         }
         return val;
     }
-    _fullKey(localeCode, nestedKey) {
-        var parts = lodash_1.default.compact([localeCode, this._rootKeyPath, nestedKey]);
+    _fullKey(localeCode, keyPath) {
+        var parts = lodash_1.default.compact([localeCode, this._rootKeyPath, keyPath]);
         return parts.join('.');
     }
     /* Return a new Lexicon, with the "root" starting at a different place.
@@ -62,19 +62,19 @@ class Lexicon {
          a = Lexicon({greeting: "hi", secondLevel: {title: "Mister"}})
          a.subset('secondLevel') // --> Lexicon({title: "Mister"})
     */
-    subset(nestedKey) {
-        let rootPathExcludingLocale = this._fullKey(null, nestedKey);
+    subset(keyPath) {
+        let rootPathExcludingLocale = this._fullKey(null, keyPath);
         return new Lexicon(this._contentByLocale, this.currentLocaleCode, this._filename, rootPathExcludingLocale);
     }
     /*
-       Returns the filename and NestedKey of the item in question.
-       The returned nestedKey might be different from the input because you're looking
+       Returns the filename and KeyPath of the item in question.
+       The returned keyPath might be different from the input because you're looking
        at a Lexicon subset, with some keys hidden.
      */
-    source(nestedKey) {
+    source(keyPath) {
         return {
             filename: this.filename(),
-            nestedKey: this._fullKey(this.currentLocaleCode, nestedKey),
+            keyPath: this._fullKey(this.currentLocaleCode, keyPath),
         };
     }
     keys() {
@@ -102,27 +102,6 @@ class Lexicon {
         }
         util.set(this._contentByLocale, fullPath, newValue);
         return true; // success
-        // console.log('  update() key=', key, 'newValue=', newValue, 'locale=', locale);
-        //     if (!util.has(this._contentByLocale, locale)) return false; // We don't have that locale
-        //     if (key.includes('.')) {
-        //       const firstPath = key.substr(0, key.lastIndexOf('.')),
-        //         tailKey = key.substr(key.lastIndexOf('.') + 1),
-        //         subset = this.locale(locale).subset(firstPath);
-        //       if (subset === null) {
-        //         return false; // Don't have that branch of content
-        //       } else {
-        //         return subset.update(tailKey, newValue, locale);
-        //       }
-        //     } else {
-        //       const localeMap = util.get(this._contentByLocale, locale);
-        // console.log('    util.has(localeMap, key)=', util.has(localeMap, key));
-        //       if (! util.has(localeMap, key)) {
-        //         return false; // Don't have that branch of content
-        //       } else {
-        //         util.set(localeMap, key, newValue);
-        //         return true;
-        //       }
-        //     }
     }
     clone() {
         return new Lexicon(lodash_1.default.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);

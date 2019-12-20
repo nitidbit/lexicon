@@ -184,15 +184,15 @@ describe('Lexicon module', () => {
 
   describe('source()', () => {
     test('returns keyPath and filename', () => {
-      expect(lex.source('foo')).toEqual({filename: 'blah.json', nestedKey: 'en.foo'});
+      expect(lex.source('foo')).toEqual({filename: 'blah.json', keyPath: 'en.foo'});
     });
 
     test('works with locale("es")', () => {
-      expect(lex.locale("es").source('foo')).toEqual({filename: 'blah.json', nestedKey: 'es.foo'});
+      expect(lex.locale("es").source('foo')).toEqual({filename: 'blah.json', keyPath: 'es.foo'});
     });
 
     test('works with subset("nested")', () => {
-      expect(lex.subset('nested').source('wom')).toEqual({filename: 'blah.json', nestedKey: 'en.nested.wom'});
+      expect(lex.subset('nested').source('wom')).toEqual({filename: 'blah.json', keyPath: 'en.nested.wom'});
     });
   });
 });

@@ -1,4 +1,4 @@
-import { Collection, NestedKey, evaluateTemplate } from './util';
+import { Collection, KeyPath, evaluateTemplate } from './util';
 import * as util from './util';
 import _ from 'lodash';
 
@@ -39,12 +39,12 @@ export class Lexicon {
   private _contentByLocale: Locales;
   public currentLocaleCode: LocaleCode;
   private _filename: string;
-  private _rootKeyPath: NestedKey;
+  private _rootKeyPath: KeyPath;
 
   constructor(contentByLocale: LocalesObject | Locales,
               localeCode: LocaleCode,
               filename: string,
-              subset: NestedKey = '') {
+              subset: KeyPath = '') {
     this.currentLocaleCode = localeCode;
     this._filename = filename;
     this._contentByLocale = contentByLocale;
@@ -71,7 +71,7 @@ export class Lexicon {
      If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
         e.g. "hello #{name}" -> "hello Winston"
   */
-  get(key: NestedKey, templateSubstitutions?: object): string | null {
+  get(key: KeyPath, templateSubstitutions?: object): string | null {
     let fullKey = this._fullKey(this.currentLocaleCode, key);
     let val = util.get(this._contentByLocale, fullKey);
 
@@ -90,8 +90,8 @@ export class Lexicon {
     return val;
   }
 
-  private _fullKey(localeCode:LocaleCode, nestedKey:NestedKey) {
-    var parts = _.compact([localeCode, this._rootKeyPath, nestedKey]);
+  private _fullKey(localeCode:LocaleCode, keyPath:KeyPath) {
+    var parts = _.compact([localeCode, this._rootKeyPath, keyPath]);
     return parts.join('.');
   }
 
@@ -100,20 +100,20 @@ export class Lexicon {
        a = Lexicon({greeting: "hi", secondLevel: {title: "Mister"}})
        a.subset('secondLevel') // --> Lexicon({title: "Mister"})
   */
-  subset(nestedKey: NestedKey): Lexicon | null {
-    let rootPathExcludingLocale = this._fullKey(null, nestedKey);
+  subset(keyPath: KeyPath): Lexicon | null {
+    let rootPathExcludingLocale = this._fullKey(null, keyPath);
     return new Lexicon(this._contentByLocale, this.currentLocaleCode, this._filename, rootPathExcludingLocale);
   }
 
   /*
-     Returns the filename and NestedKey of the item in question.
-     The returned nestedKey might be different from the input because you're looking
+     Returns the filename and KeyPath of the item in question.
+     The returned keyPath might be different from the input because you're looking
      at a Lexicon subset, with some keys hidden.
    */
-  source(nestedKey: NestedKey): {filename: string, nestedKey: NestedKey} {
+  source(keyPath: KeyPath): {filename: string, keyPath: KeyPath} {
     return {
       filename: this.filename(),
-      nestedKey: this._fullKey(this.currentLocaleCode, nestedKey),
+      keyPath: this._fullKey(this.currentLocaleCode, keyPath),
     };
   }
 
@@ -144,30 +144,6 @@ export class Lexicon {
 
     util.set(this._contentByLocale, fullPath, newValue);
     return true; // success
-
-// console.log('  update() key=', key, 'newValue=', newValue, 'locale=', locale);
-//     if (!util.has(this._contentByLocale, locale)) return false; // We don't have that locale
-
-//     if (key.includes('.')) {
-//       const firstPath = key.substr(0, key.lastIndexOf('.')),
-//         tailKey = key.substr(key.lastIndexOf('.') + 1),
-//         subset = this.locale(locale).subset(firstPath);
-
-//       if (subset === null) {
-//         return false; // Don't have that branch of content
-//       } else {
-//         return subset.update(tailKey, newValue, locale);
-//       }
-//     } else {
-//       const localeMap = util.get(this._contentByLocale, locale);
-// console.log('    util.has(localeMap, key)=', util.has(localeMap, key));
-//       if (! util.has(localeMap, key)) {
-//         return false; // Don't have that branch of content
-//       } else {
-//         util.set(localeMap, key, newValue);
-//         return true;
-//       }
-//     }
   }
 
   clone(): Lexicon {

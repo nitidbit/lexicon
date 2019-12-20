@@ -1,4 +1,4 @@
-import { NestedKey } from './util';
+import { KeyPath } from './util';
 declare type LocaleCode = string;
 export declare type RawLexiconObject = {
     [key: string]: null | string | number | boolean | object | Array<any>;
@@ -15,16 +15,16 @@ export declare class Lexicon {
     currentLocaleCode: LocaleCode;
     private _filename;
     private _rootKeyPath;
-    constructor(contentByLocale: LocalesObject | Locales, localeCode: LocaleCode, filename: string, subset?: NestedKey);
+    constructor(contentByLocale: LocalesObject | Locales, localeCode: LocaleCode, filename: string, subset?: KeyPath);
     locale(localeCode: LocaleCode): Lexicon | null;
     locales(): Array<LocaleCode>;
     filename(): string;
-    get(key: NestedKey, templateSubstitutions?: object): string | null;
+    get(key: KeyPath, templateSubstitutions?: object): string | null;
     private _fullKey;
-    subset(nestedKey: NestedKey): Lexicon | null;
-    source(nestedKey: NestedKey): {
+    subset(keyPath: KeyPath): Lexicon | null;
+    source(keyPath: KeyPath): {
         filename: string;
-        nestedKey: NestedKey;
+        keyPath: KeyPath;
     };
     keys(): Array<string>;
     update(key: string, newValue: any, localeCode?: LocaleCode): boolean;

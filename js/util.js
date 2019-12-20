@@ -11,18 +11,18 @@ function isCollection(maybeCollection) {
 }
 exports.isCollection = isCollection;
 // Like lodash.get(data, 'my.keys.0') but works with Maps too.
-function get(data, nestedKey) {
-    if (lodash_1.default.isNull(nestedKey) || lodash_1.default.isUndefined(nestedKey))
-        throw new Error("'nestedKey' is null/undefined");
+function get(data, keyPath) {
+    if (lodash_1.default.isNull(keyPath) || lodash_1.default.isUndefined(keyPath))
+        throw new Error("'keyPath' is null/undefined");
     if (lodash_1.default.isNull(data) || lodash_1.default.isUndefined(data))
         throw new Error("'data' is null/undefined");
     if (!isCollection(data)) {
         return undefined; // content not found
     }
-    if (lodash_1.default.isString(nestedKey)) {
-        nestedKey = nestedKey.split('.');
+    if (lodash_1.default.isString(keyPath)) {
+        keyPath = keyPath.split('.');
     }
-    const [firstKey, ...rest] = nestedKey;
+    const [firstKey, ...rest] = keyPath;
     const subData = lodash_1.default.isMap(data) ? data.get(firstKey) : data[firstKey];
     if (rest.length == 0) {
         return subData; // we found it
@@ -54,7 +54,7 @@ exports.has = has;
 // Equivalent to lodash.set(), but works with Maps
 function set(c, key, value) {
     if (lodash_1.default.isMap(c)) {
-        throw new Error('set with nestedKey not implemented yet');
+        throw new Error('set with keyPath not implemented yet');
         //     c.set(key, value);
     }
     else {
