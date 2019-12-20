@@ -112,7 +112,7 @@ describe('Lexicon module', () => {
       expect(lex.subset('foo')).toBeInstanceOf(Lexicon);
     });
 
-    test('returns correct keyPaths')
+    test.todo('returns correct keyPaths');
   });
 
   describe('keys()', () => {
