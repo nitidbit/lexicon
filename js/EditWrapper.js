@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const LexiconEditor_1 = __importDefault(require("./LexiconEditor"));
 require("../styles/EditWrapperStyles.scss");
+const util_1 = require("./util");
 var SavingState;
 (function (SavingState) {
     SavingState[SavingState["NoChanges"] = 0] = "NoChanges";
@@ -51,19 +52,20 @@ class EditWrapper extends react_1.default.Component {
         };
         this.saveChanges = () => {
             this.setState({ savingState: SavingState.InProgress });
-            const fetchOptions = {
+            const headers = Object.assign({ 'Authorization': `Bearer ${this.getToken()}`, 'Content-Type': 'application/json' }, this.props.extraHeaders);
+            const data = {
+                changes: [...this.state.unsavedChanges.entries()].map(([key, { newValue }]) => ({
+                    filename: this.state.lexicon.filename(),
+                    key,
+                    newValue,
+                }))
+            };
+            fetch(this.props.apiUpdateUrl, {
                 method: 'PUT',
                 mode: 'cors',
-                headers: Object.assign({ 'Authorization': `Bearer ${this.getToken()}`, 'Content-Type': 'application/json' }, this.props.extraHeaders),
-                body: JSON.stringify({
-                    changes: [...this.state.unsavedChanges.entries()].map(([key, { newValue }]) => ({
-                        filename: this.state.lexicon.filename,
-                        key,
-                        newValue,
-                    })),
-                }),
-            };
-            fetch(this.props.apiUpdateUrl, fetchOptions)
+                headers: headers,
+                body: JSON.stringify(data),
+            })
                 .then(response => response.json())
                 .catch(error => this.setState({ savingState: SavingState.Error, errorMessage: error.toString() }))
                 .then((json) => {
@@ -81,6 +83,16 @@ class EditWrapper extends react_1.default.Component {
                 this.setState({ position: newPos });
             }
         };
+        let lexiconServerToken = util_1.getURLParameter('lexiconServerToken');
+        if (lexiconServerToken) {
+            sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token
+            // Remove token from URL
+            let locationWithoutToken = window.location.href.split("?")[0];
+            window.history.replaceState(null, null, locationWithoutToken);
+            if (document.location.protocol != 'https:') {
+                console.error('You must use HTTPS otherwise the lexiconServerToken passed unsecurely');
+            }
+        }
         this.state = {
             isEditorVisible: false,
             lexicon: props.lexicon,
@@ -94,16 +106,18 @@ class EditWrapper extends react_1.default.Component {
             return this.props.apiToken;
         }
         else {
-            return localStorage.lexiconEditorToken;
+            return sessionStorage.lexiconServerToken;
         }
     }
     allowEditing() {
+        let result;
         if ('allowEditing' in this.props) {
-            return this.props.allowEditing;
+            result = this.props.allowEditing;
         }
         else {
-            return localStorage.hasOwnProperty('lexiconEditorToken');
+            result = sessionStorage.hasOwnProperty('lexiconServerToken');
         }
+        return result;
     }
     render() {
         const { component, children, OptionalLogoutButton } = this.props, { isEditorVisible, lexicon } = this.state;
@@ -164,7 +178,7 @@ class EditWrapper extends react_1.default.Component {
                         react_1.default.createElement("h2", { className: "wrapper-heading" }, "Content Editor"),
                         react_1.default.createElement("div", { className: "position" }, [['left', '\u25e7'],
                             ['bottom', '\u2b13'],
-                            ['right', '\u25e8']].map(([pos, icon]) => (react_1.default.createElement("label", { className: this.state.position == pos ? 'selected' : '' },
+                            ['right', '\u25e8']].map(([pos, icon]) => (react_1.default.createElement("label", { key: pos, className: this.state.position == pos ? 'selected' : '' },
                             icon,
                             react_1.default.createElement("input", { type: "radio", name: pos, onClick: this.changePosition }))))),
                         react_1.default.createElement("label", { className: "close-btn" },

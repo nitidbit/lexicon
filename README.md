@@ -13,16 +13,55 @@ Installation
 
 Usage
 -----
-
-```ts
-import { Lexicon, EditWrapper } from 'lexicon';
-import myStrings from './MyStrings.json';
-
-const myLexicon = new Lexicon(myStrings, 'en', 'app/javascript/components/MyStrings.json');
-
-console.log('Hello', myLexicon.get('salutation'))
+```json
+# MyStrings.yml
+en:
+    message: 'Hello, world!'
+    subComponent:
+      template: 'There are #{count} widgets.'
+    faq:
+      - question: 'What is the meaning of life, the universe, and everything?'
+        answer: '42'
+es:
+    message: '¡Hola, mundo!',
+    subComponent:
+      template: 'Hay #{count} aparatos.'
+    faq:
+      - question: '¿Cuál es el significado de la vida, el universo, y todo?'
+        answer: '42'
 ```
+    import { Lexicon, EditWrapper } from 'lexicon';
 
+    const lex = new Lexicon(require('./MyStrings.yml'),        // the data, assuming you have a YAML loader
+            'app/javascript/components/MyStrings.yml');        // plus the filename for the editor
+
+    console.log('Hello', myLexicon.get('salutation'))
+
+
+Get values using nested keys separated by "."
+
+    lex.get('subComponent.template')                    // => 'There are #{count} widgets.'
+
+Optionally substitute variables iinto the fetched string.
+
+    lex.get('subComponent.template', { count: 5 })      // => 'There are 5 widgets.'
+
+Change to different locale
+
+    lex.locale('es').get('message')                              // => '¡Hola, mundo!'
+
+Generate a "subset" of content for passing to a child component
+
+    lex.subset('subComponent').get('template', { count: 6 })  // => 'There are 6 widgets.'
+
+Arrays can be accessed using numeric keys
+
+    lex.get('faq.0.question')                           // => 'What is the meaning of life,
+                                                        //     the universe, and everything?'
+
+
+Adding an in-place editor
+-------------------------
 When you create an `EditWrapper`, you now need to specify the API endpoint it should use to make changes:
 
 ```jsx
@@ -37,81 +76,6 @@ Here is a diagram of how all the pieces of Lexicon fit together
 <img src="https://raw.githubusercontent.com/nitidbit/lexicon/master/LexiconComponents.png?token=AACEX3BWLYU4BNRAQXZYNGS6APRCQ"
   style="width: 60%; margin-left: 20%"
 />
-
-Creating a Lexicon
-------------------
-
-```ts
-import { Lexicon } from 'lexicon';
-
-const lex = new Lexicon({
-  en: {
-    message: 'Hello, world!',
-    subComponent: {
-      template: 'There are #{count} widgets.',
-    },
-    faq: [
-      { question: 'What is the meaning of life, the universe, and everything?', answer: '42' },
-    ],
-  },
-  es: {
-    message: '¡Hola, mundo!',
-    subComponent: {
-      template: 'Hay #{count} aparatos.',
-    },
-    faq: [
-      { question: '¿Cuál es el significado de la vida, el universo, y todo?', answer: '42' },
-    ],
-  },
-}, 'sampleLexicon.json', 'en');
-```
-
-The Lexicon constructor accepts a dictionary of locales, a default locale, and the filename where it is stored (this only matters for the server).
-
-Accessing data
---------------
-
-Using `lex` from the previous example:
-
-```ts
-// using default locale
-lex.get('message')                                  // => 'Hello, world!'
-// nested keys
-lex.get('subComponent.template')                    // => 'There are #{count} widgets.'
-// templates
-lex.get('subComponent.template', { count: 5 })      // => 'There are 5 widgets.'
-// different locale
-const spanish = lex.locale('es');
-spanish.get('message')                              // => '¡Hola, mundo!'
-// subset
-const subset = lex.subset('subComponent');
-subset.get('template', { count: 6 })                // => 'There are 6 widgets.'
-// arrays
-lex.get('faq.0.question')                           // => 'What is the meaning of life,
-                                                    //     the universe, and everything?'
-
-// modifications (should only be used by the editor)
-lex.update('message', 'Hi, world!')                 // => true (key exists)
-lex.update('key that does not exist', 'blah')       // => false
-// optionally specify locale
-lex.update('message', '¡Buenos días, mundo!', 'es') // => true
-lex.get('message') // => 'Hi, world!'
-spanish.get('message') // => 'Buenos días, mundo!'
-
-// other methods and properties
-lex.defaultLocale                                   // => 'en'
-spanish.defaultLocale                               // => 'es'
-lex.locales()                                       // => ['en', 'es']
-lex.keys()                                          // => ['message', 'subComponent.template',
-                                                    //     'faq.0.question', 'faq.0.answer']
-lex.asObject()                                      // => same object passed into constructor
-
-const clone = lex.clone();
-clone.update('subComponent.template', 'There are #{count} gadgets.');
-// modifications to clone do not affect original
-clone.get('subComponent.template')                  // => 'There are #{count} gadgets.'
-lex.get('subComponent.template')                    // => 'There are #{count} widgets.'
-```
 
 Developing the Lexicon NPM Package
 ----------------------------------
