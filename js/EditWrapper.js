@@ -85,7 +85,10 @@ class EditWrapper extends react_1.default.Component {
         };
         let lexiconServerToken = util_1.getURLParameter('lexiconServerToken');
         if (lexiconServerToken) {
-            sessionStorage.setItem('lexiconServerToken', lexiconServerToken);
+            sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token
+            // Remove token from URL
+            let locationWithoutToken = window.location.href.split("?")[0];
+            window.history.replaceState(null, null, locationWithoutToken);
             if (document.location.protocol != 'https:') {
                 console.error('You must use HTTPS otherwise the lexiconServerToken passed unsecurely');
             }
