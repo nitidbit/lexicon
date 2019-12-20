@@ -4,43 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(require("lodash"));
-// export const getNestedKeyInMap = <T>(map: NestedMap<string, T>, key: string): T | NestedMap<string, T> | null => {
-//   const [first, ...rest] = key.split('.');
-//   if (!map.has(first)) return null; // malformed key
-//   const val = map.get(first);
-//   if (rest.length == 0) {
-//     return val; // we found the item
-//   }
-//   if (val instanceof Map) {
-//     return getNestedKeyInMap(val, rest.join('.'));
-//   } else {
-//     return null;
-//   }
-// };
-exports.flattenMap = (map) => {
-    const flatKeys = [];
-    const recurse = (map, prefix) => {
-        for (const [k, v] of map.entries()) {
-            if (v instanceof Map) {
-                recurse(v, `${prefix}${k}.`);
-            }
-            else {
-                flatKeys.push(`${prefix}${k}`);
-            }
-        }
-    };
-    recurse(map, '');
-    return flatKeys;
-};
-exports.cloneNestedMap = (map) => {
-    const shallow = new Map(map);
-    for (const [key, value] of shallow) {
-        if (value instanceof Map) {
-            shallow.set(key, exports.cloneNestedMap(value));
-        }
-    }
-    return shallow;
-};
 function isCollection(maybeCollection) {
     return lodash_1.default.isMap(maybeCollection)
         || lodash_1.default.isArray(maybeCollection)
@@ -107,20 +70,6 @@ function size(c) {
     return lodash_1.default.size(c);
 }
 exports.size = size;
-function clone(c) {
-    let result = null;
-    if (lodash_1.default.isMap(c)) {
-        result = new Map(this._contentByLocale);
-        for (const [lang, lexicon] of result) {
-            result.set(lang, exports.cloneNestedMap(lexicon));
-        }
-    }
-    else {
-        result = lodash_1.default.cloneDeep(c);
-    }
-    return result;
-}
-exports.clone = clone;
 //
 //      Other functions
 //

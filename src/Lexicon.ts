@@ -1,4 +1,4 @@
-import { Collection, NestedKey, NestedMap, flattenMap, cloneNestedMap, evaluateTemplate } from './util';
+import { Collection, NestedKey, evaluateTemplate } from './util';
 import * as util from './util';
 import _ from 'lodash';
 
@@ -171,7 +171,7 @@ export class Lexicon {
   }
 
   clone(): Lexicon {
-    return new Lexicon(util.clone(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);
+    return new Lexicon(_.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);
   }
 
   asObject(): LocalesObject {

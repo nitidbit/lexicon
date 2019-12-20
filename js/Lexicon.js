@@ -125,7 +125,7 @@ class Lexicon {
         //     }
     }
     clone() {
-        return new Lexicon(util.clone(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);
+        return new Lexicon(lodash_1.default.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);
     }
     asObject() {
         return this._contentByLocale;
