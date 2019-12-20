@@ -104,7 +104,6 @@ spanish.defaultLocale                               // => 'es'
 lex.locales()                                       // => ['en', 'es']
 lex.keys()                                          // => ['message', 'subComponent.template',
                                                     //     'faq.0.question', 'faq.0.answer']
-lex.asObject()                                      // => same object passed into constructor
 
 const clone = lex.clone();
 clone.update('subComponent.template', 'There are #{count} gadgets.');

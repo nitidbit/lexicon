@@ -5,43 +5,17 @@ import _ from 'lodash';
 type LocaleCode = string; // e.g. 'en', 'es'
 const DEFAULT_LOCALE_CODE = 'en';
 
-// RawLexiconObject -- the content inside a lexicon string file, in Object form, excluding locale
-// identifiers. I.e. everything underneath { "en": ... }
-export type RawLexiconObject = {
-  [key: string]:
-    null |
-    string |
-    number |
-    boolean |
-    object |
-    Array<any>
-//     | Array<RawLexiconObject>
-//     | RawLexiconObject,
-};
-
-// RawLexiconMap -- The content inside a lexicon string file, in Map() form.
-//   After loading the RawLexiconObject, we convert and store it as a Map.
-export type RawLexiconMap = {
-  [lang: string]: object | Map<any, any>
-};
-// export type RawLexiconMap = NestedMap<string, any>;
-
-
-// e.g. { "en": ..., "es": ... }
-export type Locales = LocalesObject;
-// export type Locales = Map<LocaleCode, RawLexiconMap>;
-export type LocalesObject = {
+export type ContentByLocale = {
   [lang: string]: object | Map<any, any>,
-//   [lang: string]: RawLexiconObject,
 };
 
 export class Lexicon {
-  private _contentByLocale: Locales;
+  private _contentByLocale: ContentByLocale;
   public currentLocaleCode: LocaleCode;
   private _filename: string;
   private _rootKeyPath: KeyPath;
 
-  constructor(contentByLocale: LocalesObject | Locales,
+  constructor(contentByLocale: ContentByLocale,
               localeCode: LocaleCode,
               filename: string,
               subset: KeyPath = '') {
@@ -150,7 +124,7 @@ export class Lexicon {
     return new Lexicon(_.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);
   }
 
-  asObject(): LocalesObject {
+  asObject(): ContentByLocale {
     return this._contentByLocale;
   }
 }
