@@ -42,7 +42,7 @@ describe('Lexicon module', () => {
     });
 
     test('returns warning for keys that do not exist', () => {
-      expect(lex.get('blah')).toEqual('[no content for "blah"]');
+      expect(lex.get('blah')).toEqual('[no content for "en.blah"]');
     });
 
     test('works for nested keys', () => {
@@ -111,8 +111,6 @@ describe('Lexicon module', () => {
       expect(lex.subset('blah')).toBeInstanceOf(Lexicon);
       expect(lex.subset('foo')).toBeInstanceOf(Lexicon);
     });
-
-    test.todo('returns correct keyPaths');
   });
 
   describe('keys()', () => {
@@ -181,6 +179,20 @@ describe('Lexicon module', () => {
   describe('asObject()', () => {
     test('returns the correct representation of the Lexicon', () => {
       expect(new Lexicon(lexObj, 'en', 'blah.json').asObject()).toEqual(lexObj);
+    });
+  });
+
+  describe('source()', () => {
+    test('returns keyPath and filename', () => {
+      expect(lex.source('foo')).toEqual({filename: 'blah.json', nestedKey: 'en.foo'});
+    });
+
+    test('works with locale("es")', () => {
+      expect(lex.locale("es").source('foo')).toEqual({filename: 'blah.json', nestedKey: 'es.foo'});
+    });
+
+    test('works with subset("nested")', () => {
+      expect(lex.subset('nested').source('wom')).toEqual({filename: 'blah.json', nestedKey: 'en.nested.wom'});
     });
   });
 });

@@ -103,17 +103,18 @@ export function entries(c: Collection): Array<[any, any]> {
 }
 
 // Equivalent to lodash.has(), but works with Maps
-export function has(c: Collection, key): boolean {
+export function has(c: Collection, key: string): boolean {
   if (_.isMap(c)) return c.has(key);
-  return !_.isUndefined(get(c, key));
+  return _.has(c, key);
 }
 
 // Equivalent to lodash.set(), but works with Maps
-export function set(c: Collection, key, value): Collection {
+export function set(c: Collection, key:NestedKey, value:any): Collection {
   if (_.isMap(c)) {
-    c.set(key, value);
+    throw new Error('set with nestedKey not implemented yet');
+//     c.set(key, value);
   } else {
-    c[key] = value;
+    _.set(c, key, value);
   }
   return c;
 }

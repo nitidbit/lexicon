@@ -12,16 +12,22 @@ export declare type LocalesObject = {
 };
 export declare class Lexicon {
     private _contentByLocale;
-    currentLocaleCode: string;
+    currentLocaleCode: LocaleCode;
     private _filename;
-    constructor(_locales: LocalesObject | Locales, localeCode: string, filename: string);
-    locale(languageCode: LocaleCode): Lexicon | null;
+    private _rootKeyPath;
+    constructor(contentByLocale: LocalesObject | Locales, localeCode: LocaleCode, filename: string, subset?: NestedKey);
+    locale(localeCode: LocaleCode): Lexicon | null;
     locales(): Array<LocaleCode>;
     filename(): string;
     get(key: NestedKey, templateSubstitutions?: object): string | null;
+    private _fullKey;
     subset(nestedKey: NestedKey): Lexicon | null;
+    source(nestedKey: NestedKey): {
+        filename: string;
+        nestedKey: NestedKey;
+    };
     keys(): Array<string>;
-    update(key: string, newValue: string, locale?: LocaleCode): boolean;
+    update(key: string, newValue: any, localeCode?: LocaleCode): boolean;
     clone(): Lexicon;
     asObject(): LocalesObject;
 }

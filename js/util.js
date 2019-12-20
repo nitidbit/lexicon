@@ -85,16 +85,17 @@ exports.entries = entries;
 function has(c, key) {
     if (lodash_1.default.isMap(c))
         return c.has(key);
-    return !lodash_1.default.isUndefined(get(c, key));
+    return lodash_1.default.has(c, key);
 }
 exports.has = has;
 // Equivalent to lodash.set(), but works with Maps
 function set(c, key, value) {
     if (lodash_1.default.isMap(c)) {
-        c.set(key, value);
+        throw new Error('set with nestedKey not implemented yet');
+        //     c.set(key, value);
     }
     else {
-        c[key] = value;
+        lodash_1.default.set(c, key, value);
     }
     return c;
 }
