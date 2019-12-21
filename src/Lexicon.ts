@@ -6,7 +6,7 @@ type LocaleCode = string; // e.g. 'en', 'es'
 const DEFAULT_LOCALE_CODE = 'en';
 
 export type ContentByLocale = {
-  [localeCode: LocaleCode]: object | Map<any, any>,
+  [localeCode: string]: object | Map<any, any>,
 };
 
 export class Lexicon {

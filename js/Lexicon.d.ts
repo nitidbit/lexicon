@@ -1,7 +1,7 @@
 import { KeyPath } from './util';
 declare type LocaleCode = string;
 export declare type ContentByLocale = {
-    [localeCode: LocaleCode]: object | Map<any, any>;
+    [localeCode: string]: object | Map<any, any>;
 };
 export declare class Lexicon {
     private _contentByLocale;
