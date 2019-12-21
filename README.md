@@ -8,8 +8,8 @@ Client-side code and React components for interacting with a Lexicon.
 
 Installation
 ------------
-    yarn add git+ssh://git@github.com/nitidbit/lexicon.git
-    npm i -S git+ssh://git@github.com/nitidbit/lexicon.git
+    yarn add git+ssh://git@github.com/nitidbit/lexicon.git#2.6.0     # 2.6.0 = the release version
+    npm i -S git+ssh://git@github.com/nitidbit/lexicon.git#2.6.0
 
 Usage
 -----
@@ -84,13 +84,17 @@ If you are just using Lexicon in your project, ignore this section.
 
 ### Editing Lexicon and your project at the same time
 Create a symbolic link from your projects folder to your lexicon folder
+
     cd myproject
     rm -rf node_modules/lexicon
     ln -s /Users/my-home/path/to/lexicon node_modules/lexicon
 
 Check it worked:
+
     ls -l node_modules |grep lexicon
+
 should output this which shows it's a symbolic link:
+
     lrwxr-xr-x    1 winstonw  staff     44 Dec 11 11:40 lexicon@ -> /Users/winstonw/clients/nitidbit/git/lexicon
 
 ### Compilation
@@ -114,6 +118,7 @@ PATCH version when you make backwards compatible bug fixes.
 When Lexicon is in a good state, mark a new version with:
 
     change src/index.ts > VERSION
+    change package.json > version
 
 Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to
 people using the package. This is already done if you've been running `npm run watch`

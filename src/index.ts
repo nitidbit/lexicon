@@ -1,4 +1,4 @@
-export const VERSION = '2.5.0'
+export const VERSION = '2.6.1'
 
 export { Lexicon } from './Lexicon';
 export { default as EditWrapper } from './EditWrapper';
