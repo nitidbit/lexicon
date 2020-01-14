@@ -1,4 +1,4 @@
-import { Collection, KeyPath, evaluateTemplate } from './util';
+import { Collection, KeyPath, keyPathAsString, keyPathAsArray, evaluateTemplate } from './util';
 import * as util from './util';
 import _ from 'lodash';
 
@@ -65,8 +65,9 @@ export class Lexicon {
     return new Lexicon(this._contentByLocale, this.currentLocaleCode, this._filename, rootPathExcludingLocale);
   }
 
+  /* Determine the complete "key path" to retrieve our value */
   private _fullKey(localeCode:LocaleCode, keyPath:KeyPath) {
-    var parts = _.compact([localeCode, this._rootKeyPath, keyPath]);
+    var parts = _.compact([localeCode, keyPathAsString(this._rootKeyPath), keyPathAsString(keyPath)]);
     return parts.join('.');
   }
 

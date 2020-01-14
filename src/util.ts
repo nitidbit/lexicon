@@ -8,7 +8,23 @@ export type Collection = Map<any, any> | Array<any> | object;
 
 // Specifies keys in a tree of collections, either as dotted strings 'key.2.anotherKey'
 // or as an array ['key', 2, 'anotherKey']
-export type KeyPath = Array<any> | string;
+export type KeyPath = Array<string> | string;
+
+/* return in Array form, e.g. 'my.key.path' -> ['my', 'key', 'path'] */
+export function keyPathAsArray(keyPath: KeyPath): Array<string> {
+  if (_.isString(keyPath)) {
+    keyPath = keyPath.split('.');
+  }
+  return keyPath
+}
+
+/* return in dotted-string form, e.g. ['my', 'key', 'path'] -> 'my.key.path' */
+export function keyPathAsString(keyPath: KeyPath): string {
+  if (_.isArray(keyPath)) {
+    keyPath = keyPath.join('.');
+  }
+  return keyPath
+}
 
 export function isCollection(maybeCollection: any): boolean {
   return _.isMap(maybeCollection)
@@ -25,9 +41,7 @@ export function get(data: Collection, keyPath: KeyPath): any {
     return undefined; // content not found
   }
 
-  if (_.isString(keyPath)) {
-    keyPath = keyPath.split('.');
-  }
+  keyPath = keyPathAsArray(keyPath);
   const [firstKey, ...rest] = keyPath;
   const subData = _.isMap(data) ? data.get(firstKey) : data[firstKey];
 

@@ -49,6 +49,10 @@ describe('Lexicon module', () => {
       expect(lex.get('nested.wom')).toEqual('bat');
     });
 
+    test('nested keys may be passed as array', () => {
+      expect(lex.get(['nested', 'wom'])).toEqual('bat');
+    });
+
     test('works for arrays of objects', () => {
       expect(lex.get('arrayOfObjects.0.text')).toEqual('one');
       expect(lex.get('arrayOfObjects.1.text')).toEqual('two');
