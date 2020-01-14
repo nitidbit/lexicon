@@ -1,5 +1,7 @@
 export declare type Collection = Map<any, any> | Array<any> | object;
-export declare type KeyPath = Array<any> | string;
+export declare type KeyPath = Array<string> | string;
+export declare function keyPathAsArray(keyPath: KeyPath): Array<string>;
+export declare function keyPathAsString(keyPath: KeyPath): string;
 export declare function isCollection(maybeCollection: any): boolean;
 export declare function get(data: Collection, keyPath: KeyPath): any;
 export declare function keys(c: Collection): Array<string>;

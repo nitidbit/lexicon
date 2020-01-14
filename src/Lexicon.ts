@@ -1,4 +1,4 @@
-import { Collection, KeyPath, keyPathAsString, keyPathAsArray, evaluateTemplate } from './util';
+import { Collection, isCollection, KeyPath, keyPathAsString, keyPathAsArray, evaluateTemplate } from './util';
 import * as util from './util';
 import _ from 'lodash';
 
@@ -36,15 +36,39 @@ export class Lexicon {
      If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
         e.g. "hello #{name}" -> "hello Winston"
   */
-  get(key: KeyPath, templateSubstitutions?: object): string | null {
-    let fullKey = this._fullKey(this.currentLocaleCode, key);
-    let val = util.get(this._contentByLocale, fullKey);
+  get(keyPath: KeyPath, templateSubstitutions?: object): any {
+    if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+    if (_.isNil(this._contentByLocale)) throw new Error("'this._contentByLocale' is null/undefined")
+
+    // Get one level
+    function recursiveGet(data: any, keyPath: Array<string>): any {
+      if (_.isNil(data)) throw new Error("'data' is null/undefined")
+      if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+
+      const [firstKey, ...restOfKeys] = keyPath;
+      let subData = undefined;
+
+      if (data instanceof Lexicon) {
+        subData = data.get(firstKey);
+      } else {
+        subData = util.get(data, firstKey);
+      }
+
+      if (restOfKeys.length == 0) {
+        return subData; // we found it
+      }
+
+      return recursiveGet(subData, restOfKeys);
+    }
+
+    let fullKey = keyPathAsArray(this._fullKey(this.currentLocaleCode, keyPath));
+    let val = recursiveGet(this._contentByLocale, fullKey);
 
     if (_.isUndefined(val)) { // could not find data--try English
-      val = util.get(this._contentByLocale, this._fullKey(DEFAULT_LOCALE_CODE, key));
+      val = util.get(this._contentByLocale, this._fullKey(DEFAULT_LOCALE_CODE, keyPath));
 
       if (_.isUndefined(val)) { // still couldn't find it--return a clue of the problem
-        return `[no content for "${fullKey}"]`;
+        return `[no content for "${keyPathAsString(fullKey)}"]`;
       }
     }
 
@@ -102,11 +126,19 @@ export class Lexicon {
     const localeMap = util.get(this._contentByLocale, this.currentLocaleCode);
     if (localeMap === undefined) return [];
 
-    const flatKeys: Array<string> = [];
+    let flatKeys: Array<string> = [];
     const recurse = (c: Collection, prefix: string) => {
       for (const [k, v] of util.entries(c)) {
-        if (util.isCollection(v)) {
+
+        if (v instanceof Lexicon) {
+          const subKeys = v.keys();
+          const prefixedKeys = _.map(subKeys, (keyPath) => `${prefix}${k}.${keyPath}`);
+          console.log('!!! keys() prefixedKeys=', prefixedKeys);
+          flatKeys = flatKeys.concat(prefixedKeys);
+
+        } else if (util.isCollection(v)) {
           recurse(v, `${prefix}${k}.`);
+
         } else {
           flatKeys.push(`${prefix}${k}`);
         }

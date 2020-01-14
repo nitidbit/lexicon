@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
+const Lexicon_1 = require("./Lexicon");
 const LexiconEditor_1 = __importDefault(require("./LexiconEditor"));
 require("../styles/EditWrapperStyles.scss");
 const util_1 = require("./util");
@@ -83,6 +84,8 @@ class EditWrapper extends react_1.default.Component {
                 this.setState({ position: newPos });
             }
         };
+        if (!(props.lexicon instanceof Lexicon_1.Lexicon))
+            throw new Error(`'lexicon' prop should be a Lexicon object, but it is: ${JSON.stringify(props.lexicon).substring(0, 50)}`);
         let lexiconServerToken = util_1.getURLParameter('lexiconServerToken');
         if (lexiconServerToken) {
             sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token

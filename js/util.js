@@ -4,6 +4,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const lodash_1 = __importDefault(require("lodash"));
+/* return in Array form, e.g. 'my.key.path' -> ['my', 'key', 'path'] */
+function keyPathAsArray(keyPath) {
+    if (lodash_1.default.isString(keyPath)) {
+        keyPath = keyPath.split('.');
+    }
+    return keyPath;
+}
+exports.keyPathAsArray = keyPathAsArray;
+/* return in dotted-string form, e.g. ['my', 'key', 'path'] -> 'my.key.path' */
+function keyPathAsString(keyPath) {
+    if (lodash_1.default.isArray(keyPath)) {
+        keyPath = keyPath.join('.');
+    }
+    return keyPath;
+}
+exports.keyPathAsString = keyPathAsString;
 function isCollection(maybeCollection) {
     return lodash_1.default.isMap(maybeCollection)
         || lodash_1.default.isArray(maybeCollection)
@@ -12,16 +28,14 @@ function isCollection(maybeCollection) {
 exports.isCollection = isCollection;
 // Like lodash.get(data, 'my.keys.0') but works with Maps too.
 function get(data, keyPath) {
-    if (lodash_1.default.isNull(keyPath) || lodash_1.default.isUndefined(keyPath))
+    if (lodash_1.default.isNil(keyPath))
         throw new Error("'keyPath' is null/undefined");
-    if (lodash_1.default.isNull(data) || lodash_1.default.isUndefined(data))
+    if (lodash_1.default.isNil(data))
         throw new Error("'data' is null/undefined");
     if (!isCollection(data)) {
         return undefined; // content not found
     }
-    if (lodash_1.default.isString(keyPath)) {
-        keyPath = keyPath.split('.');
-    }
+    keyPath = keyPathAsArray(keyPath);
     const [firstKey, ...rest] = keyPath;
     const subData = lodash_1.default.isMap(data) ? data.get(firstKey) : data[firstKey];
     if (rest.length == 0) {
@@ -99,7 +113,7 @@ exports.evaluateTemplate = (template, substitutions) => {
                     level--;
                 i++;
             }
-            const path = template.substring(startPos, i - 1), value = get(substitutions, path);
+            const path = template.substring(startPos, i - 1), value = lodash_1.default.get(substitutions, path);
             replaced += value;
             i--;
             continue;

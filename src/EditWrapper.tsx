@@ -48,6 +48,8 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
   constructor(props: EditWrapperProps) {
     super(props);
 
+    if (! (props.lexicon as any instanceof Lexicon)) throw new Error(`'lexicon' prop should be a Lexicon object, but it is: ${JSON.stringify(props.lexicon).substring(0,50)}`)
+
     let lexiconServerToken = getURLParameter('lexiconServerToken')
     if (lexiconServerToken) {
       sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token

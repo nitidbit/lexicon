@@ -10,7 +10,7 @@ export declare class Lexicon {
     private _rootKeyPath;
     constructor(contentByLocale: ContentByLocale, localeCode: LocaleCode, filename: string, subset?: KeyPath);
     locale(localeCode: LocaleCode): Lexicon | null;
-    get(key: KeyPath, templateSubstitutions?: object): string | null;
+    get(keyPath: KeyPath, templateSubstitutions?: object): any;
     subset(keyPath: KeyPath): Lexicon | null;
     private _fullKey;
     source(keyPath: KeyPath): {

@@ -34,8 +34,8 @@ export function isCollection(maybeCollection: any): boolean {
 
 // Like lodash.get(data, 'my.keys.0') but works with Maps too.
 export function get(data: Collection, keyPath: KeyPath): any {
-  if (_.isNull(keyPath) || _.isUndefined(keyPath)) throw new Error("'keyPath' is null/undefined")
-  if (_.isNull(data) || _.isUndefined(data)) throw new Error("'data' is null/undefined")
+  if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+  if (_.isNil(data)) throw new Error("'data' is null/undefined")
 
   if (!isCollection(data)) {
     return undefined; // content not found
@@ -116,7 +116,7 @@ export const evaluateTemplate = (template: string, substitutions: object): strin
       }
 
       const path = template.substring(startPos, i - 1),
-        value = get(substitutions, path);
+        value = _.get(substitutions, path);
 
       replaced += value;
       i--;

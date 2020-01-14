@@ -1,6 +1,8 @@
 import { Lexicon } from './Lexicon';
 
 describe('Lexicon module', () => {
+  const subLex = new Lexicon({
+      en: { subFoo: 'SUB FOO' }}, 'en', 'subLex.json');
   const lexObj = {
     en: {
       foo: 'bar',
@@ -11,9 +13,11 @@ describe('Lexicon module', () => {
         { text: 'one' },
         { text: 'two' },
       ],
+      map: new Map([['mapKey', 'MAP VALUE']]),
       arrayOfStrings: [ "ichi", "ni", "san" ],
       template: '\\#{escaped} \\\\ #{foo} #{bar.baz} #{{{manyBrackets}}}',
-      onlyExistsInEnglish: 'EN only'
+      onlyExistsInEnglish: 'EN only',
+      subLex: subLex,
     },
     es: {
       foo: 'bar_es',
@@ -58,6 +62,10 @@ describe('Lexicon module', () => {
       expect(lex.get('arrayOfObjects.1.text')).toEqual('two');
     });
 
+    test('works for Maps', () => {
+      expect(lex.get('map.mapKey')).toEqual('MAP VALUE');
+    });
+
     test('works for arrays of strings', () => {
       expect(lex.get('arrayOfStrings.0')).toEqual('ichi');
       expect(lex.get('arrayOfStrings.1')).toEqual('ni');
@@ -71,6 +79,10 @@ describe('Lexicon module', () => {
         '{{manyBrackets}}': 'qux'
       })).toEqual('#{escaped} \\ foo baz qux');
     })
+
+    test('works with Lexicons inside Lexicons', () => {
+      expect(lex.get('subLex.subFoo')).toEqual('SUB FOO');
+    });
   });
 
   describe('locale()', () => {
@@ -124,11 +136,13 @@ describe('Lexicon module', () => {
         'nested.wom',
         'arrayOfObjects.0.text',
         'arrayOfObjects.1.text',
+        'map.mapKey',
         'arrayOfStrings.0',
         'arrayOfStrings.1',
         'arrayOfStrings.2',
         'template',
         'onlyExistsInEnglish',
+        'subLex.subFoo',
       ]);
       expect(lex.locale('es').keys()).toEqual(['foo', 'nested.wom', 'arrayOfObjects.0.text', 'arrayOfObjects.1.text', 'onlyExistsInSpanish']);
     });
@@ -197,6 +211,10 @@ describe('Lexicon module', () => {
 
     test('works with subset("nested")', () => {
       expect(lex.subset('nested').source('wom')).toEqual({filename: 'blah.json', keyPath: 'en.nested.wom'});
+    });
+
+    test('works with Lexicons inside Lexicons', () => {
+      expect(lex.source('subLex.subFoo')).toEqual({filename: 'subLex.json', keyPath: 'en.subFoo'})
     });
   });
 });
