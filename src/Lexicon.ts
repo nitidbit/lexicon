@@ -35,6 +35,7 @@ export class Lexicon {
     return new Lexicon(this._contentByLocale, localeCode, this._filename, this._rootKeyPath);
   }
 
+
   /*
      Return a value from the Lexicon, in the current locale.
      If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
@@ -62,6 +63,7 @@ export class Lexicon {
     return val;
   }
 
+
   /* Return a new Lexicon, with the "root" starting at a different place.
      E.g.
        a = Lexicon({greeting: "hi", secondLevel: {title: "Mister"}})
@@ -72,11 +74,13 @@ export class Lexicon {
     return new Lexicon(this._contentByLocale, this.currentLocaleCode, this._filename, rootPathExcludingLocale);
   }
 
+
   /* Determine the complete "key path" to retrieve our value */
   private fullKey(locale:LocaleCode, keyPath:KeyPath) {
     var parts = _.compact([locale, keyPathAsString(this._rootKeyPath), keyPathAsString(keyPath)]);
     return parts.join('.');
   }
+
 
   /* Find some content and return info about that node */
   private find(locale: LocaleCode, keyPath: KeyPath): {lexicon:Lexicon, locale:string, keyPath:KeyPath, value:any} | null {
@@ -85,6 +89,7 @@ export class Lexicon {
 
     let fullPathExcludingLocale = this.fullKey(null, keyPath)
     return recursiveFind(this, keyPathAsArray(fullPathExcludingLocale), this, []);
+
 
     function recursiveFind(
         node: Collection | Lexicon,
@@ -148,6 +153,7 @@ export class Lexicon {
     return util.keys(this._contentByLocale) as Array<string>;
   }
 
+
   /* Used by LexiconEditor */
   filename(): string {
     return this._filename;
@@ -181,6 +187,7 @@ export class Lexicon {
     return flatKeys;
   }
 
+
   /* Set a value in the Lexicon */
   update(keyPath: KeyPath, newValue: any, locale: LocaleCode = this.currentLocaleCode): boolean {
     let fullPath = this.fullKey(locale, keyPath);
@@ -192,14 +199,10 @@ export class Lexicon {
     return true; // success
   }
 
+
   /* Used by LexiconEditor */
   clone(): Lexicon {
     return new Lexicon(_.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);
   }
-
-  /* Used by LexiconEditor */
-//   asObject(): ContentByLocale {
-//     return this._contentByLocale;
-//   }
 }
 

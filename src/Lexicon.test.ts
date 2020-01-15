@@ -198,12 +198,6 @@ describe('Lexicon module', () => {
     });
   });
 
-//   describe('asObject()', () => {
-//     test('returns the correct representation of the Lexicon', () => {
-//       expect(new Lexicon(lexObj, 'en', 'blah.json').asObject()).toEqual(lexObj);
-//     });
-//   });
-
   describe('source()', () => {
     test('returns keyPath and filename', () => {
       expect(lex.source('foo')).toEqual({filename: 'blah.json', keyPath: ['en', 'foo']});
