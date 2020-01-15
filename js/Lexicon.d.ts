@@ -13,10 +13,14 @@ export declare class Lexicon {
     get(keyPath: KeyPath, templateSubstitutions?: object): any;
     subset(keyPath: KeyPath): Lexicon | null;
     private _fullKey;
+    info(keyPath: KeyPath): {
+        lexicon: Lexicon;
+        keyPath: KeyPath;
+    } | null;
     source(keyPath: KeyPath): {
         filename: string;
         keyPath: KeyPath;
-    };
+    } | null;
     locales(): Array<LocaleCode>;
     filename(): string;
     keys(): Array<string>;

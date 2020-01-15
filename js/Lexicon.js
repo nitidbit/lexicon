@@ -27,25 +27,6 @@ class Lexicon {
             return null;
         return new Lexicon(this._contentByLocale, localeCode, this._filename, this._rootKeyPath);
     }
-    /* Identifies which (possibly nested) Lexicon actually contains 'keyPath'
-     */
-    //   info(keyPath: KeyPath): {lexicon:Lexicon, subPath:KeyPath} | null {
-    //     function recursiveFind(data: Collection | Lexicon, keyPath: Array<string>): any {
-    //       if (_.isNil(data)) throw new Error("'data' is null/undefined")
-    //       if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
-    //       const [firstKey, ...restOfKeys] = keyPath;
-    //       let subData = undefined;
-    //       if (data instanceof Lexicon) {
-    //         subData = data.get(firstKey);
-    //       } else {
-    //         subData = util.get(data, firstKey);
-    //       }
-    //       if (restOfKeys.length == 0) {
-    //         return subData; // we found it
-    //       }
-    //       return recursiveGet(subData, restOfKeys);
-    //     }
-    //   }
     /*
        Return a value from the Lexicon, in the current locale.
        If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
@@ -54,8 +35,6 @@ class Lexicon {
     get(keyPath, templateSubstitutions) {
         if (lodash_1.default.isNil(keyPath))
             throw new Error("'keyPath' is null/undefined");
-        if (lodash_1.default.isNil(this._contentByLocale))
-            throw new Error("'this._contentByLocale' is null/undefined");
         // Get one level
         function recursiveGet(data, keyPath) {
             if (lodash_1.default.isNil(data))
@@ -102,6 +81,39 @@ class Lexicon {
         var parts = lodash_1.default.compact([localeCode, util_1.keyPathAsString(this._rootKeyPath), util_1.keyPathAsString(keyPath)]);
         return parts.join('.');
     }
+    //   private info(keyPath: KeyPath): {lexicon:Lexicon, keyPath:KeyPath} | null {
+    info(keyPath) {
+        if (lodash_1.default.isNil(keyPath))
+            throw new Error("'keyPath' is null/undefined");
+        function recursiveFind(node, keyPath, lexicon, prefix) {
+            if (lodash_1.default.isNil(node))
+                throw new Error("'node' is null/undefined");
+            if (lodash_1.default.isNil(keyPath))
+                throw new Error("'keyPath' is null/undefined");
+            const [firstKey, ...restOfKeys] = keyPath;
+            let nextNode = undefined;
+            if (node instanceof Lexicon) {
+                // We found a lexicon. Reset prefix to ignore parent Lexicons
+                lexicon = node;
+                prefix = [firstKey];
+                nextNode = lexicon.get(firstKey);
+            }
+            else {
+                prefix = prefix.concat([firstKey]); // use concat to not modify old value of 'prefix'
+                nextNode = util.get(node, firstKey);
+            }
+            if (restOfKeys.length == 0) {
+                return {
+                    lexicon: lexicon,
+                    keyPath: prefix,
+                };
+            }
+            ;
+            return recursiveFind(nextNode, restOfKeys, lexicon, prefix);
+        }
+        ;
+        return recursiveFind(this, util_1.keyPathAsArray(keyPath), this, []);
+    }
     /* Used by LexiconEditor
   
        Returns the filename and KeyPath of the item in question.
@@ -109,9 +121,10 @@ class Lexicon {
        at a Lexicon subset, with some keys hidden.
      */
     source(keyPath) {
+        let info = this.info(keyPath);
         return {
-            filename: this.filename(),
-            keyPath: this._fullKey(this.currentLocaleCode, keyPath),
+            filename: info.lexicon.filename(),
+            keyPath: [this.currentLocaleCode].concat(info.keyPath),
         };
     }
     /* Used by LexiconEditor

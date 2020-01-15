@@ -25,7 +25,11 @@ export class Lexicon {
     this._rootKeyPath = subset;
   }
 
-  // Return a new Lexicon with same contens, but different default language code
+  //
+  //    Methods for use by Lexicon clients
+  //
+
+  /* Return a new Lexicon with same contens, but different default language code */
   locale(localeCode: LocaleCode): Lexicon | null {
     if (!util.has(this._contentByLocale, localeCode)) return null;
     return new Lexicon(this._contentByLocale, localeCode, this._filename, this._rootKeyPath);
@@ -38,7 +42,6 @@ export class Lexicon {
   */
   get(keyPath: KeyPath, templateSubstitutions?: object): any {
     if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
-    if (_.isNil(this._contentByLocale)) throw new Error("'this._contentByLocale' is null/undefined")
 
     // Get one level
     function recursiveGet(data: any, keyPath: Array<string>): any {
@@ -90,27 +93,73 @@ export class Lexicon {
   }
 
   /* Determine the complete "key path" to retrieve our value */
-  private _fullKey(localeCode:LocaleCode, keyPath:KeyPath) {
-    var parts = _.compact([localeCode, keyPathAsString(this._rootKeyPath), keyPathAsString(keyPath)]);
+  private _fullKey(locale:LocaleCode, keyPath:KeyPath) {
+    var parts = _.compact([locale, keyPathAsString(this._rootKeyPath), keyPathAsString(keyPath)]);
     return parts.join('.');
   }
 
-  /* Used by LexiconEditor
+//   private info(...
+  info(locale: LocaleCode, keyPath: KeyPath): {lexicon:Lexicon, locale:string, keyPath:KeyPath} | null {
+    if (locale.length != 2) throw new Error("'locale' should be LocaleCode, e.g. 'en'");
+    if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined");
 
+    function recursiveFind(
+        node: Collection | Lexicon,
+        keyPath: Array<string>,
+        lexicon: Lexicon,
+        prefix: Array<string>) {
+//       console.log('!!! recursiveFind() prefix=', prefix, 'keyPath=', keyPath, 'node=', node)
+
+      if (_.isNil(node)) throw new Error("'node' is null/undefined")
+      if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+
+      const [firstKey, ...restOfKeys] = keyPath;
+      let nextNode = undefined;
+
+      if (node instanceof Lexicon) { // Is this a nested Lexicon?
+        lexicon = node;
+        prefix = [firstKey]; // Reset prefix to ignore parent Lexicons
+        nextNode = lexicon.locale(locale).get(firstKey);
+      } else {
+        prefix = prefix.concat([firstKey]); // use concat to not modify old value of 'prefix'
+        nextNode = util.get(node, firstKey);
+      }
+
+      if (restOfKeys.length == 0) {
+        return { // we found it
+          lexicon: lexicon,
+          locale: locale,
+          keyPath: prefix,
+        };
+      };
+
+      return recursiveFind(nextNode, restOfKeys, lexicon, prefix);
+    };
+
+    let fullPathExcludingLocale = this._fullKey(null, keyPath)
+
+    return recursiveFind(this, keyPathAsArray(fullPathExcludingLocale), this, []);
+  }
+
+  //
+  //    Methods for use by Lexicon Editor
+  //
+
+  /*
      Returns the filename and KeyPath of the item in question.
      The returned keyPath might be different from the input because you're looking
      at a Lexicon subset, with some keys hidden.
    */
-  source(keyPath: KeyPath): {filename: string, keyPath: KeyPath} {
+  source(keyPath: KeyPath): {filename:string, keyPath:KeyPath} | null {
+    let info = this.info(this.currentLocaleCode, keyPath);
     return {
-      filename: this.filename(),
-      keyPath: this._fullKey(this.currentLocaleCode, keyPath),
+      filename: info.lexicon.filename(),
+      keyPath: [info.locale].concat(info.keyPath),
     };
   }
 
-  /* Used by LexiconEditor
-     Return language codes for available locales
-   */
+
+  /* Return language codes for available locales */
   locales(): Array<LocaleCode> {
     return util.keys(this._contentByLocale) as Array<string>;
   }
@@ -121,7 +170,7 @@ export class Lexicon {
   }
 
 
-  /* Used by LexiconEditor */
+  /* Return list of dotted keys, e.g. ['mycomponent.title', 'mycomponent.page1.intro'] */
   keys(): Array<string> {
     const localeMap = util.get(this._contentByLocale, this.currentLocaleCode);
     if (localeMap === undefined) return [];
@@ -149,9 +198,9 @@ export class Lexicon {
     return flatKeys;
   }
 
-  /* Used by LexiconEditor */
-  update(key: string, newValue: any, localeCode: LocaleCode = this.currentLocaleCode): boolean {
-    let fullPath = this._fullKey(localeCode, key);
+  /* Set a value in the Lexicon */
+  update(keyPath: KeyPath, newValue: any, locale: LocaleCode = this.currentLocaleCode): boolean {
+    let fullPath = this._fullKey(locale, keyPath);
     if (! util.has(this._contentByLocale, fullPath)) {
       return false; // We don't have that locale
     }
@@ -166,8 +215,8 @@ export class Lexicon {
   }
 
   /* Used by LexiconEditor */
-  asObject(): ContentByLocale {
-    return this._contentByLocale;
-  }
+//   asObject(): ContentByLocale {
+//     return this._contentByLocale;
+//   }
 }
 

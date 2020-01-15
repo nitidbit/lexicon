@@ -108,6 +108,8 @@ describe('Lexicon module', () => {
       expect(newLex.get('wom')).toEqual('bat');
       expect(newLex.currentLocaleCode).toEqual('en');
     });
+
+    pending('locale and nested Lexicons work together');
   });
 
   describe('subset()', () => {
@@ -194,27 +196,30 @@ describe('Lexicon module', () => {
     });
   });
 
-  describe('asObject()', () => {
-    test('returns the correct representation of the Lexicon', () => {
-      expect(new Lexicon(lexObj, 'en', 'blah.json').asObject()).toEqual(lexObj);
-    });
-  });
+//   describe('asObject()', () => {
+//     test('returns the correct representation of the Lexicon', () => {
+//       expect(new Lexicon(lexObj, 'en', 'blah.json').asObject()).toEqual(lexObj);
+//     });
+//   });
 
   describe('source()', () => {
     test('returns keyPath and filename', () => {
-      expect(lex.source('foo')).toEqual({filename: 'blah.json', keyPath: 'en.foo'});
+      expect(lex.source('foo')).toEqual({filename: 'blah.json', keyPath: ['en', 'foo']});
     });
 
     test('works with locale("es")', () => {
-      expect(lex.locale("es").source('foo')).toEqual({filename: 'blah.json', keyPath: 'es.foo'});
+      expect(lex.locale("es").source('foo')).toEqual(
+        {filename: 'blah.json', keyPath: ['es', 'foo']});
     });
 
     test('works with subset("nested")', () => {
-      expect(lex.subset('nested').source('wom')).toEqual({filename: 'blah.json', keyPath: 'en.nested.wom'});
+      expect(lex.subset('nested').source('wom')).toEqual(
+        {filename: 'blah.json', keyPath: ['en', 'nested', 'wom']});
     });
 
     test('works with Lexicons inside Lexicons', () => {
-      expect(lex.source('subLex.subFoo')).toEqual({filename: 'subLex.json', keyPath: 'en.subFoo'})
+      expect(lex.source('subLex.subFoo')).toEqual(
+        {filename: 'subLex.json', keyPath: ['en', 'subFoo']})
     });
   });
 });
