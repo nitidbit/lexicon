@@ -29,7 +29,7 @@ export class Lexicon {
   //    Methods for use by Lexicon clients
   //
 
-  /* Return a new Lexicon with same contens, but different default language code */
+  /* Return a new Lexicon with same contents, but different default language code */
   locale(localeCode: LocaleCode): Lexicon | null {
     if (!util.has(this._contentByLocale, localeCode)) return null;
     return new Lexicon(this._contentByLocale, localeCode, this._filename, this._rootKeyPath);
@@ -43,37 +43,17 @@ export class Lexicon {
   get(keyPath: KeyPath, templateSubstitutions?: object): any {
     if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
 
-    // Get one level
-    function recursiveGet(data: any, keyPath: Array<string>): any {
-      if (_.isNil(data)) throw new Error("'data' is null/undefined")
-      if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+    let info = this.find(this.currentLocaleCode, keyPath);
 
-      const [firstKey, ...restOfKeys] = keyPath;
-      let subData = undefined;
+    if (_.isNil(info)) { // could not find it--try English
+      info = this.find(DEFAULT_LOCALE_CODE, keyPath);
 
-      if (data instanceof Lexicon) {
-        subData = data.get(firstKey);
-      } else {
-        subData = util.get(data, firstKey);
-      }
-
-      if (restOfKeys.length == 0) {
-        return subData; // we found it
-      }
-
-      return recursiveGet(subData, restOfKeys);
-    }
-
-    let fullKey = keyPathAsArray(this._fullKey(this.currentLocaleCode, keyPath));
-    let val = recursiveGet(this._contentByLocale, fullKey);
-
-    if (_.isUndefined(val)) { // could not find data--try English
-      val = util.get(this._contentByLocale, this._fullKey(DEFAULT_LOCALE_CODE, keyPath));
-
-      if (_.isUndefined(val)) { // still couldn't find it--return a clue of the problem
-        return `[no content for "${keyPathAsString(fullKey)}"]`;
+      if (_.isNil(info)) { // still couldn't find it--return a clue of the problem
+        return `[no content for "${keyPathAsString(this.fullKey(this.currentLocaleCode, keyPath))}"]`;
       }
     }
+
+    let val = info.value;
 
     if (_.isString(val) && !_.isUndefined(templateSubstitutions)) {
       val = evaluateTemplate(val, templateSubstitutions);
@@ -88,20 +68,23 @@ export class Lexicon {
        a.subset('secondLevel') // --> Lexicon({title: "Mister"})
   */
   subset(keyPath: KeyPath): Lexicon | null {
-    let rootPathExcludingLocale = this._fullKey(null, keyPath);
+    let rootPathExcludingLocale = this.fullKey(null, keyPath);
     return new Lexicon(this._contentByLocale, this.currentLocaleCode, this._filename, rootPathExcludingLocale);
   }
 
   /* Determine the complete "key path" to retrieve our value */
-  private _fullKey(locale:LocaleCode, keyPath:KeyPath) {
+  private fullKey(locale:LocaleCode, keyPath:KeyPath) {
     var parts = _.compact([locale, keyPathAsString(this._rootKeyPath), keyPathAsString(keyPath)]);
     return parts.join('.');
   }
 
-//   private info(...
-  info(locale: LocaleCode, keyPath: KeyPath): {lexicon:Lexicon, locale:string, keyPath:KeyPath} | null {
+  /* Find some content and return info about that node */
+  private find(locale: LocaleCode, keyPath: KeyPath): {lexicon:Lexicon, locale:string, keyPath:KeyPath, value:any} | null {
     if (locale.length != 2) throw new Error("'locale' should be LocaleCode, e.g. 'en'");
     if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined");
+
+    let fullPathExcludingLocale = this.fullKey(null, keyPath)
+    return recursiveFind(this, keyPathAsArray(fullPathExcludingLocale), this, []);
 
     function recursiveFind(
         node: Collection | Lexicon,
@@ -119,26 +102,27 @@ export class Lexicon {
       if (node instanceof Lexicon) { // Is this a nested Lexicon?
         lexicon = node;
         prefix = [firstKey]; // Reset prefix to ignore parent Lexicons
-        nextNode = lexicon.locale(locale).get(firstKey);
+        nextNode = util.get(lexicon._contentByLocale, [locale, firstKey]);
       } else {
         prefix = prefix.concat([firstKey]); // use concat to not modify old value of 'prefix'
         nextNode = util.get(node, firstKey);
       }
 
+      if (_.isUndefined(nextNode)) return null; // could not find the node
+
       if (restOfKeys.length == 0) {
-        return { // we found it
+        let result = { // we found it
           lexicon: lexicon,
           locale: locale,
           keyPath: prefix,
+          value: nextNode,
         };
+//         console.log('!!! find() result=', result);
+        return result;
       };
 
       return recursiveFind(nextNode, restOfKeys, lexicon, prefix);
     };
-
-    let fullPathExcludingLocale = this._fullKey(null, keyPath)
-
-    return recursiveFind(this, keyPathAsArray(fullPathExcludingLocale), this, []);
   }
 
   //
@@ -151,7 +135,7 @@ export class Lexicon {
      at a Lexicon subset, with some keys hidden.
    */
   source(keyPath: KeyPath): {filename:string, keyPath:KeyPath} | null {
-    let info = this.info(this.currentLocaleCode, keyPath);
+    let info = this.find(this.currentLocaleCode, keyPath);
     return {
       filename: info.lexicon.filename(),
       keyPath: [info.locale].concat(info.keyPath),
@@ -182,7 +166,6 @@ export class Lexicon {
         if (v instanceof Lexicon) {
           const subKeys = v.keys();
           const prefixedKeys = _.map(subKeys, (keyPath) => `${prefix}${k}.${keyPath}`);
-          console.log('!!! keys() prefixedKeys=', prefixedKeys);
           flatKeys = flatKeys.concat(prefixedKeys);
 
         } else if (util.isCollection(v)) {
@@ -200,7 +183,7 @@ export class Lexicon {
 
   /* Set a value in the Lexicon */
   update(keyPath: KeyPath, newValue: any, locale: LocaleCode = this.currentLocaleCode): boolean {
-    let fullPath = this._fullKey(locale, keyPath);
+    let fullPath = this.fullKey(locale, keyPath);
     if (! util.has(this._contentByLocale, fullPath)) {
       return false; // We don't have that locale
     }
