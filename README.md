@@ -58,7 +58,9 @@ Arrays can be accessed using numeric keys
 
     lex.get('faq.0.question')                           // => 'What is the meaning of life,
                                                         //     the universe, and everything?'
-
+Change History
+--------------
+See: [src/index.ts](src/index.ts)
 
 Adding an in-place editor
 -------------------------
@@ -117,8 +119,8 @@ PATCH version when you make backwards compatible bug fixes.
 
 When Lexicon is in a good state, mark a new version with:
 
-    change src/index.ts > VERSION
     change package.json > version
+    change src/index.ts > VERSION
 
 Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to
 people using the package. This is already done if you've been running `npm run watch`
