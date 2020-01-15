@@ -109,7 +109,9 @@ describe('Lexicon module', () => {
       expect(newLex.currentLocaleCode).toEqual('en');
     });
 
-    pending('locale and nested Lexicons work together');
+    test('locale and nested Lexicons work together', ()=> {
+      expect(lex.locale('es').subset('subLex').locale('en').get('subFoo')).toEqual('SUB FOO');
+    });
   });
 
   describe('subset()', () => {
