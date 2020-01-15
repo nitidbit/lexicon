@@ -12,11 +12,8 @@ export declare class Lexicon {
     locale(localeCode: LocaleCode): Lexicon | null;
     get(keyPath: KeyPath, templateSubstitutions?: object): any;
     subset(keyPath: KeyPath): Lexicon | null;
-    private _fullKey;
-    info(keyPath: KeyPath): {
-        lexicon: Lexicon;
-        keyPath: KeyPath;
-    } | null;
+    private fullKey;
+    private find;
     source(keyPath: KeyPath): {
         filename: string;
         keyPath: KeyPath;
@@ -24,8 +21,7 @@ export declare class Lexicon {
     locales(): Array<LocaleCode>;
     filename(): string;
     keys(): Array<string>;
-    update(key: string, newValue: any, localeCode?: LocaleCode): boolean;
+    update(keyPath: KeyPath, newValue: any, locale?: LocaleCode): boolean;
     clone(): Lexicon;
-    asObject(): ContentByLocale;
 }
 export {};

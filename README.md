@@ -126,8 +126,10 @@ Right before you check-in, Build the JS ouput before you commit to GitHub, so it
 people using the package. This is already done if you've been running `npm run watch`
 
     npm run tsc
-    git tag <major>.<minor>.<patch>
-    git push origin <major>.<minor>.<patch>
+    VERSION=<major>.<minor>.<patch>
+    git add . && git commit -m "Version ${VERSION}"
+    git tag ${VERSION}
+    git push && git push origin ${VERSION}
 
 
 Thoughts

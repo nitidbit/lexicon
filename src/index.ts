@@ -1,12 +1,14 @@
 export { Lexicon } from './Lexicon';
 export { default as EditWrapper } from './EditWrapper';
 
-export const VERSION = '2.7.0'
+export const VERSION = '2.7.1'
 
 /*
   Change History - API changes since last version
 
-  v2.7 — Lexicons can be stored inside other Lexicons
+  v2.7.1 — Fix: didn't compile TS -> JS before commiting
+
+  v2.7.0 — Lexicons can be stored inside other Lexicons
     * e.g. let lex = new Lexicon({
         en: {
           title: "...",
