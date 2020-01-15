@@ -73,11 +73,7 @@ When you create an `EditWrapper`, you now need to specify the API endpoint it sh
 />
 ```
 
-Here is a diagram of how all the pieces of Lexicon fit together
-
-<img src="https://raw.githubusercontent.com/nitidbit/lexicon/master/LexiconComponents.png"
-  style="width: 60%; margin-left: 20%"
-/>
+[Here is a diagram of how all the pieces of Lexicon fit together](LexiconComponents.png)
 
 Developing the Lexicon NPM Package
 ----------------------------------
