@@ -148,7 +148,16 @@ describe('Lexicon module', () => {
         'onlyExistsInEnglish',
         'subLex.subFoo',
       ]);
-      expect(lex.locale('es').keys()).toEqual(['foo', 'nested.wom', 'arrayOfObjects.0.text', 'arrayOfObjects.1.text', 'onlyExistsInSpanish']);
+    });
+
+    test('works with different locales', () => {
+      expect(lex.locale('es').keys())
+        .toEqual(['foo', 'nested.wom', 'arrayOfObjects.0.text', 'arrayOfObjects.1.text', 'onlyExistsInSpanish']);
+    });
+
+    test('keys() for subsets only returns keys under that subset', () => {
+      expect(lex.subset('nested').keys())
+        .toEqual(['wom']);
     });
   });
 

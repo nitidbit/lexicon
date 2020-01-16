@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const Lexicon_1 = require("./Lexicon");
-const LexiconEditor_1 = __importDefault(require("./LexiconEditor"));
+const LexiconEditor_1 = require("./LexiconEditor");
 require("../styles/EditWrapperStyles.scss");
 const util_1 = require("./util");
 var SavingState;
@@ -187,7 +187,7 @@ class EditWrapper extends react_1.default.Component {
                         react_1.default.createElement("label", { className: "close-btn" },
                             " \u00D7",
                             react_1.default.createElement("button", { onClick: this.toggleEditor }))),
-                    react_1.default.createElement(LexiconEditor_1.default, { lexicon: lexicon, onChange: this.updateText, selectedLocale: lexicon.currentLocaleCode, switchLocale: this.switchLocale }),
+                    react_1.default.createElement(LexiconEditor_1.LexiconEditor, { lexicon: lexicon, onChange: this.updateText, selectedLocale: lexicon.currentLocaleCode, switchLocale: this.switchLocale }),
                     react_1.default.createElement("div", { className: "save-box" },
                         react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText)),
                     this.state.savingState == SavingState.Error && react_1.default.createElement("p", { className: "error-message" }, this.state.errorMessage))));

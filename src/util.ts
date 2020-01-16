@@ -13,7 +13,7 @@ export type KeyPath = Array<string> | string;
 /* return in Array form, e.g. 'my.key.path' -> ['my', 'key', 'path'] */
 export function keyPathAsArray(keyPath: KeyPath): Array<string> {
   if (_.isString(keyPath)) {
-    keyPath = keyPath.split('.');
+    keyPath = _.compact(keyPath.split('.'));
   }
   return keyPath
 }

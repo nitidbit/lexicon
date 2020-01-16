@@ -14,6 +14,10 @@ const util_1 = require("./util");
 const util = __importStar(require("./util"));
 const lodash_1 = __importDefault(require("lodash"));
 const DEFAULT_LOCALE_CODE = 'en';
+function isLocaleCode(locale) {
+    return lodash_1.default.isString(locale)
+        && locale.length < 10;
+}
 class Lexicon {
     constructor(contentByLocale, localeCode, filename, subset = '') {
         this.currentLocaleCode = localeCode;
@@ -26,6 +30,8 @@ class Lexicon {
     //
     /* Return a new Lexicon with same contents, but different default language code */
     locale(localeCode) {
+        if (!isLocaleCode(localeCode))
+            throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`);
         if (!util.has(this._contentByLocale, localeCode))
             return null;
         return new Lexicon(this._contentByLocale, localeCode, this._filename, this._rootKeyPath);
@@ -39,8 +45,10 @@ class Lexicon {
         if (lodash_1.default.isNil(keyPath))
             throw new Error("'keyPath' is null/undefined");
         let info = this.find(this.currentLocaleCode, keyPath);
+        //     console.log('!!! get(',keyPath,') info-1=', info);
         if (lodash_1.default.isNil(info)) { // could not find it--try English
             info = this.find(DEFAULT_LOCALE_CODE, keyPath);
+            //       console.log('!!! get(',keyPath,') info-2=', info);
             if (lodash_1.default.isNil(info)) { // still couldn't find it--return a clue of the problem
                 return `[no content for "${util_1.keyPathAsString(this.fullKey(this.currentLocaleCode, keyPath))}"]`;
             }
@@ -67,8 +75,8 @@ class Lexicon {
     }
     /* Find some content and return info about that node */
     find(locale, keyPath) {
-        if (locale.length != 2)
-            throw new Error("'locale' should be LocaleCode, e.g. 'en'");
+        if (!isLocaleCode(locale))
+            throw new Error(`'locale' should be LocaleCode, e.g. 'en', not: ${locale}`);
         if (lodash_1.default.isNil(keyPath))
             throw new Error("'keyPath' is null/undefined");
         let fullPathExcludingLocale = this.fullKey(null, keyPath);
@@ -99,7 +107,7 @@ class Lexicon {
                     keyPath: prefix,
                     value: nextNode,
                 };
-                //         console.log('!!! find() result=', result);
+                //         console.log('!!! find() value:', nextNode);
                 return result;
             }
             ;
@@ -132,27 +140,29 @@ class Lexicon {
     }
     /* Return list of dotted keys, e.g. ['mycomponent.title', 'mycomponent.page1.intro'] */
     keys() {
-        const localeMap = util.get(this._contentByLocale, this.currentLocaleCode);
-        if (localeMap === undefined)
+        const info = this.find(this.currentLocaleCode, []);
+        if (lodash_1.default.isNil(info))
             return [];
+        const startingNode = info.value;
+        console.log('!!! keys() startingNode=', startingNode);
         let flatKeys = [];
-        const recurse = (c, prefix) => {
-            for (const [k, v] of util.entries(c)) {
-                if (v instanceof Lexicon) {
-                    const subKeys = v.keys();
-                    const prefixedKeys = lodash_1.default.map(subKeys, (keyPath) => `${prefix}${k}.${keyPath}`);
+        recurse(startingNode, '');
+        return flatKeys;
+        function recurse(c, prefix) {
+            for (const [key, node] of util.entries(c)) {
+                if (node instanceof Lexicon) {
+                    const subKeys = node.keys();
+                    const prefixedKeys = lodash_1.default.map(subKeys, (keyPath) => `${prefix}${key}.${keyPath}`);
                     flatKeys = flatKeys.concat(prefixedKeys);
                 }
-                else if (util.isCollection(v)) {
-                    recurse(v, `${prefix}${k}.`);
+                else if (util.isCollection(node)) {
+                    recurse(node, `${prefix}${key}.`);
                 }
                 else {
-                    flatKeys.push(`${prefix}${k}`);
+                    flatKeys.push(`${prefix}${key}`);
                 }
             }
-        };
-        recurse(localeMap, '');
-        return flatKeys;
+        }
     }
     /* Set a value in the Lexicon */
     update(keyPath, newValue, locale = this.currentLocaleCode) {

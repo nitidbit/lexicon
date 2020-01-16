@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react';
 
 import { Lexicon } from './Lexicon';
-import LexiconEditor from './LexiconEditor';
+import {LexiconEditor} from './LexiconEditor';
 import '../styles/EditWrapperStyles.scss';
 import { getURLParameter } from './util';
 

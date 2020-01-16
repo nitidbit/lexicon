@@ -9,5 +9,4 @@ export interface LexiconEditorProps {
     selectedLocale: string;
     switchLocale: SwitchLocaleCallback;
 }
-declare const LexiconEditor: ({ lexicon, onChange, selectedLocale, switchLocale }: LexiconEditorProps) => JSX.Element;
-export default LexiconEditor;
+export declare const LexiconEditor: ({ lexicon, onChange, selectedLocale, switchLocale }: LexiconEditorProps) => JSX.Element;

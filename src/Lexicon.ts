@@ -2,8 +2,12 @@ import { Collection, isCollection, KeyPath, keyPathAsString, keyPathAsArray, eva
 import * as util from './util';
 import _ from 'lodash';
 
-type LocaleCode = string; // e.g. 'en', 'es'
+type LocaleCode = string; // e.g. 'en', 'es', 'en_GB', 'zh-Hant'
 const DEFAULT_LOCALE_CODE = 'en';
+function isLocaleCode(locale:LocaleCode) {
+  return _.isString(locale)
+    && locale.length < 10;
+}
 
 export type ContentByLocale = {
   [localeCode: string]: object | Map<any, any>,
@@ -31,6 +35,8 @@ export class Lexicon {
 
   /* Return a new Lexicon with same contents, but different default language code */
   locale(localeCode: LocaleCode): Lexicon | null {
+    if (! isLocaleCode(localeCode)) throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`);
+
     if (!util.has(this._contentByLocale, localeCode)) return null;
     return new Lexicon(this._contentByLocale, localeCode, this._filename, this._rootKeyPath);
   }
@@ -83,8 +89,13 @@ export class Lexicon {
 
 
   /* Find some content and return info about that node */
-  private find(locale: LocaleCode, keyPath: KeyPath): {lexicon:Lexicon, locale:string, keyPath:KeyPath, value:any} | null {
-    if (locale.length != 2) throw new Error("'locale' should be LocaleCode, e.g. 'en'");
+  private find(locale: LocaleCode, keyPath: KeyPath):
+      null
+      | {lexicon:Lexicon,
+         locale:string,
+         keyPath:KeyPath,
+         value:any} {
+    if (! isLocaleCode(locale)) throw new Error(`'locale' should be LocaleCode, e.g. 'en', not: ${locale}`);
     if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined");
 
     let fullPathExcludingLocale = this.fullKey(null, keyPath)
@@ -98,35 +109,34 @@ export class Lexicon {
         prefix: Array<string>) {
 //       console.log('!!! recursiveFind() prefix=', prefix, 'keyPath=', keyPath, 'node=', node)
 
-      if (_.isNil(node)) throw new Error("'node' is null/undefined")
+      if (_.isUndefined(node)) return null; // could not find the node
       if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
 
-      const [firstKey, ...restOfKeys] = keyPath;
-      let nextNode = undefined;
-
-      if (node instanceof Lexicon) { // Is this a nested Lexicon?
-        lexicon = node;
-        prefix = [firstKey]; // Reset prefix to ignore parent Lexicons
-        nextNode = util.get(lexicon._contentByLocale, [locale, firstKey]);
-      } else {
-        prefix = prefix.concat([firstKey]); // use concat to not modify old value of 'prefix'
-        nextNode = util.get(node, firstKey);
-      }
-
-      if (_.isUndefined(nextNode)) return null; // could not find the node
-
-      if (restOfKeys.length == 0) {
+      if (keyPath.length == 0 && !(node instanceof Lexicon)) {
         let result = { // we found it
           lexicon: lexicon,
           locale: locale,
           keyPath: prefix,
-          value: nextNode,
+          value: node,
         };
-//         console.log('!!! find() result=', result);
+//         console.log('!!! find() value:', nextNode);
         return result;
       };
 
-      return recursiveFind(nextNode, restOfKeys, lexicon, prefix);
+      let nextNode = undefined;
+
+      if (node instanceof Lexicon) {
+        lexicon = node;
+        prefix = [];
+        nextNode = util.get(lexicon._contentByLocale, [locale]);
+      } else {
+        const firstKey = keyPath[0];
+        keyPath = keyPath.slice(1);
+        prefix = prefix.concat([firstKey]); // use concat to not modify old value of 'prefix'
+        nextNode = util.get(node, firstKey);
+      }
+
+      return recursiveFind(nextNode, keyPath, lexicon, prefix);
     };
   }
 
@@ -162,29 +172,31 @@ export class Lexicon {
 
   /* Return list of dotted keys, e.g. ['mycomponent.title', 'mycomponent.page1.intro'] */
   keys(): Array<string> {
-    const localeMap = util.get(this._contentByLocale, this.currentLocaleCode);
-    if (localeMap === undefined) return [];
+    const info = this.find(this.currentLocaleCode, [])
+    if (_.isNil(info)) return [];
+
+    const startingNode = info.value;
 
     let flatKeys: Array<string> = [];
-    const recurse = (c: Collection, prefix: string) => {
-      for (const [k, v] of util.entries(c)) {
+    recurse(startingNode, '');
+    return flatKeys;
 
-        if (v instanceof Lexicon) {
-          const subKeys = v.keys();
-          const prefixedKeys = _.map(subKeys, (keyPath) => `${prefix}${k}.${keyPath}`);
+    function recurse(c: Collection | Lexicon, prefix: string) {
+      for (const [key, node] of util.entries(c)) {
+
+        if (node instanceof Lexicon) {
+          const subKeys = node.keys();
+          const prefixedKeys = _.map(subKeys, (keyPath) => `${prefix}${key}.${keyPath}`);
           flatKeys = flatKeys.concat(prefixedKeys);
 
-        } else if (util.isCollection(v)) {
-          recurse(v, `${prefix}${k}.`);
+        } else if (util.isCollection(node)) {
+          recurse(node, `${prefix}${key}.`);
 
         } else {
-          flatKeys.push(`${prefix}${k}`);
+          flatKeys.push(`${prefix}${key}`);
         }
       }
-    };
-
-    recurse(localeMap, '');
-    return flatKeys;
+    }
   }
 
 

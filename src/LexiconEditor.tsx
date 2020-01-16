@@ -9,6 +9,23 @@ export type SwitchLocaleCallback = (newLocale: string) => void;
 
 type HtmlOnChangeCallback = (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
 
+function LocaleChooser({lexicon, switchLocale, selectedLocale}) {
+  return (
+    lexicon.locales().map((locale: string) => (
+      <label htmlFor={`localeRadio__${locale}`} key={locale}>
+        <input
+          type="radio"
+          id={`localeRadio__${locale}`}
+          value={locale}
+          checked={locale == selectedLocale}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => switchLocale(e.target.value)}
+        />
+        {locale}
+      </label>
+    ))
+  );
+}
+
 const FormRow = (props: { label: string, children: any }) => (
   <div id="FormRow">
     <label title={props.label}>
@@ -41,7 +58,7 @@ export interface LexiconEditorProps {
   switchLocale: SwitchLocaleCallback;
 }
 
-const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }: LexiconEditorProps) => {
+export const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }: LexiconEditorProps) => {
   const sendLexiconEditorChange = (event) => {
     const { name: contentKey, value: newValue } = event.target;
     onChange(contentKey, newValue);
@@ -49,20 +66,9 @@ const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }: Lexi
 
   return (
     <div id="LexiconEditor">
-      {
-        lexicon.locales().map((locale: string) => (
-          <label htmlFor={`localeRadio__${locale}`} key={locale}>
-            <input
-              type="radio"
-              id={`localeRadio__${locale}`}
-              value={locale}
-              checked={locale == selectedLocale}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => switchLocale(e.target.value)}
-            />
-            {locale}
-          </label>
-        ))
-      }
+
+      <LocaleChooser lexicon={lexicon} selectedLocale={selectedLocale} switchLocale={switchLocale} />
+
       {
         lexicon.keys().map((key: string) => (
           <FormRow key={key} label={key}>
@@ -78,4 +84,3 @@ const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }: Lexi
   );
 };
 
-export default LexiconEditor;
