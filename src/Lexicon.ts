@@ -1,4 +1,5 @@
-import { Collection, isCollection, KeyPath, keyPathAsString, keyPathAsArray, evaluateTemplate } from './util';
+import { Collection, isCollection, KeyPath, KeyPathArray, KeyPathString,
+  keyPathAsString, keyPathAsArray, evaluateTemplate } from './util';
 import * as util from './util';
 import _ from 'lodash';
 
@@ -17,16 +18,19 @@ export class Lexicon {
   private _contentByLocale: ContentByLocale;
   public currentLocaleCode: LocaleCode;
   private _filename: string;
-  private _rootKeyPath: KeyPath;
+  private _subsetRoot: KeyPathArray;
 
   constructor(contentByLocale: ContentByLocale,
               localeCode: LocaleCode,
               filename: string,
               subset: KeyPath = '') {
+    if (! _.has(contentByLocale, DEFAULT_LOCALE_CODE)) {
+      throw new Error("'contentByLocale' must contain 'en: {...}' locale");
+    }
     this.currentLocaleCode = localeCode;
     this._filename = filename;
     this._contentByLocale = contentByLocale;
-    this._rootKeyPath = subset;
+    this._subsetRoot = keyPathAsArray(subset);
   }
 
   //
@@ -38,7 +42,7 @@ export class Lexicon {
     if (! isLocaleCode(localeCode)) throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`);
 
     if (!util.has(this._contentByLocale, localeCode)) return null;
-    return new Lexicon(this._contentByLocale, localeCode, this._filename, this._rootKeyPath);
+    return new Lexicon(this._contentByLocale, localeCode, this._filename, this._subsetRoot);
   }
 
 
@@ -83,7 +87,7 @@ export class Lexicon {
 
   /* Determine the complete "key path" to retrieve our value */
   private fullKey(locale:LocaleCode, keyPath:KeyPath) {
-    var parts = _.compact([locale, keyPathAsString(this._rootKeyPath), keyPathAsString(keyPath)]);
+    var parts = _.compact([locale, keyPathAsString(this._subsetRoot), keyPathAsString(keyPath)]);
     return parts.join('.');
   }
 
@@ -98,15 +102,14 @@ export class Lexicon {
     if (! isLocaleCode(locale)) throw new Error(`'locale' should be LocaleCode, e.g. 'en', not: ${locale}`);
     if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined");
 
-    let fullPathExcludingLocale = this.fullKey(null, keyPath)
-    return recursiveFind(this, keyPathAsArray(fullPathExcludingLocale), this, []);
+    return recursiveFind(this, keyPathAsArray(keyPath), this, []);
 
 
     function recursiveFind(
         node: Collection | Lexicon,
-        keyPath: Array<string>,
+        keyPath: KeyPathArray,
         lexicon: Lexicon,
-        prefix: Array<string>) {
+        prefix: KeyPathArray) {
 //       console.log('!!! recursiveFind() prefix=', prefix, 'keyPath=', keyPath, 'node=', node)
 
       if (_.isUndefined(node)) return null; // could not find the node
@@ -119,7 +122,6 @@ export class Lexicon {
           keyPath: prefix,
           value: node,
         };
-//         console.log('!!! find() value:', nextNode);
         return result;
       };
 
@@ -127,7 +129,8 @@ export class Lexicon {
 
       if (node instanceof Lexicon) {
         lexicon = node;
-        prefix = [];
+        prefix = []
+        keyPath = _.concat(keyPathAsArray(lexicon._subsetRoot), keyPath);
         nextNode = util.get(lexicon._contentByLocale, [locale]);
       } else {
         const firstKey = keyPath[0];
@@ -151,6 +154,7 @@ export class Lexicon {
    */
   source(keyPath: KeyPath): {filename:string, keyPath:KeyPath} | null {
     let info = this.find(this.currentLocaleCode, keyPath);
+    if (info == null) throw new Error(`Could not find node for '${keyPath}'`);
     return {
       filename: info.lexicon.filename(),
       keyPath: [info.locale].concat(info.keyPath),
@@ -160,7 +164,7 @@ export class Lexicon {
 
   /* Return language codes for available locales */
   locales(): Array<LocaleCode> {
-    return util.keys(this._contentByLocale) as Array<string>;
+    return util.keys(this._contentByLocale) as Array<LocaleCode>;
   }
 
 
@@ -171,13 +175,13 @@ export class Lexicon {
 
 
   /* Return list of dotted keys, e.g. ['mycomponent.title', 'mycomponent.page1.intro'] */
-  keys(): Array<string> {
+  keys(): Array<KeyPathString> {
     const info = this.find(this.currentLocaleCode, [])
     if (_.isNil(info)) return [];
 
     const startingNode = info.value;
 
-    let flatKeys: Array<string> = [];
+    let flatKeys: KeyPathArray = [];
     recurse(startingNode, '');
     return flatKeys;
 
@@ -214,7 +218,7 @@ export class Lexicon {
 
   /* Used by LexiconEditor */
   clone(): Lexicon {
-    return new Lexicon(_.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._rootKeyPath);
+    return new Lexicon(_.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._subsetRoot);
   }
 }
 

@@ -8,7 +8,9 @@ export type Collection = Map<any, any> | Array<any> | object;
 
 // Specifies keys in a tree of collections, either as dotted strings 'key.2.anotherKey'
 // or as an array ['key', 2, 'anotherKey']
-export type KeyPath = Array<string> | string;
+export type KeyPathArray = Array<string>
+export type KeyPathString = string
+export type KeyPath = KeyPathArray | KeyPathString;
 
 /* return in Array form, e.g. 'my.key.path' -> ['my', 'key', 'path'] */
 export function keyPathAsArray(keyPath: KeyPath): Array<string> {

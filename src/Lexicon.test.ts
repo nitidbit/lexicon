@@ -38,6 +38,10 @@ describe('Lexicon module', () => {
     test('has the correct currentLocaleCode', () => {
       expect(lex.currentLocaleCode).toEqual('en');
     });
+
+    test('raises error when it doesn\'t have "en" locale', () => {
+      expect(() => new Lexicon({missing: {data: 'en locale'}}, 'en', 'missing.json')).toThrow(/must contain 'en/)
+    });
   });
 
   describe('get()', () => {
@@ -212,6 +216,10 @@ describe('Lexicon module', () => {
       expect(lex.source('foo')).toEqual({filename: 'blah.json', keyPath: ['en', 'foo']});
     });
 
+    test('raises exception when node is not found', () => {
+      expect(() => lex.source('does.not.exist')).toThrow(/does.not.exist/);
+    });
+
     test('works with locale("es")', () => {
       expect(lex.locale("es").source('foo')).toEqual(
         {filename: 'blah.json', keyPath: ['es', 'foo']});
@@ -225,6 +233,14 @@ describe('Lexicon module', () => {
     test('works with Lexicons inside Lexicons', () => {
       expect(lex.source('subLex.subFoo')).toEqual(
         {filename: 'subLex.json', keyPath: ['en', 'subFoo']})
+    });
+
+    test('works with Lexicon.subset() inside Lexicons', () => {
+      const BC = new Lexicon({en: {b: {c: "CCC"}}}, 'en', 'BC.json');
+      const A = new Lexicon({en: {a: BC.subset('b')}}, 'en', 'A.json');
+
+      expect(A.source('a.c')).toEqual(
+        {filename: 'BC.json', keyPath: ['en', 'b', 'c']})
     });
   });
 });
