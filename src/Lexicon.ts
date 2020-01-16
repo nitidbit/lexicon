@@ -1,7 +1,7 @@
-import { Collection, isCollection, KeyPath, KeyPathArray, KeyPathString,
-  keyPathAsString, keyPathAsArray, evaluateTemplate } from './util';
-import * as util from './util';
 import _ from 'lodash';
+import { Collection, KeyPath, KeyPathArray, KeyPathString } from './collection';
+import * as col from './collection';
+import {evaluateTemplate } from './util';
 
 type LocaleCode = string; // e.g. 'en', 'es', 'en_GB', 'zh-Hant'
 const DEFAULT_LOCALE_CODE = 'en';
@@ -30,7 +30,7 @@ export class Lexicon {
     this.currentLocaleCode = localeCode;
     this._filename = filename;
     this._contentByLocale = contentByLocale;
-    this._subsetRoot = keyPathAsArray(subset);
+    this._subsetRoot = col.keyPathAsArray(subset);
   }
 
   //
@@ -41,7 +41,7 @@ export class Lexicon {
   locale(localeCode: LocaleCode): Lexicon | null {
     if (! isLocaleCode(localeCode)) throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`);
 
-    if (!util.has(this._contentByLocale, localeCode)) return null;
+    if (!col.has(this._contentByLocale, localeCode)) return null;
     return new Lexicon(this._contentByLocale, localeCode, this._filename, this._subsetRoot);
   }
 
@@ -60,7 +60,7 @@ export class Lexicon {
       info = this.find(DEFAULT_LOCALE_CODE, keyPath);
 
       if (_.isNil(info)) { // still couldn't find it--return a clue of the problem
-        return `[no content for "${keyPathAsString(this.fullKey(this.currentLocaleCode, keyPath))}"]`;
+        return `[no content for "${col.keyPathAsString(this.fullKey(this.currentLocaleCode, keyPath))}"]`;
       }
     }
 
@@ -87,7 +87,7 @@ export class Lexicon {
 
   /* Determine the complete "key path" to retrieve our value */
   private fullKey(locale:LocaleCode, keyPath:KeyPath) {
-    var parts = _.compact([locale, keyPathAsString(this._subsetRoot), keyPathAsString(keyPath)]);
+    var parts = _.compact([locale, col.keyPathAsString(this._subsetRoot), col.keyPathAsString(keyPath)]);
     return parts.join('.');
   }
 
@@ -102,7 +102,7 @@ export class Lexicon {
     if (! isLocaleCode(locale)) throw new Error(`'locale' should be LocaleCode, e.g. 'en', not: ${locale}`);
     if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined");
 
-    return recursiveFind(this, keyPathAsArray(keyPath), this, []);
+    return recursiveFind(this, col.keyPathAsArray(keyPath), this, []);
 
 
     function recursiveFind(
@@ -130,13 +130,13 @@ export class Lexicon {
       if (node instanceof Lexicon) {
         lexicon = node;
         prefix = []
-        keyPath = _.concat(keyPathAsArray(lexicon._subsetRoot), keyPath);
-        nextNode = util.get(lexicon._contentByLocale, [locale]);
+        keyPath = _.concat(col.keyPathAsArray(lexicon._subsetRoot), keyPath);
+        nextNode = col.get(lexicon._contentByLocale, [locale]);
       } else {
         const firstKey = keyPath[0];
         keyPath = keyPath.slice(1);
         prefix = prefix.concat([firstKey]); // use concat to not modify old value of 'prefix'
-        nextNode = util.get(node, firstKey);
+        nextNode = col.get(node, firstKey);
       }
 
       return recursiveFind(nextNode, keyPath, lexicon, prefix);
@@ -164,7 +164,7 @@ export class Lexicon {
 
   /* Return language codes for available locales */
   locales(): Array<LocaleCode> {
-    return util.keys(this._contentByLocale) as Array<LocaleCode>;
+    return col.keys(this._contentByLocale) as Array<LocaleCode>;
   }
 
 
@@ -186,14 +186,14 @@ export class Lexicon {
     return flatKeys;
 
     function recurse(c: Collection | Lexicon, prefix: string) {
-      for (const [key, node] of util.entries(c)) {
+      for (const [key, node] of col.entries(c)) {
 
         if (node instanceof Lexicon) {
           const subKeys = node.keys();
           const prefixedKeys = _.map(subKeys, (keyPath) => `${prefix}${key}.${keyPath}`);
           flatKeys = flatKeys.concat(prefixedKeys);
 
-        } else if (util.isCollection(node)) {
+        } else if (col.isCollection(node)) {
           recurse(node, `${prefix}${key}.`);
 
         } else {
@@ -207,11 +207,11 @@ export class Lexicon {
   /* Set a value in the Lexicon */
   update(keyPath: KeyPath, newValue: any, locale: LocaleCode = this.currentLocaleCode): boolean {
     let fullPath = this.fullKey(locale, keyPath);
-    if (! util.has(this._contentByLocale, fullPath)) {
+    if (! col.has(this._contentByLocale, fullPath)) {
       return false; // We don't have that locale
     }
 
-    util.set(this._contentByLocale, fullPath, newValue);
+    col.set(this._contentByLocale, fullPath, newValue);
     return true; // success
   }
 
