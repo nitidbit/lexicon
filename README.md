@@ -115,8 +115,8 @@ PATCH version when you make backwards compatible bug fixes.
 
 When Lexicon is in a good state, mark a new version with:
 
-    change package.json > version
     change src/index.ts > VERSION
+    change package.json > version
 
 Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to
 people using the package. This is already done if you've been running `npm run watch`

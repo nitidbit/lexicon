@@ -1,11 +1,12 @@
 export { Lexicon } from './Lexicon';
 export { default as EditWrapper } from './EditWrapper';
 
-export const VERSION = '2.7.1 ???'
+export const VERSION = '2.8.0'
 
 /*
   Change History - API changes since last version
 
+  v2.8.0 — You can embed Lexicons within other Lexicons. get(), and editing works fine.
   v2.7.1 — Fix: didn't compile TS -> JS before commiting
 
   v2.7.0 — Lexicons can be stored inside other Lexicons

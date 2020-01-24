@@ -60,8 +60,11 @@ function entries(c) {
 exports.entries = entries;
 // Equivalent to lodash.has(), but works with Maps
 function has(c, key) {
-    if (lodash_1.default.isMap(c))
-        return c.has(key);
+    if (lodash_1.default.isMap(c)) {
+        if (keyPathAsArray(key).length > 1)
+            throw new Error('Not implemented yet.');
+        return c.has(keyPathAsString(key));
+    }
     return lodash_1.default.has(c, key);
 }
 exports.has = has;
@@ -84,3 +87,9 @@ function size(c) {
     return lodash_1.default.size(c);
 }
 exports.size = size;
+// Returns an iterator for the collection
+// export function iterator(c: Collection): Iterator<any> {
+//   if (_.isObject(c)) return _.entries(c)[Symbol.iterator]();
+//   if (_.isArray(c)) return (c as Array<any>)[Symbol.iterator]();
+//   else return (c as Map<any, any>)[Symbol.iterator]();
+// }
