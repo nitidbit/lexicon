@@ -1,12 +1,21 @@
-/// <reference types="react" />
+import React from 'react';
 import '../styles/LexiconEditorStyles.scss';
 import { Lexicon } from './Lexicon';
-export declare type ContentChangeCallback = (contentKey: string, newValue: string) => void;
+import { KeyPath, KeyPathString } from './collection';
+export declare type OnChangeCallback = (change: {
+    filename: string;
+    localPath: KeyPathString;
+    updatePath: KeyPath;
+    newValue: string;
+}) => void;
 export declare type SwitchLocaleCallback = (newLocale: string) => void;
 export interface LexiconEditorProps {
     lexicon: Lexicon;
-    onChange: ContentChangeCallback;
+    onChange: OnChangeCallback;
     selectedLocale: string;
     switchLocale: SwitchLocaleCallback;
 }
-export declare const LexiconEditor: ({ lexicon, onChange, selectedLocale, switchLocale }: LexiconEditorProps) => JSX.Element;
+export declare class LexiconEditor extends React.Component<LexiconEditorProps, {}> {
+    sendLexiconEditorChange: (event: any) => void;
+    render(): JSX.Element;
+}

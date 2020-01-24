@@ -1,38 +1,43 @@
 import { Lexicon } from './Lexicon';
 
 describe('Lexicon module', () => {
-  const subLex = new Lexicon({
-      en: { subFoo: 'SUB FOO' }}, 'en', 'subLex.json');
-  const lexObj = {
-    en: {
-      foo: 'bar',
-      nested: {
-        wom: 'bat',
-      },
-      arrayOfObjects: [
-        { text: 'one' },
-        { text: 'two' },
-      ],
-      map: new Map([['mapKey', 'MAP VALUE']]),
-      arrayOfStrings: [ "ichi", "ni", "san" ],
-      template: '\\#{escaped} \\\\ #{foo} #{bar.baz} #{{{manyBrackets}}}',
-      onlyExistsInEnglish: 'EN only',
-      subLex: subLex,
-    },
-    es: {
-      foo: 'bar_es',
-      nested: {
-        wom: 'murciélago',
-      },
-      arrayOfObjects: [
-        { text: 'uno' },
-        { text: 'dos' },
-      ],
-      onlyExistsInSpanish: 'hola, ¿cómo estás?'
-    },
-  };
+  let lex;
 
-  const lex = new Lexicon(lexObj, 'en', 'blah.json');
+  beforeEach( ()=> {
+    const subLex = new Lexicon({
+        en: { subFoo: 'SUB FOO' }}, 'en', 'subLex.json');
+
+    const lexObj = {
+      en: {
+        foo: 'bar',
+        nested: {
+          wom: 'bat',
+        },
+        arrayOfObjects: [
+          { text: 'one' },
+          { text: 'two' },
+        ],
+        map: new Map([['mapKey', 'MAP VALUE']]),
+        arrayOfStrings: [ "ichi", "ni", "san" ],
+        template: '\\#{escaped} \\\\ #{foo} #{bar.baz} #{{{manyBrackets}}}',
+        onlyExistsInEnglish: 'EN only',
+        subLex: subLex,
+      },
+      es: {
+        foo: 'bar_es',
+        nested: {
+          wom: 'murciélago',
+        },
+        arrayOfObjects: [
+          { text: 'uno' },
+          { text: 'dos' },
+        ],
+        onlyExistsInSpanish: 'hola, ¿cómo estás?'
+      },
+    };
+
+    lex = new Lexicon(lexObj, 'en', 'blah.json');
+  });
 
   describe('new Lexicon()', () => {
     test('has the correct currentLocaleCode', () => {
@@ -43,6 +48,7 @@ describe('Lexicon module', () => {
       expect(() => new Lexicon({missing: {data: 'en locale'}}, 'en', 'missing.json')).toThrow(/must contain 'en/)
     });
   });
+
 
   describe('get()', () => {
     test('works for a single key', () => {
@@ -89,8 +95,14 @@ describe('Lexicon module', () => {
     });
   });
 
+
   describe('locale()', () => {
-    const es = lex.locale('es');
+    let es;
+
+    beforeEach( ()=> {
+      es = lex.locale('es');
+    });
+
 
     test('returns a Lexicon with a new currentLocaleCode', () => {
       expect(es.currentLocaleCode).toEqual('es');
@@ -118,8 +130,13 @@ describe('Lexicon module', () => {
     });
   });
 
+
   describe('subset()', () => {
-    const subset = lex.subset('nested');
+    let subset;
+
+    beforeEach( ()=>{
+      subset = lex.subset('nested');
+    });
 
     test('retains the currentLocaleCode', () => {
       expect(subset.currentLocaleCode).toEqual('en');
@@ -165,27 +182,10 @@ describe('Lexicon module', () => {
     });
   });
 
-  describe('update()', () => {
-    test('updates the key and returns true', () => {
-      expect(lex.update('nested.wom', 'foobar', 'es')).toEqual(true);
-      expect(lex.locale('es').get('nested.wom')).toEqual('foobar');
-    });
 
-    test('uses the default locale if none is specified', () => {
-      expect(lex.update('nested.wom', 'abc')).toEqual(true);
-      expect(lex.get('nested.wom')).toEqual('abc');
-    });
-
-    test('returns false if path or locale does not exist', () => {
-      expect(lex.update('blah.123', 'foobar', 'en')).toEqual(false);
-      expect(lex.update('nested.blah', 'foobar', 'en')).toEqual(false);
-      expect(lex.update('nested.wom', 'foobar', 'fakeLanguage')).toEqual(false);
-    });
-  });
-
-  describe('clone()', () => {
+  describe('cloneDeep()', () => {
     test('returns a copy of the Lexicon', () => {
-      const cloned = lex.clone();
+      const cloned = lex.cloneDeep();
       for (const k of cloned.keys()) {
         expect(cloned.get(k)).toEqual(lex.get(k));
       }
@@ -196,14 +196,17 @@ describe('Lexicon module', () => {
     });
 
     test('returns an independent copy', () => {
-      const clone1 = lex.clone(),
-        clone2 = lex.clone();
-      clone1.update('foo', 'abc');
-      expect(clone1.get('foo')).toEqual('abc');
+      const clone1 = lex.cloneDeep();
+      const clone2 = lex.cloneDeep();
+
+      clone1.update(clone1.source('foo').updatePath, 'FOO 1');
+
+      expect(clone1.get('foo')).toEqual('FOO 1');
       expect(clone2.get('foo')).toEqual('bar');
       expect(lex.get('foo')).toEqual('bar');
     });
   });
+
 
   describe('locales()', () => {
     test('returns a list of defined locales', () => {
@@ -211,9 +214,16 @@ describe('Lexicon module', () => {
     });
   });
 
+
   describe('source()', () => {
-    test('returns keyPath and filename', () => {
-      expect(lex.source('foo')).toEqual({filename: 'blah.json', keyPath: ['en', 'foo']});
+    test('returns keyPath and filename for editing the file', () => {
+      const info = lex.source('foo');
+
+      expect(info.filename).toEqual('blah.json')
+      expect(info.localPath).toEqual(['en', 'foo'])
+
+      lex.update(info.updatePath, 'NEW VALUE');
+      expect(lex.get('foo')).toEqual('NEW VALUE');
     });
 
     test('raises exception when node is not found', () => {
@@ -221,26 +231,90 @@ describe('Lexicon module', () => {
     });
 
     test('works with locale("es")', () => {
-      expect(lex.locale("es").source('foo')).toEqual(
-        {filename: 'blah.json', keyPath: ['es', 'foo']});
+      const info = lex.locale("es").source('foo');
+
+      expect(info.filename).toEqual('blah.json');
+      expect(info.localPath).toEqual(['es', 'foo']);
+
+      lex.update(info.updatePath, 'NEW VALUE');
+      expect(lex.locale("es").get('foo')).toEqual('NEW VALUE');
+
     });
 
     test('works with subset("nested")', () => {
-      expect(lex.subset('nested').source('wom')).toEqual(
-        {filename: 'blah.json', keyPath: ['en', 'nested', 'wom']});
+      let info = lex.subset('nested').source('wom');
+
+      expect(info.filename).toEqual('blah.json');
+      expect(info.localPath).toEqual(['en', 'nested', 'wom']);
+
+      lex.update(info.updatePath, 'NEW VALUE');
+      expect(lex.subset('nested').get('wom')).toEqual('NEW VALUE');
     });
 
     test('works with Lexicons inside Lexicons', () => {
-      expect(lex.source('subLex.subFoo')).toEqual(
-        {filename: 'subLex.json', keyPath: ['en', 'subFoo']})
+      let info = lex.source('subLex.subFoo');
+
+      expect(info.filename).toEqual('subLex.json');
+      expect(info.localPath).toEqual(['en', 'subFoo']);
+
+      lex.update(info.updatePath, 'NEW VALUE');
+      expect(lex.get('subLex.subFoo')).toEqual('NEW VALUE');
     });
 
-    test('works with Lexicon.subset() inside Lexicons', () => {
-      const BC = new Lexicon({en: {b: {c: "CCC"}}}, 'en', 'BC.json');
-      const A = new Lexicon({en: {a: BC.subset('b')}}, 'en', 'A.json');
+    describe('with Lexicon.subset() inside Lexicons', () => {
+      let A, BC;
 
-      expect(A.source('a.c')).toEqual(
-        {filename: 'BC.json', keyPath: ['en', 'b', 'c']})
+      beforeAll( ()=>{
+        BC = new Lexicon({en: {b: {c: "CCC"}}}, 'en', 'BC.json');
+        A = new Lexicon({en: {a: BC.subset('b')}}, 'en', 'A.json');
+      });
+
+      test('returns filename and key path', () => {
+        expect(A.source('a.c').filename).toEqual('BC.json')
+        expect(A.source('a.c').localPath).toEqual(['en', 'b', 'c'])
+      });
+
+      test('returns updatePath that works with .update()', () => {
+        const updatePath = A.source('a.c').updatePath;
+        A.update(updatePath, 'NEW VALUE');
+        expect(A.get('a.c')).toEqual('NEW VALUE')
+      });
     });
   });
+
+
+  describe('update()', () => {
+    let lex2 = null;
+
+    beforeEach( ()=> {
+      lex2 = lex.cloneDeep();
+    });
+
+    test('updates the key and returns true', () => {
+      expect(lex2.update(lex2.source('nested.wom').updatePath, 'NEW BAT')).toEqual(true);
+      expect(lex2.get('nested.wom')).toEqual('NEW BAT');
+    });
+
+
+    test('output of source() can be used to update()', () => {
+      let info = lex.source('nested.wom');
+      lex2.update(info.updatePath, 'NEW BAT')
+
+      expect(lex2.get('nested.wom')).toEqual('NEW BAT')
+      expect(lex.get('nested.wom')).toEqual('bat')
+    });
+
+    test('works for nested Lexicons', () => {
+      let info = lex.source('subLex.subFoo');
+      lex2.update(info.updatePath, 'NEW-sub-foo')
+
+      expect(lex.get('subLex.subFoo')).toEqual('SUB FOO')
+      expect(lex2.get('subLex.subFoo')).toEqual('NEW-sub-foo')
+    });
+
+    test('returns false if path or locale does not exist', () => {
+      expect(lex.update('blah.123', 'foobar')).toEqual(false);
+    });
+  });
+
 });

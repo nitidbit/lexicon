@@ -3,8 +3,13 @@ import React from 'react';
 import '../styles/LexiconEditorStyles.scss';
 import { Lexicon } from './Lexicon';
 import { JSXElement } from '@babel/types';
+import {KeyPath, KeyPathString, keyPathAsString} from './collection';
 
-export type ContentChangeCallback = (contentKey: string, newValue: string) => void;
+export type OnChangeCallback = (change: {
+  filename: string,
+  localPath: KeyPathString,
+  updatePath: KeyPath,
+  newValue: string}) => void;
 export type SwitchLocaleCallback = (newLocale: string) => void;
 
 type HtmlOnChangeCallback = (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -38,14 +43,14 @@ const FormRow = (props: { label: string, children: any }) => (
 );
 
 interface FieldProps {
-  contentKey: string;
+  localPath: string;
   value: any;
   onChange: HtmlOnChangeCallback;
 }
 
-const Field = ({ contentKey, value, onChange }: FieldProps) => (
+const Field = ({ localPath, value, onChange }: FieldProps) => (
   <textarea
-    name={contentKey}
+    name={localPath}
     value={value}
     onChange={onChange}
   />
@@ -53,34 +58,47 @@ const Field = ({ contentKey, value, onChange }: FieldProps) => (
 
 export interface LexiconEditorProps {
   lexicon: Lexicon;
-  onChange: ContentChangeCallback;
+  onChange: OnChangeCallback;
   selectedLocale: string;
   switchLocale: SwitchLocaleCallback;
 }
 
-export const LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }: LexiconEditorProps) => {
-  const sendLexiconEditorChange = (event) => {
-    const { name: contentKey, value: newValue } = event.target;
-    onChange(contentKey, newValue);
-  };
+export class LexiconEditor extends
+  React.Component< LexiconEditorProps, {} > {
 
-  return (
-    <div id="LexiconEditor">
+  sendLexiconEditorChange = (event) => {
+    const { name: localPath, value: newValue } = event.target;
+    const source = this.props.lexicon.source(localPath);
+    const changeInfo = {
+      filename: source.filename,
+      localPath: keyPathAsString(source.localPath),
+      updatePath: keyPathAsString(source.updatePath),
+      newValue: newValue as string
+    };
+    this.props.onChange(changeInfo);
+  }
 
-      <LocaleChooser lexicon={lexicon} selectedLocale={selectedLocale} switchLocale={switchLocale} />
+  render() {
+    return (
+      <div id="LexiconEditor">
 
-      {
-        lexicon.keys().map((key: string) => (
-          <FormRow key={key} label={key}>
-            <Field
-              contentKey={key}
-              value={lexicon.get(key)}
-              onChange={sendLexiconEditorChange}
-            />
-          </FormRow>
-        ))
-      }
-    </div>
-  );
-};
+        <LocaleChooser lexicon={this.props.lexicon}
+          selectedLocale={this.props.selectedLocale}
+          switchLocale={this.props.switchLocale} />
+
+        {
+          this.props.lexicon.keys().map((key: string) => (
+            <FormRow key={key} label={key}>
+              <Field
+                localPath={key}
+                value={this.props.lexicon.get(key)}
+                onChange={this.sendLexiconEditorChange}
+              />
+            </FormRow>
+          ))
+        }
+      </div>
+    );
+  }
+}
 

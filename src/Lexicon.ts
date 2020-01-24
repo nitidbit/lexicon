@@ -1,19 +1,27 @@
 import _ from 'lodash';
-import { Collection, KeyPath, KeyPathArray, KeyPathString } from './collection';
+import { Collection, KeyPath, keyPathAsArray, KeyPathArray, KeyPathString } from './collection';
 import * as col from './collection';
 import {evaluateTemplate } from './util';
 
-type LocaleCode = string; // e.g. 'en', 'es', 'en_GB', 'zh-Hant'
-const DEFAULT_LOCALE_CODE = 'en';
-function isLocaleCode(locale:LocaleCode) {
-  return _.isString(locale)
-    && locale.length < 10;
-}
-
 export type ContentByLocale = {
-  [localeCode: string]: object | Map<any, any>,
+  [localeCode: string]: Collection,
 };
 
+
+//
+//      LocaleCode & related functions
+//
+type LocaleCode = string; // e.g. 'en', 'es', 'en_GB', 'zh-Hant'
+const DEFAULT_LOCALE_CODE = 'en';
+
+function isLocaleCode(locale:LocaleCode) {
+  return _.isString(locale) && locale.length < 10;
+}
+
+
+//
+//      Lexicon — A tree-like container for holding content. Lexicons can hold other Lexicons.
+//
 export class Lexicon {
   private _contentByLocale: ContentByLocale;
   public currentLocaleCode: LocaleCode;
@@ -73,6 +81,22 @@ export class Lexicon {
     return val;
   }
 
+  /*
+   * Gets value, but if the value is not found, return 'undefined'. I.e. don't roll over to default
+   * dictionary, or produce informative default value.
+   */
+  getExact(keyPath: KeyPath): any {
+    if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+
+    let info = this.find(this.currentLocaleCode, keyPath);
+
+    if (_.isNil(info)) {
+      return undefined; // could not find value
+    }
+
+    return info.value;
+  }
+
 
   /* Return a new Lexicon, with the "root" starting at a different place.
      E.g.
@@ -93,53 +117,54 @@ export class Lexicon {
 
 
   /* Find some content and return info about that node */
-  private find(locale: LocaleCode, keyPath: KeyPath):
-      null
-      | {lexicon:Lexicon,
-         locale:string,
-         keyPath:KeyPath,
-         value:any} {
+  private find(locale: LocaleCode, keyPath: KeyPath) {
     if (! isLocaleCode(locale)) throw new Error(`'locale' should be LocaleCode, e.g. 'en', not: ${locale}`);
     if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined");
 
-    return recursiveFind(this, col.keyPathAsArray(keyPath), this, []);
+    return recursiveFind(this, col.keyPathAsArray(keyPath), this, [], []);
 
 
     function recursiveFind(
         node: Collection | Lexicon,
         keyPath: KeyPathArray,
         lexicon: Lexicon,
-        prefix: KeyPathArray) {
-//       console.log('!!! recursiveFind() prefix=', prefix, 'keyPath=', keyPath, 'node=', node)
+        rootPrefix: KeyPathArray,
+        localPrefix: KeyPathArray) {
+//       console.log('!!! recursiveFind() rootPrefix=', rootPrefix, 'localPrefix=', localPrefix, 'keyPath=', keyPath, 'node=', node)
 
-      if (_.isUndefined(node)) return null; // could not find the node
+      if (_.isUndefined(node)) {
+        return null; // could not find the node
+      }
       if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
 
       if (keyPath.length == 0 && !(node instanceof Lexicon)) {
-        let result = { // we found it
-          lexicon: lexicon,
-          locale: locale,
-          keyPath: prefix,
-          value: node,
+        let result = { // Here's the output:
+          lexicon: lexicon,     // Which Lexicon contains this node?
+          locale: locale,       // The locale we were searching for
+          keyPath: localPrefix, // The path from this Lexicon
+          updatePath: rootPrefix, // argument for `rootLexicon.update()`
+          value: node,          // contents of the node we searched for
         };
-        return result;
+        return result; // Found it!
       };
 
       let nextNode = undefined;
 
       if (node instanceof Lexicon) {
         lexicon = node;
-        prefix = []
+        localPrefix = []
+        rootPrefix = rootPrefix.concat(['_contentByLocale', locale])
         keyPath = _.concat(col.keyPathAsArray(lexicon._subsetRoot), keyPath);
         nextNode = col.get(lexicon._contentByLocale, [locale]);
       } else {
         const firstKey = keyPath[0];
         keyPath = keyPath.slice(1);
-        prefix = prefix.concat([firstKey]); // use concat to not modify old value of 'prefix'
+        rootPrefix = rootPrefix.concat([firstKey]); // use concat to not modify old value
+        localPrefix = localPrefix.concat([firstKey]);
         nextNode = col.get(node, firstKey);
       }
 
-      return recursiveFind(nextNode, keyPath, lexicon, prefix);
+      return recursiveFind(nextNode, keyPath, lexicon, rootPrefix, localPrefix);
     };
   }
 
@@ -152,12 +177,13 @@ export class Lexicon {
      The returned keyPath might be different from the input because you're looking
      at a Lexicon subset, with some keys hidden.
    */
-  source(keyPath: KeyPath): {filename:string, keyPath:KeyPath} | null {
+  source(keyPath: KeyPath) {
     let info = this.find(this.currentLocaleCode, keyPath);
-    if (info == null) throw new Error(`Could not find node for '${keyPath}'`);
+    if (info == null) throw new Error(`Lexicon: Could not find keyPath: '${keyPath}' in file: '${this.filename()}'`);
     return {
       filename: info.lexicon.filename(),
-      keyPath: [info.locale].concat(info.keyPath),
+      localPath: [info.locale].concat(info.keyPath),
+      updatePath: info.updatePath,
     };
   }
 
@@ -204,21 +230,32 @@ export class Lexicon {
   }
 
 
-  /* Set a value in the Lexicon */
-  update(keyPath: KeyPath, newValue: any, locale: LocaleCode = this.currentLocaleCode): boolean {
-    let fullPath = this.fullKey(locale, keyPath);
-    if (! col.has(this._contentByLocale, fullPath)) {
-      return false; // We don't have that locale
-    }
+  /*
+   * Change value in a lexicon.
+   * Note that updatePath is interepreted from the root of this Lexicon, and ignores current
+   * locale and subset settings
+   */
+  update(updatePath: KeyPath, newValue: any): boolean {
+    if (!col.has(this, updatePath)) return false; // node does not exist
 
-    col.set(this._contentByLocale, fullPath, newValue);
+    col.set(this, updatePath, newValue);
     return true; // success
   }
 
 
   /* Used by LexiconEditor */
+  cloneDeep(): Lexicon {
+    function customizer(value) {
+      if (value instanceof Lexicon) {
+        return value.cloneDeep();
+      }
+    }
+    return new Lexicon(_.cloneDeepWith(this._contentByLocale, customizer), this.currentLocaleCode, this._filename, this._subsetRoot);
+  }
+
   clone(): Lexicon {
-    return new Lexicon(_.cloneDeep(this._contentByLocale), this.currentLocaleCode, this._filename, this._subsetRoot);
+    console.warn('Lexicon.ts: clone() is deprecated. Use cloneDeep() instead.');
+    return this.cloneDeep();
   }
 }
 

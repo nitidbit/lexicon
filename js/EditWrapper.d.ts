@@ -1,6 +1,8 @@
 import React from 'react';
 import { Lexicon } from './Lexicon';
+import { OnChangeCallback } from './LexiconEditor';
 import '../styles/EditWrapperStyles.scss';
+import { KeyPath } from './collection';
 interface EditWrapperProps {
     component: // This is the React component rendered inside the wrapper.
     React.FunctionComponent<{
@@ -21,7 +23,10 @@ interface EditWrapperProps {
     };
     OptionalLogoutButton?: React.FC<any>;
 }
-declare type EditWrapperChanges = Map<string, {
+declare type EditWrapperChanges = Map<{
+    filename: string;
+    localPath: KeyPath;
+}, {
     originalValue: string;
     newValue: string;
 }>;
@@ -45,7 +50,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     toggleEditor: () => void;
     getToken(): string;
     allowEditing(): boolean;
-    updateText: (contentKey: string, newValue: string) => void;
+    updateTextFromEditor: OnChangeCallback;
     switchLocale: (newLocale: string) => void;
     saveChanges: () => void;
     changePosition: (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => void;

@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 require("../styles/LexiconEditorStyles.scss");
+const collection_1 = require("./collection");
 function LocaleChooser({ lexicon, switchLocale, selectedLocale }) {
     return (lexicon.locales().map((locale) => (react_1.default.createElement("label", { htmlFor: `localeRadio__${locale}`, key: locale },
         react_1.default.createElement("input", { type: "radio", id: `localeRadio__${locale}`, value: locale, checked: locale == selectedLocale, onChange: (e) => switchLocale(e.target.value) }),
@@ -14,14 +15,27 @@ const FormRow = (props) => (react_1.default.createElement("div", { id: "FormRow"
     react_1.default.createElement("label", { title: props.label },
         react_1.default.createElement("span", { className: "label" }, props.label),
         props.children)));
-const Field = ({ contentKey, value, onChange }) => (react_1.default.createElement("textarea", { name: contentKey, value: value, onChange: onChange }));
-exports.LexiconEditor = ({ lexicon, onChange, selectedLocale, switchLocale }) => {
-    const sendLexiconEditorChange = (event) => {
-        const { name: contentKey, value: newValue } = event.target;
-        onChange(contentKey, newValue);
-    };
-    return (react_1.default.createElement("div", { id: "LexiconEditor" },
-        react_1.default.createElement(LocaleChooser, { lexicon: lexicon, selectedLocale: selectedLocale, switchLocale: switchLocale }),
-        lexicon.keys().map((key) => (react_1.default.createElement(FormRow, { key: key, label: key },
-            react_1.default.createElement(Field, { contentKey: key, value: lexicon.get(key), onChange: sendLexiconEditorChange }))))));
-};
+const Field = ({ localPath, value, onChange }) => (react_1.default.createElement("textarea", { name: localPath, value: value, onChange: onChange }));
+class LexiconEditor extends react_1.default.Component {
+    constructor() {
+        super(...arguments);
+        this.sendLexiconEditorChange = (event) => {
+            const { name: localPath, value: newValue } = event.target;
+            const source = this.props.lexicon.source(localPath);
+            const changeInfo = {
+                filename: source.filename,
+                localPath: collection_1.keyPathAsString(source.localPath),
+                updatePath: collection_1.keyPathAsString(source.updatePath),
+                newValue: newValue
+            };
+            this.props.onChange(changeInfo);
+        };
+    }
+    render() {
+        return (react_1.default.createElement("div", { id: "LexiconEditor" },
+            react_1.default.createElement(LocaleChooser, { lexicon: this.props.lexicon, selectedLocale: this.props.selectedLocale, switchLocale: this.props.switchLocale }),
+            this.props.lexicon.keys().map((key) => (react_1.default.createElement(FormRow, { key: key, label: key },
+                react_1.default.createElement(Field, { localPath: key, value: this.props.lexicon.get(key), onChange: this.sendLexiconEditorChange }))))));
+    }
+}
+exports.LexiconEditor = LexiconEditor;

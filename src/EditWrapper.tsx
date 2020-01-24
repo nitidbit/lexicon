@@ -1,9 +1,10 @@
 import React, { ChangeEvent } from 'react';
 
 import { Lexicon } from './Lexicon';
-import {LexiconEditor} from './LexiconEditor';
+import {LexiconEditor, OnChangeCallback} from './LexiconEditor';
 import '../styles/EditWrapperStyles.scss';
 import { getURLParameter } from './util';
+import {KeyPath, KeyPathString} from './collection';
 
 interface EditWrapperProps {
   component:                                                    // This is the React component rendered inside the wrapper.
@@ -20,7 +21,7 @@ interface EditWrapperProps {
   OptionalLogoutButton?: React.FC<any>
 }
 
-type EditWrapperChanges = Map<string, { originalValue: string, newValue: string }>;
+type EditWrapperChanges = Map<{ filename: string, localPath: KeyPath }, { originalValue: string, newValue: string }>;
 
 enum SavingState {
   NoChanges,
@@ -94,29 +95,30 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     return result;
   }
 
-  updateText = (contentKey: string, newValue: string) => {
+  updateTextFromEditor:OnChangeCallback = (change) => {
+    console.log('updateText() change=', change);
 
     this.setState(oldState => {
       const newLexicon = oldState.lexicon.clone();
-      newLexicon.update(contentKey, newValue);
+      newLexicon.update(change.updatePath, change.newValue);
+
+      const fileKey = {filename: change.filename, localPath: change.localPath};
+      const existingChange = oldState.unsavedChanges.get(fileKey)
+      let originalValue = existingChange && existingChange.originalValue;
 
       const newChanges = new Map(oldState.unsavedChanges);
-      const fullPath = `${oldState.lexicon.currentLocaleCode}.${contentKey}`;
-      if (newChanges.has(fullPath)) {
-        if (newChanges.get(fullPath).originalValue == newValue) {
-          newChanges.delete(fullPath);
-        } else {
-          const originalValue = newChanges.get(fullPath).originalValue;
-          newChanges.set(fullPath, { originalValue, newValue });
-        }
+      if (originalValue == change.newValue) {
+          newChanges.delete(fileKey); // They changed it back to original value--no net change
       } else {
-        newChanges.set(fullPath, { originalValue: oldState.lexicon.get(contentKey), newValue });
+        originalValue = originalValue || oldState.lexicon.getExact(change.localPath);
+        console.log('!!! updateTextFromEditor() setting', fileKey, { originalValue, newValue: change.newValue });
+        newChanges.set(fileKey, { originalValue, newValue: change.newValue });
       }
 
       return {
         lexicon: newLexicon,
         unsavedChanges: newChanges,
-        savingState: newChanges.size == 0 ? SavingState.NoChanges : SavingState.Available 
+        savingState: newChanges.size == 0 ? SavingState.NoChanges : SavingState.Available,
       };
     });
   }
@@ -132,18 +134,20 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       'Authorization': `Bearer ${this.getToken()}`,
       'Content-Type': 'application/json',
       ...this.props.extraHeaders };
-    const data = {
-      changes: [...this.state.unsavedChanges.entries()].map(([key, { newValue }]) => ({
-        filename: this.state.lexicon.filename(),
-        key,
-        newValue,
-      }))};
+    const listOfChanges = [...this.state.unsavedChanges.entries()].map(([fileKey, { newValue }]) => {
+        return {
+          filename: fileKey.filename,
+          key: fileKey.localPath,
+          newValue,
+        }
+      })
+    const payload = { changes: listOfChanges };
 
     fetch(this.props.apiUpdateUrl, {
       method: 'PUT',
       mode: 'cors',
       headers: headers,
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload)
     })
       .then(response => response.json())
       .catch(error => this.setState({ savingState: SavingState.Error, errorMessage: error.toString() }))
@@ -253,7 +257,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
 
             <LexiconEditor
               lexicon={lexicon}
-              onChange={this.updateText}
+              onChange={this.updateTextFromEditor}
               selectedLocale={lexicon.currentLocaleCode}
               switchLocale={this.switchLocale}
             />

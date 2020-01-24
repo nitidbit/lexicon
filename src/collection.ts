@@ -71,8 +71,11 @@ export function entries(c: Collection): Array<[any, any]> {
 }
 
 // Equivalent to lodash.has(), but works with Maps
-export function has(c: Collection, key: string): boolean {
-  if (_.isMap(c)) return c.has(key);
+export function has(c: Collection, key: KeyPath): boolean {
+  if (_.isMap(c)) {
+    if (keyPathAsArray(key).length > 1) throw new Error('Not implemented yet.');
+    return c.has(keyPathAsString(key));
+  }
   return _.has(c, key);
 }
 
@@ -92,4 +95,11 @@ export function size(c: Collection): Number {
   if (_.isMap(c)) return c.size;
   return _.size(c);
 }
+
+// Returns an iterator for the collection
+// export function iterator(c: Collection): Iterator<any> {
+//   if (_.isObject(c)) return _.entries(c)[Symbol.iterator]();
+//   if (_.isArray(c)) return (c as Array<any>)[Symbol.iterator]();
+//   else return (c as Map<any, any>)[Symbol.iterator]();
+// }
 
