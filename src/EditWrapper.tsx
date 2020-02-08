@@ -21,7 +21,7 @@ interface EditWrapperProps {
   OptionalLogoutButton?: React.FC<any>
 }
 
-type EditWrapperChanges = Map<{ filename: string, localPath: KeyPath }, { originalValue: string, newValue: string }>;
+type EditWrapperChanges = Map<string, { originalValue: string, newValue: string }>;
 
 enum SavingState {
   NoChanges,
@@ -102,7 +102,11 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       const newLexicon = oldState.lexicon.clone();
       newLexicon.update(change.updatePath, change.newValue);
 
-      const fileKey = {filename: change.filename, localPath: change.localPath};
+      const fileKey = JSON.stringify({
+        filename: change.filename,
+        localPath: change.localPath
+      }); // we stringify here because Javascript never treats multiple objects as the same one even if the keys and values are all identical
+      
       const existingChange = oldState.unsavedChanges.get(fileKey)
       let originalValue = existingChange && existingChange.originalValue;
 
@@ -110,7 +114,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       if (originalValue == change.newValue) {
           newChanges.delete(fileKey); // They changed it back to original value--no net change
       } else {
-        originalValue = originalValue || oldState.lexicon.getExact(change.localPath);
+        originalValue = originalValue || oldState.lexicon.getExact(change.localPath.slice(3)); // the slice trims off locale aka 'en.'
         console.log('!!! updateTextFromEditor() setting', fileKey, { originalValue, newValue: change.newValue });
         newChanges.set(fileKey, { originalValue, newValue: change.newValue });
       }
@@ -134,7 +138,9 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       'Authorization': `Bearer ${this.getToken()}`,
       'Content-Type': 'application/json',
       ...this.props.extraHeaders };
-    const listOfChanges = [...this.state.unsavedChanges.entries()].map(([fileKey, { newValue }]) => {
+    const listOfChanges = [...this.state.unsavedChanges.entries()].map(([fileKeyString, { newValue }]) => {
+        const fileKey = JSON.parse(fileKeyString);
+
         return {
           filename: fileKey.filename,
           key: fileKey.localPath,

@@ -2,7 +2,6 @@ import React from 'react';
 import { Lexicon } from './Lexicon';
 import { OnChangeCallback } from './LexiconEditor';
 import '../styles/EditWrapperStyles.scss';
-import { KeyPath } from './collection';
 interface EditWrapperProps {
     component: // This is the React component rendered inside the wrapper.
     React.FunctionComponent<{
@@ -23,10 +22,7 @@ interface EditWrapperProps {
     };
     OptionalLogoutButton?: React.FC<any>;
 }
-declare type EditWrapperChanges = Map<{
-    filename: string;
-    localPath: KeyPath;
-}, {
+declare type EditWrapperChanges = Map<string, {
     originalValue: string;
     newValue: string;
 }>;
