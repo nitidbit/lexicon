@@ -8,8 +8,8 @@ Client-side code and React components for interacting with a Lexicon.
 
 Installation
 ------------
-    yarn add git+ssh://git@github.com/nitidbit/lexicon.git#2.6.0     # 2.6.0 = the release version
-    npm i -S git+ssh://git@github.com/nitidbit/lexicon.git#2.6.0
+    yarn add git+ssh://git@github.com/nitidbit/lexicon.git#2.8.1     # 2.8.1 = the release version
+    npm i -S git+ssh://git@github.com/nitidbit/lexicon.git#2.8.1
 
 Usage
 -----
