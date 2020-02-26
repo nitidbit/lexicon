@@ -54,10 +54,6 @@ Arrays can be accessed using numeric keys
 
     lex.get('faq.0.question')                           // => 'What is the meaning of life,
                                                         //     the universe, and everything?'
-Change History
---------------
-See: [src/index.ts](src/index.ts)
-
 EditWrapper
 -----------
 EditWrapper is a React component that takes your component, and a Lexicon and adds an Edit Contents button. Admins can then edit a Lexicon, see changes live, and then save them to a Lexicon-Server.
@@ -78,6 +74,10 @@ When you create an `EditWrapper`, you now need to tell it where to send changes.
 [Here is a diagram of how all the pieces of Lexicon fit together](LexiconComponents.png)
 
 
+
+Change History
+--------------
+See: [src/index.ts](src/index.ts)
 
 
 
