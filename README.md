@@ -11,8 +11,10 @@ Installation
     yarn add git+ssh://git@github.com/nitidbit/lexicon.git#2.8.1     # 2.8.1 = the release version
     npm i -S git+ssh://git@github.com/nitidbit/lexicon.git#2.8.1
 
-Usage
------
+Lexicon
+-------
+A Lexicon is a container for translated strings and data.
+
 ```json
 # MyStrings.yml
 en:
@@ -24,25 +26,19 @@ en:
         answer: '42'
 es:
     message: '¡Hola, mundo!',
-    subComponent:
-      template: 'Hay #{count} aparatos.'
-    faq:
-      - question: '¿Cuál es el significado de la vida, el universo, y todo?'
-        answer: '42'
+    ...
 ```
     import { Lexicon, EditWrapper } from 'lexicon';
 
     const lex = new Lexicon(require('./MyStrings.yml'),        // the data, assuming you have a YAML loader
             'app/javascript/components/MyStrings.yml');        // plus the filename for the editor
+            
+Get values using key paths as arrays or separated by "."
 
-    console.log('Hello', myLexicon.get('salutation'))
-
-
-Get values using nested keys separated by "."
-
+    lex.get(['subComponent', 'template'])               // => 'There are #{count} widgets.'
     lex.get('subComponent.template')                    // => 'There are #{count} widgets.'
 
-Optionally substitute variables iinto the fetched string.
+Optionally interpolate variables into the fetched string.
 
     lex.get('subComponent.template', { count: 5 })      // => 'There are 5 widgets.'
 
@@ -62,9 +58,14 @@ Change History
 --------------
 See: [src/index.ts](src/index.ts)
 
-Adding an in-place editor
--------------------------
-When you create an `EditWrapper`, you now need to specify the API endpoint it should use to make changes:
+EditWrapper
+-----------
+EditWrapper is a React component that takes your component, and a Lexicon and adds an Edit Contents button. Admins can then edit a Lexicon, see changes live, and then save them to a Lexicon-Server.
+
+When you create an `EditWrapper`, you now need to tell it where to send changes. There are several configurations:
+
+- An endpoint on your own app that will call [Services::LexiconSaver](https://github.com/nitidbit/lexicon-server/blob/master/app/services/lexicon_saver.rb)
+- Use the endpoint on ...???...
 
 ```jsx
 <EditWrapper
