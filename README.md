@@ -67,7 +67,7 @@ When you create an `EditWrapper`, you now need to tell it where to send changes.
 ```jsx
 <EditWrapper
   // other props...
-  apiUpdateUrl="https://lexicon-editor.herokuapp.com/lexicon" // or whatever the correct URL is
+  apiUpdateUrl="https://lexicon-editor.herokuapp.com/update" // or whatever the correct URL is
 />
 ```
 

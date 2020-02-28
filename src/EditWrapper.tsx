@@ -60,7 +60,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       window.history.replaceState(null, null, locationWithoutToken);
 
       if (document.location.protocol != 'https:') {
-        console.error('You must use HTTPS otherwise the lexiconServerToken passed unsecurely');
+        console.warn('You should use HTTPS otherwise the lexiconServerToken is passed insecurely');
       }
     }
 
