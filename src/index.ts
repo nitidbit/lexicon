@@ -1,7 +1,7 @@
 export { Lexicon } from './Lexicon';
 export { default as EditWrapper } from './EditWrapper';
 
-export const VERSION = '2.8.0'
+export const VERSION = '2.8.1'
 
 /*
   Change History - API changes since last version
