@@ -97,7 +97,7 @@ class EditWrapper extends react_1.default.Component {
             let locationWithoutToken = window.location.href.split("?")[0];
             window.history.replaceState(null, null, locationWithoutToken);
             if (document.location.protocol != 'https:') {
-                console.error('You must use HTTPS otherwise the lexiconServerToken passed unsecurely');
+                console.warn('You should use HTTPS otherwise the lexiconServerToken is passed insecurely');
             }
         }
         this.state = {

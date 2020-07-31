@@ -4,7 +4,7 @@ var Lexicon_1 = require("./Lexicon");
 exports.Lexicon = Lexicon_1.Lexicon;
 var EditWrapper_1 = require("./EditWrapper");
 exports.EditWrapper = EditWrapper_1.default;
-exports.VERSION = '2.8.0';
+exports.VERSION = '2.8.1';
 /*
   Change History - API changes since last version
 
