@@ -90,8 +90,8 @@ If you are just using Lexicon in your project, ignore this section.
 Create a symbolic link from your projects folder to your lexicon folder
 
     cd myproject
-    rm -rf node_modules/lexicon
-    ln -s /Users/my-home/path/to/lexicon node_modules/lexicon
+    rm -rf node_modules/@nitidbit/lexicon
+    ln -s /Users/my-home/path/to/lexicon node_modules/@nitidbit/lexicon
 
 Check it worked:
 

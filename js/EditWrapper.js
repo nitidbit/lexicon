@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const Lexicon_1 = require("./Lexicon");
+const index_1 = require("./index");
 const LexiconEditor_1 = require("./LexiconEditor");
 require("../styles/EditWrapperStyles.scss");
 const util_1 = require("./util");
@@ -178,11 +179,11 @@ class EditWrapper extends react_1.default.Component {
             return (react_1.default.createElement("div", { className: "EditWrapper" },
                 react_1.default.createElement(renderedComponent, Object.assign({ lexicon }, renderedComponentProps), children),
                 react_1.default.createElement("div", { className: 'buttons' },
-                    react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Editor' : 'Edit Content'),
+                    react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Lexicon' : 'Edit Lexicon'),
                     OptionalLogoutButton && react_1.default.createElement(OptionalLogoutButton, null)),
                 react_1.default.createElement("div", { className: `wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}` },
                     react_1.default.createElement("hgroup", null,
-                        react_1.default.createElement("h2", { className: "wrapper-heading" }, "Content Editor"),
+                        react_1.default.createElement("h2", { className: "wrapper-heading" }, "Lexicon"),
                         react_1.default.createElement("div", { className: "position" }, [['left', '\u25e7'],
                             ['bottom', '\u2b13'],
                             ['right', '\u25e8']].map(([pos, icon]) => (react_1.default.createElement("label", { key: pos, className: this.state.position == pos ? 'selected' : '' },
@@ -193,6 +194,10 @@ class EditWrapper extends react_1.default.Component {
                             react_1.default.createElement("button", { onClick: this.toggleEditor }))),
                     react_1.default.createElement(LexiconEditor_1.LexiconEditor, { lexicon: lexicon, onChange: this.updateTextFromEditor, selectedLocale: lexicon.currentLocaleCode, switchLocale: this.switchLocale }),
                     react_1.default.createElement("div", { className: "save-box" },
+                        react_1.default.createElement("span", null,
+                            " v",
+                            index_1.VERSION,
+                            " "),
                         react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText)),
                     this.state.savingState == SavingState.Error && react_1.default.createElement("p", { className: "error-message" }, this.state.errorMessage))));
         }

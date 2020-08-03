@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react';
 
 import { Lexicon } from './Lexicon';
+import { VERSION } from './index';
 import {LexiconEditor, OnChangeCallback} from './LexiconEditor';
 import '../styles/EditWrapperStyles.scss';
 import { getURLParameter } from './util';
@@ -235,7 +236,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
 
           <div className='buttons'>
             <button onClick={this.toggleEditor} className="edit-wrapper-button">
-              { isEditorVisible ? 'Hide Editor' : 'Edit Content' }
+              { isEditorVisible ? 'Hide Lexicon' : 'Edit Lexicon' }
             </button>
             { OptionalLogoutButton && <OptionalLogoutButton /> }
           </div>
@@ -243,7 +244,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
           { /* Content Editor on the side */ }
           <div className={`wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`}>
             <hgroup>
-              <h2 className="wrapper-heading">Content Editor</h2>
+              <h2 className="wrapper-heading">Lexicon</h2>
 
               <div className="position">
                 {
@@ -268,6 +269,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
               switchLocale={this.switchLocale}
             />
             <div className="save-box">
+              <span> v{VERSION} </span>
               <button onClick={this.saveChanges} disabled={ !buttonEnabled }>
                 {buttonText}
               </button>
