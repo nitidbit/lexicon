@@ -52,6 +52,8 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
 
     if (! (props.lexicon as any instanceof Lexicon)) throw new Error(`'lexicon' prop should be a Lexicon object, but it is: ${JSON.stringify(props.lexicon).substring(0,50)}`)
 
+    console.log('!!! editwrapper constructor', location.search)
+
     let lexiconServerToken = getURLParameter('lexiconServerToken')
     if (lexiconServerToken) {
       sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token
@@ -97,8 +99,6 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
   }
 
   updateTextFromEditor:OnChangeCallback = (change) => {
-    console.log('updateText() change=', change);
-
     this.setState(oldState => {
       const newLexicon = oldState.lexicon.clone();
       newLexicon.update(change.updatePath, change.newValue);
@@ -116,7 +116,6 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
           newChanges.delete(fileKey); // They changed it back to original value--no net change
       } else {
         originalValue = originalValue || oldState.lexicon.getExact(change.localPath.slice(3)); // the slice trims off locale aka 'en.'
-        console.log('!!! updateTextFromEditor() setting', fileKey, { originalValue, newValue: change.newValue });
         newChanges.set(fileKey, { originalValue, newValue: change.newValue });
       }
 

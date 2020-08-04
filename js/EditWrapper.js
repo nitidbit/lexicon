@@ -25,7 +25,6 @@ class EditWrapper extends react_1.default.Component {
             this.setState(Object.assign({}, this.state, { isEditorVisible: !this.state.isEditorVisible }));
         };
         this.updateTextFromEditor = (change) => {
-            console.log('updateText() change=', change);
             this.setState(oldState => {
                 const newLexicon = oldState.lexicon.clone();
                 newLexicon.update(change.updatePath, change.newValue);
@@ -41,7 +40,6 @@ class EditWrapper extends react_1.default.Component {
                 }
                 else {
                     originalValue = originalValue || oldState.lexicon.getExact(change.localPath.slice(3)); // the slice trims off locale aka 'en.'
-                    console.log('!!! updateTextFromEditor() setting', fileKey, { originalValue, newValue: change.newValue });
                     newChanges.set(fileKey, { originalValue, newValue: change.newValue });
                 }
                 return {
@@ -91,6 +89,7 @@ class EditWrapper extends react_1.default.Component {
         };
         if (!(props.lexicon instanceof Lexicon_1.Lexicon))
             throw new Error(`'lexicon' prop should be a Lexicon object, but it is: ${JSON.stringify(props.lexicon).substring(0, 50)}`);
+        console.log('!!! editwrapper constructor', location.search);
         let lexiconServerToken = util_1.getURLParameter('lexiconServerToken');
         if (lexiconServerToken) {
             sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token
