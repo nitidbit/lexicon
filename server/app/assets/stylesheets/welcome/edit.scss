@@ -1,0 +1,14 @@
+@import 'regular';
+
+body.welcome_controller.edit_action {
+  @include regular;
+
+   main {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  ul.app_links {
+    line-height: 2.0;
+  }
+}

@@ -1,0 +1,12 @@
+shared: &SHARED
+  adapter: postgresql
+  encoding: utf8
+  pool: 5
+
+development:
+  <<: *SHARED
+  database: lexicon_development
+
+test:
+  <<: *SHARED
+  database: lexicon_test
