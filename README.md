@@ -11,6 +11,7 @@ Installation
     yarn add git+ssh://git@github.com/nitidbit/lexicon.git#2.8.1     # 2.8.1 = the release version
     npm i -S git+ssh://git@github.com/nitidbit/lexicon.git#2.8.1
 
+
 Lexicon
 -------
 A Lexicon is a container for translated strings and data.
@@ -73,6 +74,35 @@ When you create an `EditWrapper`, you now need to tell it where to send changes.
 
 [Here is a diagram of how all the pieces of Lexicon fit together](LexiconComponents.png)
 
+
+Where are we using Lexicon and Lexicon-Server?
+----------------------------------------------
+
+### Lexicon cient only
+- www.bedsider.org
+  - uses internal editor
+
+### Lexicon Server
+
+- https://use.mybirthcontrol.org
+  clients: Whitney
+  repo: https://github.com/nitidbit/mybcweb
+  - [MyBC disemination site](http://mybcweb.s3-website-us-west-2.amazonaws.com/)
+  - uses server: http://lexicon-editor.herokuapp.com
+
+- [MyPath disemination site](http://mypathweb.s3-website.us-east-2.amazonaws.com/)
+  info.mypath.org -- no production site yet
+  http://mypathweb.s3-website.us-east-2.amazonaws.com/
+  clients: Sam
+  repo: https://github.com/nitidbit/mypathweb
+
+- HIV tool -- no production site yet
+  https://staging.myhivprevention.org
+  clients: Whitney
+  repo: hiv-dst
+    - [HIV DST](http://hiv-dst.herokuapp.com/)
+
+    - [MyBC Peripartum disemination site](http://mybcweb-pp.s3-website-us-west-2.amazonaws.com/)
 
 
 Change History
