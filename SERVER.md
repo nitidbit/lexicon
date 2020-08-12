@@ -12,16 +12,6 @@ Pages:
 - /sign_in — for configuring and editing other websites that use Lexicon
 
 
-Where are we using Lexicon?
----------------------------
-- www.bedsider.org
-  - uses internal editor
-- [HIV DST](http://hiv-dst.herokuapp.com/)
-- [MyBC disemination site](http://mybcweb.s3-website-us-west-2.amazonaws.com/)
-  - uses server: http://lexicon-editor.herokuapp.com
-- [MyBC Peripartum disemination site](http://mybcweb-pp.s3-website-us-west-2.amazonaws.com/)
-- [MyPath disemination site](http://mypathweb.s3-website.us-east-2.amazonaws.com/)
-
 Using Lexicon-Server to Edit Content on a Server-less App
 ---------------------------------------------------------
 Lets say you have a server-less app, like the MyPath disseminations sites. Let's call it "MyApp."

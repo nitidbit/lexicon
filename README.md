@@ -13,9 +13,9 @@ Client-side code and React components for interacting with a Lexicon.
 
 Installation
 ------------
-    yarn add git+ssh://git@github.com/nitidbit/lexicon.git#2.8.1     # 2.8.1 = the release version
-    npm i -S git+ssh://git@github.com/nitidbit/lexicon.git#2.8.1
+set NPM_TOKEN environment var so you can access Nitid's private Github NPM package registry. See 1Password.
 
+    npm i --save @nitidbit/lexicon
 
 Lexicon
 -------
@@ -38,7 +38,7 @@ es:
 
     const lex = new Lexicon(require('./MyStrings.yml'),        // the data, assuming you have a YAML loader
             'app/javascript/components/MyStrings.yml');        // plus the filename for the editor
-            
+
 Get values using key paths as arrays or separated by "."
 
     lex.get(['subComponent', 'template'])               // => 'There are #{count} widgets.'
