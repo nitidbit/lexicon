@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20200226224919) do
     t.datetime "updated_at", null: false
     t.string "app_url", default: "https://___.herokuapp.com", null: false
     t.string "github_repo", default: "nitidbit/___"
-    t.string "git_branch", default: "master"
+    t.string "git_branch", default: "main"
     t.string "github_api_token"
     t.string "github_user"
     t.string "adapter", default: "github", null: false

@@ -84,7 +84,7 @@ Developer Setup
 Deploy
 ------
 - Change the version in `lib/lexicon.rb`
-- staging — Heroku is configured to automatically deploy from Github's 'master' branch.
+- staging — Heroku is configured to automatically deploy from Github's 'main' branch.
 - production — Use Heroku pipeline
 
 Configuration

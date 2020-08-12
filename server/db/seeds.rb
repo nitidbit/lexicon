@@ -28,15 +28,15 @@ create_or_update(User, :email,
 )
 
 create_or_update(ClientApp, :app_url,
-  app_url: 'https://lexicon-server-staging.herokuapp.com/demo',
-  github_repo: 'nitidbit/lexicon-server',
-  git_branch: 'master',
+  app_url: '//demo',
+  github_repo: 'nitidbit/lexicon',
+  git_branch: 'main',
   github_api_token: '',
   github_user: '___@nitidbit.com')
 
 create_or_update(ClientApp, :app_url,
   app_url: 'http://localhost:3000/demo',
-  github_repo: 'nitidbit/lexicon-server',
-  git_branch: 'master',
+  github_repo: 'nitidbit/lexicon',
+  git_branch: 'main',
   github_api_token: '',
   github_user: '___@nitidbit.com')

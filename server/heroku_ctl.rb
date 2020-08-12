@@ -14,7 +14,7 @@ module Tasks
     shell("heroku buildpacks:clear --app #{heroku_app}")
 
     # Move our /js_lib/ folder into /server/vendor/
-    shell("heroku config:set BUILDPACK_RUN=\"./heroku_ctl.rb move_js_lib\" --app #{heroku_app}")
+    shell("heroku config:set BUILDPACK_RUN=\"./server/heroku_ctl.rb move_js_lib\" --app #{heroku_app}")
     shell("heroku buildpacks:add https://github.com/weibeld/heroku-buildpack-run --app #{heroku_app}")
 
     # Move the /server/ folder down to the root so Heroku runs rails
@@ -28,7 +28,7 @@ module Tasks
 
   # Called by buildpack above
   def self.move_js_lib
-    # Simulate installing Lexicon
+    # Move Lexicon files before they are deleted by subdir-heroku-buildpack.
     shell('mkdir -p $BUILD_DIR/server/node_modules/lexicon')
     shell('mv $BUILD_DIR/js           $BUILD_DIR/server/node_modules/lexicon/')
     shell('mv $BUILD_DIR/package.json $BUILD_DIR/server/node_modules/lexicon/')
@@ -57,6 +57,7 @@ module Tasks
   end
 
 end
+
 
 cmd = ARGV[0]
 avail_cmds = (Tasks.methods - Object.methods).map(&:to_s)

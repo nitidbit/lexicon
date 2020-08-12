@@ -92,3 +92,4 @@ Rails.application.configure do
 end
 
 JWT_SECRET = ENV['JWT_SECRET']
+raise 'Environment variable JWT_SECRET is not defined. Set it to 64 random hex chars.' if JWT_SECRET.nil?
