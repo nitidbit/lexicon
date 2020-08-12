@@ -8,6 +8,7 @@ Client-side code and React components for interacting with a Lexicon.
 - `Lexicon Server` — a Rails app that will accept changes from the editor, and write them to GitHub
 
 [DEVELOPERS.md is documentation for people modifying the Lexicon JS client](DEVELOPERS.md).
+
 [SERVER.md is documentation for the Lexicon-server](SERVER.md)
 
 Installation
