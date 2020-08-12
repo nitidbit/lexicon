@@ -35,24 +35,32 @@ You should also make sure that all tests pass:
 Tests are in `src/Lexicon.test.ts`.
 
 ### Deploying new versions
+
 Let's use [semantic versioning](https://semver.org).
 MAJOR version when you make incompatible API changes,
 MINOR version when you add functionality in a backwards compatible manner, and
 PATCH version when you make backwards compatible bug fixes.
 
-When Lexicon is in a good state, mark a new version with:
+When Lexicon is in a good state, set new version number:
 
-    change src/index.ts > VERSION
-    change package.json > version
+    - src/index.ts > VERSION
+    - package.json > version
+
+    git add . && git commit -m "Version x.y.z"
+    git push
+
+Login NPM into Github's package registry.
+
+    Create a new GitHub personal access token at https://github.com/settings/tokens
+    npm login --registry=https://npm.pkg.github.com/
+    Use the token as a password
 
 Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to
 people using the package. This is already done if you've been running `npm run watch`
 
+    cd lexicon/npm_package
     npm run tsc
-    VERSION=<major>.<minor>.<patch>
-    git add . && git commit -m "Version ${VERSION}"
-    git tag ${VERSION}
-    git push && git push origin ${VERSION}
+    npm publish
 
 
 Thoughts
