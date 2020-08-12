@@ -1,7 +1,5 @@
 Lexicon Server
 ==============
-Lexicon is Nitid Bit's system to allow clients to edit content (text and values) in their websites
-and decision support tools. This repo contains (1) the LexiconSaver class (Ruby) which handles reading responses from LexiconEditor, and saving it to a local file or GitHub, and (2) a Rails app that runs on Heroku and can handle EditWrapper calls if you don't want to do it in your own app.
 
 - Production v1: https://lexicon-editor.herokuapp.com -- sign in at MyBC/sign_in
     used by MyBC
@@ -12,11 +10,6 @@ and decision support tools. This repo contains (1) the LexiconSaver class (Ruby)
 Pages:
 - /demo — See Lexicon in action. Also a testbed for making sure it's working.
 - /sign_in — for configuring and editing other websites that use Lexicon
-  
-
-Git repos:
-- lexicon -- an NPM module containing client-side code and React components for using and editing a Lexicon.
-- lexicon-server -- a Rails app which allows saving edits to Github
 
 
 Where are we using Lexicon?
