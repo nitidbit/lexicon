@@ -1,12 +1,12 @@
 export { Lexicon } from './Lexicon';
 export { default as EditWrapper } from './EditWrapper';
 
-export const VERSION = '2.8.2-alpha'
+export const VERSION = '2.8.2'
 
 /*
   Change History - API changes since last version
 
-  v2.8.2-alpha — Making monorepo that contains NPM package and Rails server in one Git repo
+  v2.8.2 — Making monorepo that contains NPM package and Rails server in one Git repo
 
   v2.8.0 — You can embed Lexicons within other Lexicons. get(), and editing works fine.
 

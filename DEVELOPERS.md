@@ -43,8 +43,8 @@ PATCH version when you make backwards compatible bug fixes.
 
 When Lexicon is in a good state, set new version number:
 
-    - src/index.ts > VERSION
-    - package.json > version
+    - npm-package/src/index.ts
+    - npm-package/package.json
 
     git add . && git commit -m "Version x.y.z"
     git push
