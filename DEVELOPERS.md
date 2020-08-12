@@ -47,7 +47,6 @@ When Lexicon is in a good state, set new version number:
     - npm-package/package.json
 
     git add . && git commit -m "Version x.y.z"
-    git push
 
 Login NPM into Github's package registry.
 
@@ -58,9 +57,10 @@ Login NPM into Github's package registry.
 Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to
 people using the package. This is already done if you've been running `npm run watch`
 
-    cd lexicon/npm_package
+    cd npm-package
     npm run tsc
     npm publish
+    git push
 
 
 Thoughts
