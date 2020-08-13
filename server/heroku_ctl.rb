@@ -30,8 +30,8 @@ module Tasks
   def self.move_js_lib
     # Move Lexicon files before they are deleted by subdir-heroku-buildpack.
     shell('mkdir -p $BUILD_DIR/server/node_modules/lexicon')
-    shell('mv $BUILD_DIR/js           $BUILD_DIR/server/node_modules/lexicon/')
-    shell('mv $BUILD_DIR/package.json $BUILD_DIR/server/node_modules/lexicon/')
+    shell('mv $BUILD_DIR/npm-package/js           $BUILD_DIR/server/node_modules/lexicon/')
+    shell('mv $BUILD_DIR/npm-package/package.json $BUILD_DIR/server/node_modules/lexicon/')
   end
 
 
