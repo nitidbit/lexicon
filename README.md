@@ -95,25 +95,38 @@ Where are we using Lexicon and Lexicon-Server?
 
 ### Lexicon Server
 
-- https://use.mybirthcontrol.org
-  clients: Whitney
-  repo: https://github.com/nitidbit/mybcweb
-  - [MyBC disemination site](http://mybcweb.s3-website-us-west-2.amazonaws.com/)
-  - uses server: http://lexicon-editor.herokuapp.com
+- v2.8.2 - https://lexicon-production.herokuapp.com
+
+- v2.8.1 - https://lexicon-production-v281.herokuapp.com
+  - abortionfinder.org
+    github: nitidbit/bedsider-web
+    editors: 
+    url: www.abortionfinder.org
+         staging.abortionfinder.org
+
+- v1 - http://lexicon-editor.herokuapp.com
+
+    - mybcweb
+      url: https://use.mybirthcontrol.org
+      s3: http://mybcweb.s3-website-us-west-2.amazonaws.com/
+      client: Whitney
+      github: mybcweb
 
 - [MyPath disemination site](http://mypathweb.s3-website.us-east-2.amazonaws.com/)
   info.mypath.org -- no production site yet
   http://mypathweb.s3-website.us-east-2.amazonaws.com/
-  clients: Sam
+  editors: Sam
   repo: https://github.com/nitidbit/mypathweb
 
-- HIV tool -- no production site yet
-  https://staging.myhivprevention.org
-  clients: Whitney
-  repo: hiv-dst
-    - [HIV DST](http://hiv-dst.herokuapp.com/)
+- ???
 
-    - [MyBC Peripartum disemination site](http://mybcweb-pp.s3-website-us-west-2.amazonaws.com/)
+    - hiv-dst — HIV tool -- no production site yet
+      urls:
+        - https://staging.myhivprevention.org
+        - [HIV DST](http://hiv-dst.herokuapp.com/)
+        - [MyBC Peripartum disemination site](http://mybcweb-pp.s3-website-us-west-2.amazonaws.com/)
+      editors: Whitney
+      github: hiv-dst
 
 
 Change History
