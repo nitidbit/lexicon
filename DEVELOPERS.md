@@ -84,6 +84,16 @@ Developers can:
 
 ### Later
 
+- Don't require localeCode in new Lexicon(), i.e. change the signature so it's:
+      constructor(contentByLocale: ContentByLocale,
+                  filename: string,
+                  subset: KeyPath = '',
+                  localeCode: LocaleCode = DEFAULT_LOCALE_CODE
+                  )
+
+- I wish I could define the Lexicon I need in each module so I wasn't passing them all around. Yet I
+  still want the editor to access them all.
+
 - Editor can check types of content, e.g. must be a number, date, or list has elements of a
   particular shape {question: ___, answer: ___}
 

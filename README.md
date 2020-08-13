@@ -15,6 +15,12 @@ Installation
 ------------
 set NPM_TOKEN environment var so you can access Nitid's private Github NPM package registry. See 1Password.
 
+Point NPM to use Nitid's registry: create this file:
+```
+# .npmrc
+@nitidbit:registry=https://npm.pkg.github.com/
+```
+
     npm i --save @nitidbit/lexicon
 
 Lexicon
@@ -36,7 +42,7 @@ es:
 ```
     import { Lexicon, EditWrapper } from 'lexicon';
 
-    const lex = new Lexicon(require('./MyStrings.yml'),        // the data, assuming you have a YAML loader
+    const lex = new Lexicon(require('./MyStrings.yml'), 'en',  // the data, assuming you have a YAML loader
             'app/javascript/components/MyStrings.yml');        // plus the filename for the editor
 
 Get values using key paths as arrays or separated by "."
