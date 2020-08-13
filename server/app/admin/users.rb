@@ -10,7 +10,7 @@ ActiveAdmin.register User do
     id_column
     column :email
     column :is_admin
-    column :updated_at
+    column :client_apps
     actions
   end
 

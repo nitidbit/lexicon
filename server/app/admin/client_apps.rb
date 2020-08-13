@@ -8,8 +8,8 @@ ActiveAdmin.register ClientApp do
     column :name
     column :app_url
     column :users
+    column :git_branch
     column :adapter
-    column :updated_at
     actions
   end
 
