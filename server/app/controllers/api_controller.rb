@@ -73,7 +73,7 @@ class ApiController < ApplicationController
     header = request.headers['Authorization']
 
     if ! header&.match(pattern)
-      return render_error('Missing Lexicon Server Token', :forbidden)
+      return render_error('Lexicon Server: Missing token from client app via HTTP authorization header.', :forbidden)
     end
 
     token = header.gsub(pattern, '')
@@ -83,7 +83,7 @@ class ApiController < ApplicationController
       @authenticated_client_app = ClientApp.find(payload['clientAppId'])
 
     rescue JWT::VerificationError, JWT::DecodeError, ActiveRecord::RecordNotFound => exc
-      return render_error('Invalid Lexicon Server Token', :forbidden)
+      return render_error('Lexicon Server: Invalid token from client app', :forbidden)
     end
   end
 

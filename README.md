@@ -97,26 +97,28 @@ Where are we using Lexicon and Lexicon-Server?
 
 - v2.8.2 - https://lexicon-production.herokuapp.com
 
-- v2.8.1 - https://lexicon-production-v281.herokuapp.com
   - abortionfinder.org
     github: nitidbit/bedsider-web
-    editors: 
+    editors: Lauren, Gillian, Chelsey
     url: www.abortionfinder.org
          staging.abortionfinder.org
 
-- v1 - http://lexicon-editor.herokuapp.com
+- v1 -- These should be upgraded and moved to v2.8.2
 
-    - mybcweb
+    - github: nitidbit/mybcweb
       url: https://use.mybirthcontrol.org
+           http://mybcweb-pp.s3-website-us-west-2.amazonaws.com
+
+      lexicon server: http://lexicon-editor.herokuapp.com
       s3: http://mybcweb.s3-website-us-west-2.amazonaws.com/
       client: Whitney
-      github: mybcweb
 
-- [MyPath disemination site](http://mypathweb.s3-website.us-east-2.amazonaws.com/)
-  info.mypath.org -- no production site yet
-  http://mypathweb.s3-website.us-east-2.amazonaws.com/
-  editors: Sam
-  repo: https://github.com/nitidbit/mypathweb
+    - github: mypathweb
+      url: http://mypathweb.s3-website.us-east-2.amazonaws.com/
+           info.mypath.org -- no production site yet
+      lexicon server: lexicon-mypath-web.herokuapp.com
+      editors: Sam
+
 
 - ???
 
