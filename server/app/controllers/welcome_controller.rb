@@ -6,15 +6,19 @@ class WelcomeController < ApplicationController
 
   def edit
 
-    @client_app_links = current_user.client_apps.order(:name).map do |client_app|
-      lexicon_server_token = ApiController::lexicon_server_token(current_user, client_app)
-      url_with_token = "#{client_app.app_url}?lexiconServerToken=#{lexicon_server_token}"
+    @client_app_links = current_user.client_apps
+      .order(:github_repo, :name)
+      .map do |client_app|
+        lexicon_server_token = ApiController::lexicon_server_token(current_user, client_app)
+        url_with_token = "#{client_app.app_url}?lexiconServerToken=#{lexicon_server_token}"
 
-      {
-        url: url_with_token,
-        label: client_app.title
-      }
-    end
+        {
+          url: url_with_token,
+          name: client_app.name,
+          git_branch: client_app.git_branch,
+          github_repo: client_app.github_repo,
+        }
+      end
   end
 
   def demo

@@ -1,5 +1,6 @@
 ActiveAdmin.register ClientApp do
 
+  config.sort_order = 'github_repo_asc'
   menu if: proc{ current_user.is_admin } # Show in ActiveAdmin menu?
 
   index do
@@ -8,8 +9,8 @@ ActiveAdmin.register ClientApp do
     column :name
     column :app_url
     column :users
+    column :github_repo
     column :git_branch
-    column :adapter
     actions
   end
 
@@ -50,7 +51,7 @@ ActiveAdmin.register ClientApp do
       input :app_url, hint: 'Where is the app hosted? Where should the Apps to Edit page link to?'
       input :adapter, hint: '"github" or "file"'
       input :github_repo, hint: 'Where should Lexicon edits be saved? Only for github adapter'
-      input :git_branch, hint: 'Which branch should Lexicon use?'
+      input :git_branch, hint: 'Which branch should Lexicon use? The branch must already exist.'
       input :github_user, hint: 'For security, make a new GitHub user with access to just this one repo.'
       input :github_api_token, hint: 'Personal access token. Give it "repo" access'
       input :users, as: :select, multiple: true,

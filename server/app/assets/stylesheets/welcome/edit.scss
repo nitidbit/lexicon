@@ -8,7 +8,12 @@ body.welcome_controller.edit_action {
     padding-right: 20px;
   }
 
-  ul.app_links {
+  table.app_links {
     line-height: 2.0;
+    width: 80%;
+
+    tr {
+      text-align: left;
+    }
   }
 }

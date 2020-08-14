@@ -8,13 +8,26 @@
     allow you to change text. Editing is enabled as long as your browser is open. If you want to edit
     later, you will have to sign-in at this Lexicon Server again.
   </p>
-  <ul class='app_links'>
+  <table class='app_links'>
+    <tr>
+      <th> App Name </th>
+      <th> Github Repo </th>
+      <th> Git Branch </th>
+    </th>
     <% @client_app_links.each do |link| %>
-      <li>
-        <a href="<%= link[:url] %>">
-          <%= link[:label] %>
-        </a>
-      </li>
+      <tr>
+        <td>
+          <a href="<%= link[:url] %>">
+            <%= link[:name] %>
+          </a>
+        </td>
+        <td>
+          <%= link[:github_repo] %>
+        </td>
+        <td>
+          <%= link[:git_branch] %>
+        </td>
+      </tr>
     <% end %>
-  </ul>
+  </table>
 </main>
