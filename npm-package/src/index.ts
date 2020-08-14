@@ -1,10 +1,12 @@
 export { Lexicon } from './Lexicon';
 export { default as EditWrapper } from './EditWrapper';
 
-export const VERSION = '2.8.2'
+export const VERSION = '2.8.3'
 
 /*
   Change History - API changes since last version
+
+  v2.8.3 — Remove some debug logging. Visual improvements to Lexicon Server
 
   v2.8.2 — Making monorepo that contains NPM package and Rails server in one Git repo
 
