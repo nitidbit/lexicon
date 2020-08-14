@@ -17,12 +17,7 @@ class ApiController < ApplicationController
     changes = permitted_changes(params)
     # Security note: Someone can send any filename, and we will try to modify it. We are trusing
     # our authenticated users.
-    lsaver = lexicon_saver({
-      class: @authenticated_client_app.adapter,
-      access_token: @authenticated_client_app.github_api_token,
-      repo: @authenticated_client_app.github_repo,
-      branch: @authenticated_client_app.git_branch,
-    })
+    lsaver = lexicon_saver
 
     begin
       lsaver.update_changes(@authenticated_user.email, changes)
@@ -59,9 +54,8 @@ class ApiController < ApplicationController
 
   private
 
-  def lexicon_saver(configuration_hash)
-    adapter = Services::Adapters::Lexicon.configure(configuration_hash)
-    Services::LexiconSaver.new(adapter)
+  def lexicon_saver
+    Services::LexiconSaver.new(@authenticated_client_app.lexicon_adapter)
   end
 
   # Examine the 'Authorization: Bearer <JWT token>' header, check signature

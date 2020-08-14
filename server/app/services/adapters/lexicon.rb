@@ -18,7 +18,14 @@ module Services
         lexicon_adapter
       end
 
+
       class File
+
+        # Returns true if we are able to access the repo, otherwise false.
+        def test_access
+          {succeeded: true, msgs: ['Filesystem access is always available.']}
+        end
+
         def read(filename)
           Rails.logger.info("Lexicon: Reading from local file system '#{filename}'")
           f = ::File.read(filename)
@@ -33,6 +40,7 @@ module Services
         end
       end
 
+
       class GitHub
         attr_accessor :github
 
@@ -41,6 +49,30 @@ module Services
           @shas = {}
           @repo = repo
           @branch = branch
+        end
+
+        # Returns empty array if we are able to access the repo, otherwise an array of error strings.
+        def test_access
+          succeeded = true
+          msgs = []
+
+          begin
+            login_name = github.user.login
+            msgs << "User '#{login_name}' authenticated successfully."
+          rescue Octokit::Unauthorized => exc
+            succeeded = false
+            msgs << exc.to_s # an error occurred. Here's a clue why.
+          end
+
+          begin
+            root_dir = github.contents(@repo)
+            msgs << "Able to read of repo."
+          rescue Octokit::NotFound => exc
+            succeeded = false
+            msgs << "Unable to access repo: #{exc.to_s}" # an error occurred. Here's a clue why.
+          end
+
+          {succeeded: succeeded, msgs: msgs}
         end
 
         def read(filename)

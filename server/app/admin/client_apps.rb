@@ -30,6 +30,21 @@ ActiveAdmin.register ClientApp do
     end
   end
 
+  action_item :test_github_access, only: [:show, :edit]  do
+    link_to 'Test Github Access', test_github_access_admin_client_app_path(id: resource.id)
+  end
+
+  member_action :test_github_access, method: :get do
+    client_app = resource
+    status = client_app.lexicon_adapter.test_access
+    if status[:succeeded]
+      flash[:notice] = status[:msgs].join('  ')
+    else
+      flash[:error] = status[:msgs].join('  ')
+    end
+    redirect_to admin_client_app_path(id: client_app)
+  end
+
   permit_params do
     [
       :name,

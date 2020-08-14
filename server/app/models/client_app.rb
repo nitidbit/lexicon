@@ -6,5 +6,15 @@ class ClientApp < ApplicationRecord
   def title
     "#{name} (#{app_url})"
   end
+
+  def lexicon_adapter
+    config_hash = {
+      class: adapter,
+      access_token: github_api_token,
+      repo: github_repo,
+      branch: git_branch,
+    }
+    adapter = Services::Adapters::Lexicon.configure(config_hash)
+  end
 end
 
