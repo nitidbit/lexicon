@@ -46,7 +46,7 @@ module Services
         set(object: hash, keys: key.split('.'), value: value)
         adapter.write(filename, hash, commit_message)
       rescue => exc
-        raise Exception, "Problem adding entry for filename: #{filename.inspect} key: #{key.inspect} commit_message: #{commit_message.inspect} exception: #{exc.inspect}"
+        raise StandardError, "Problem adding entry for filename: #{filename.inspect} key: #{key.inspect} commit_message: #{commit_message.inspect} exception: #{exc.inspect}"
       end
     end
 
