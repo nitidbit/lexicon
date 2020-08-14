@@ -46,20 +46,19 @@ When Lexicon is in a good state, set new version number:
     - npm-package/src/index.ts
     - npm-package/package.json
 
-    git add . && git commit -m "Version x.y.z"
-
 Login NPM into Github's package registry.
 
     Create a new GitHub personal access token at https://github.com/settings/tokens
     npm login --registry=https://npm.pkg.github.com/
     Use the token as a password
 
-Right before you check-in, Build the JS ouput before you commit to GitHub, so it's available to
-people using the package. This is already done if you've been running `npm run watch`
+Right before you `git commit` and `npm publish`, Build the JS ouput before you commit to GitHub, so it's
+available to people using the package. This is already done if you've been running `npm run watch`
 
     cd npm-package
     npm run tsc
     npm publish
+    git add . && git commit -m "Version x.y.z"
     git push
 
 

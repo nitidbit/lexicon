@@ -89,7 +89,6 @@ class EditWrapper extends react_1.default.Component {
         };
         if (!(props.lexicon instanceof Lexicon_1.Lexicon))
             throw new Error(`'lexicon' prop should be a Lexicon object, but it is: ${JSON.stringify(props.lexicon).substring(0, 50)}`);
-        console.log('!!! editwrapper constructor', location.search);
         let lexiconServerToken = util_1.getURLParameter('lexiconServerToken');
         if (lexiconServerToken) {
             sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token
