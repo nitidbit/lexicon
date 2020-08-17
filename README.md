@@ -89,46 +89,10 @@ When you create an `EditWrapper`, you now need to tell it where to send changes.
 Where are we using Lexicon and Lexicon-Server?
 ----------------------------------------------
 
-### Lexicon cient only
-- www.bedsider.org
-  - uses internal editor
+- www.bedsider.org - uses internal server, i.e. edits are posted to bedsider/lexicon/update
 
-### Lexicon Server
-
-- v2.8.2 - https://lexicon-production.herokuapp.com
-
-  - abortionfinder.org
-    github: nitidbit/bedsider-web
-    editors: Lauren, Gillian, Chelsey
-    url: www.abortionfinder.org
-         staging.abortionfinder.org
-
-- v1 -- These should be upgraded and moved to v2.8.2
-
-    - github: nitidbit/mybcweb
-      url: https://use.mybirthcontrol.org
-           http://mybcweb-pp.s3-website-us-west-2.amazonaws.com
-
-      lexicon server: http://lexicon-editor.herokuapp.com
-      s3: http://mybcweb.s3-website-us-west-2.amazonaws.com/
-      client: Whitney
-
-    - github: mypathweb
-      url: http://mypathweb.s3-website.us-east-2.amazonaws.com/
-           info.mypath.org -- no production site yet
-      lexicon server: lexicon-mypath-web.herokuapp.com
-      editors: Sam
-
-
-- ???
-
-    - hiv-dst — HIV tool -- no production site yet
-      urls:
-        - https://staging.myhivprevention.org
-        - [HIV DST](http://hiv-dst.herokuapp.com/)
-        - [MyBC Peripartum disemination site](http://mybcweb-pp.s3-website-us-west-2.amazonaws.com/)
-      editors: Whitney
-      github: hiv-dst
+- https://lexicon-production.herokuapp.com
+    Several static sites uses this server for making Lexicon changes. See admin
 
 
 Change History

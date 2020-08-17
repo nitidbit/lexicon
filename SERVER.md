@@ -1,11 +1,8 @@
 Lexicon Server
 ==============
 
-- Production v1: https://lexicon-editor.herokuapp.com -- sign in at MyBC/sign_in
-    used by MyBC
-- Production v2: https://lexicon-production.herokuapp.com/sign_in
-    used by abortionfinder.org
-- Staging: https://lexicon-server-staging.herokuapp.com/sign_in
+- production: https://lexicon-production.herokuapp.com/sign_in
+- staging: https://lexicon-staging.herokuapp.com/sign_in -- Just use for testing Lexicon itself
 
 Pages:
 - /demo — See Lexicon in action. Also a testbed for making sure it's working.
@@ -68,7 +65,7 @@ Deploy
 ------
 - Change the version in `lib/lexicon.rb`
 - staging — Heroku is configured to automatically deploy from Github's 'main' branch.
-- production — Use Heroku pipeline
+- production — automatic deploy from 'production' branch
 
 Configuration
 -------------
