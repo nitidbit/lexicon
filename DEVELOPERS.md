@@ -46,7 +46,7 @@ When Lexicon is in a good state, set new version number:
     - npm-package/src/index.ts
     - npm-package/package.json
 
-Login NPM into Github's package registry.
+First time: Login NPM into Github's package registry.
 
     Create a new GitHub personal access token at https://github.com/settings/tokens
     npm login --registry=https://npm.pkg.github.com/
@@ -59,7 +59,8 @@ available to people using the package. This is already done if you've been runni
     npm run tsc
     npm publish
     git add . && git commit -m "Version x.y.z"
-    git push
+    git tag 'X.Y.Z'
+    git push && git push origin 'X.Y.Z'
 
 
 Thoughts
