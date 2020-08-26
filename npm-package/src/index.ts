@@ -1,10 +1,12 @@
 export { Lexicon } from './Lexicon';
 export { default as EditWrapper } from './EditWrapper';
 
-export const VERSION = '2.8.3'
+export const VERSION = '2.8.4'
 
 /*
   Change History - API changes since last version
+
+  v2.8.4 — Server has button to check if Github access token is working.
 
   v2.8.3 — Remove some debug logging. Visual improvements to Lexicon Server
 
