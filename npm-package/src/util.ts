@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import lodash_get from 'lodash/get';
 
 
 //
@@ -29,7 +29,7 @@ export const evaluateTemplate = (template: string, substitutions: object): strin
       }
 
       const path = template.substring(startPos, i - 1),
-        value = _.get(substitutions, path);
+        value = lodash_get(substitutions, path);
 
       replaced += value;
       i--;

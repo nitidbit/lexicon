@@ -1,11 +1,11 @@
 {
   "name": "@nitidbit/lexicon",
-  "version": "2.8.4",
+  "version": "2.8.5",
   "description": "Nitid Lexicon Library for text-based content management via web UI",
   "main": "js/index.js",
   "typings": "js/index",
   "publishConfig": {
-    "registry":"https://npm.pkg.github.com/"
+    "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",

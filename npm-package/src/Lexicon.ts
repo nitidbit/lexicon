@@ -1,4 +1,11 @@
-import _ from 'lodash';
+import isString from 'lodash/isString';
+import isUndefined from 'lodash/isUndefined';
+import isNil from 'lodash/isNil';
+import cloneDeepWith from 'lodash/cloneDeepWith';
+import lodash_has from 'lodash/has';
+import lodash_compact from 'lodash/compact';
+import lodash_concat from 'lodash/concat';
+import lodash_map from 'lodash/map';
 import { Collection, KeyPath, keyPathAsArray, KeyPathArray, KeyPathString } from './collection';
 import * as col from './collection';
 import {evaluateTemplate } from './util';
@@ -15,7 +22,7 @@ type LocaleCode = string; // e.g. 'en', 'es', 'en_GB', 'zh-Hant'
 const DEFAULT_LOCALE_CODE = 'en';
 
 function isLocaleCode(locale:LocaleCode) {
-  return _.isString(locale) && locale.length < 10;
+  return isString(locale) && locale.length < 10;
 }
 
 
@@ -32,7 +39,7 @@ export class Lexicon {
               localeCode: LocaleCode,
               filename: string,
               subset: KeyPath = '') {
-    if (! _.has(contentByLocale, DEFAULT_LOCALE_CODE)) {
+    if (! lodash_has(contentByLocale, DEFAULT_LOCALE_CODE)) {
       throw new Error("'contentByLocale' must contain 'en: {...}' locale");
     }
     this.currentLocaleCode = localeCode;
@@ -60,21 +67,21 @@ export class Lexicon {
         e.g. "hello #{name}" -> "hello Winston"
   */
   get(keyPath: KeyPath, templateSubstitutions?: object): any {
-    if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+    if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
 
     let info = this.find(this.currentLocaleCode, keyPath);
 
-    if (_.isNil(info)) { // could not find it--try English
+    if (isNil(info)) { // could not find it--try English
       info = this.find(DEFAULT_LOCALE_CODE, keyPath);
 
-      if (_.isNil(info)) { // still couldn't find it--return a clue of the problem
+      if (isNil(info)) { // still couldn't find it--return a clue of the problem
         return `[no content for "${col.keyPathAsString(this.fullKey(this.currentLocaleCode, keyPath))}"]`;
       }
     }
 
     let val = info.value;
 
-    if (_.isString(val) && !_.isUndefined(templateSubstitutions)) {
+    if (isString(val) && !isUndefined(templateSubstitutions)) {
       val = evaluateTemplate(val, templateSubstitutions);
     }
 
@@ -86,11 +93,11 @@ export class Lexicon {
    * dictionary, or produce informative default value.
    */
   getExact(keyPath: KeyPath): any {
-    if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+    if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
 
     let info = this.find(this.currentLocaleCode, keyPath);
 
-    if (_.isNil(info)) {
+    if (isNil(info)) {
       return undefined; // could not find value
     }
 
@@ -111,7 +118,7 @@ export class Lexicon {
 
   /* Determine the complete "key path" to retrieve our value */
   private fullKey(locale:LocaleCode, keyPath:KeyPath) {
-    var parts = _.compact([locale, col.keyPathAsString(this._subsetRoot), col.keyPathAsString(keyPath)]);
+    var parts = lodash_compact([locale, col.keyPathAsString(this._subsetRoot), col.keyPathAsString(keyPath)]);
     return parts.join('.');
   }
 
@@ -119,7 +126,7 @@ export class Lexicon {
   /* Find some content and return info about that node */
   private find(locale: LocaleCode, keyPath: KeyPath) {
     if (! isLocaleCode(locale)) throw new Error(`'locale' should be LocaleCode, e.g. 'en', not: ${locale}`);
-    if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined");
+    if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined");
 
     return recursiveFind(this, col.keyPathAsArray(keyPath), this, [], []);
 
@@ -132,10 +139,10 @@ export class Lexicon {
         localPrefix: KeyPathArray) {
 //       console.log('!!! recursiveFind() rootPrefix=', rootPrefix, 'localPrefix=', localPrefix, 'keyPath=', keyPath, 'node=', node)
 
-      if (_.isUndefined(node)) {
+      if (isUndefined(node)) {
         return null; // could not find the node
       }
-      if (_.isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+      if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
 
       if (keyPath.length == 0 && !(node instanceof Lexicon)) {
         let result = { // Here's the output:
@@ -154,7 +161,7 @@ export class Lexicon {
         lexicon = node;
         localPrefix = []
         rootPrefix = rootPrefix.concat(['_contentByLocale', locale])
-        keyPath = _.concat(col.keyPathAsArray(lexicon._subsetRoot), keyPath);
+        keyPath = lodash_concat(col.keyPathAsArray(lexicon._subsetRoot), keyPath);
         nextNode = col.get(lexicon._contentByLocale, [locale]);
       } else {
         const firstKey = keyPath[0];
@@ -203,7 +210,7 @@ export class Lexicon {
   /* Return list of dotted keys, e.g. ['mycomponent.title', 'mycomponent.page1.intro'] */
   keys(): Array<KeyPathString> {
     const info = this.find(this.currentLocaleCode, [])
-    if (_.isNil(info)) return [];
+    if (isNil(info)) return [];
 
     const startingNode = info.value;
 
@@ -216,7 +223,7 @@ export class Lexicon {
 
         if (node instanceof Lexicon) {
           const subKeys = node.keys();
-          const prefixedKeys = _.map(subKeys, (keyPath) => `${prefix}${key}.${keyPath}`);
+          const prefixedKeys = lodash_map(subKeys, (keyPath) => `${prefix}${key}.${keyPath}`);
           flatKeys = flatKeys.concat(prefixedKeys);
 
         } else if (col.isCollection(node)) {
@@ -250,7 +257,7 @@ export class Lexicon {
         return value.cloneDeep();
       }
     }
-    return new Lexicon(_.cloneDeepWith(this._contentByLocale, customizer), this.currentLocaleCode, this._filename, this._subsetRoot);
+    return new Lexicon(cloneDeepWith(this._contentByLocale, customizer), this.currentLocaleCode, this._filename, this._subsetRoot);
   }
 
   clone(): Lexicon {

@@ -22,7 +22,7 @@ class EditWrapper extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.toggleEditor = () => {
-            this.setState(Object.assign({}, this.state, { isEditorVisible: !this.state.isEditorVisible }));
+            this.setState(Object.assign(Object.assign({}, this.state), { isEditorVisible: !this.state.isEditorVisible }));
         };
         this.updateTextFromEditor = (change) => {
             this.setState(oldState => {
