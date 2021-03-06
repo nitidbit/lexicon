@@ -282,7 +282,6 @@ describe('Lexicon module', () => {
     });
   });
 
-
   describe('update()', () => {
     let lex2 = null;
 
@@ -314,6 +313,21 @@ describe('Lexicon module', () => {
 
     test('returns false if path or locale does not exist', () => {
       expect(lex.update('blah.123', 'foobar')).toEqual(false);
+    });
+  });
+
+  describe('addSubLexicon()', () => {
+    test('can add a lexicon inside the current lexicon', () => {
+      const subLex2 = new Lexicon({
+          en: { subFoo: 'SUB FOO TWO' }}, 'en', 'subLex2.json');
+
+      lex.addSubLexicon(subLex2, 'AddedSubLexicon');
+
+      expect(lex.subset('AddedSubLexicon').get('subFoo')).toEqual('SUB FOO TWO');
+
+      const subLexUpdatePath = lex.subset('AddedSubLexicon').source('subFoo').updatePath;
+      lex.update(subLexUpdatePath, 'NEW VALUE');
+      expect(lex.subset('AddedSubLexicon').get('subFoo')).toEqual('NEW VALUE');
     });
   });
 
