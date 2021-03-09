@@ -49,6 +49,7 @@ When Lexicon is in a good state, set new version number:
 First time: Login NPM into Github's package registry.
 
     Create a new GitHub personal access token at https://github.com/settings/tokens
+     Your token must have the `repo` and read:packages` scopes to login to the GitHub Package Registry.
     npm login --registry=https://npm.pkg.github.com/
     Use the token as a password
 
@@ -96,4 +97,3 @@ Developers can:
 
 - Editor can check types of content, e.g. must be a number, date, or list has elements of a
   particular shape {question: ___, answer: ___}
-
