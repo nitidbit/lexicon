@@ -1,14 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VERSION = exports.EditWrapper = exports.Lexicon = void 0;
 var Lexicon_1 = require("./Lexicon");
-Object.defineProperty(exports, "Lexicon", { enumerable: true, get: function () { return Lexicon_1.Lexicon; } });
+exports.Lexicon = Lexicon_1.Lexicon;
 var EditWrapper_1 = require("./EditWrapper");
-Object.defineProperty(exports, "EditWrapper", { enumerable: true, get: function () { return __importDefault(EditWrapper_1).default; } });
-exports.VERSION = '2.8.4';
+exports.EditWrapper = EditWrapper_1.default;
+exports.VERSION = '2.9.4';
 /*
   Change History - API changes since last version
 
