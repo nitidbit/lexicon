@@ -48,6 +48,12 @@ class Lexicon {
             return null;
         return new Lexicon(this._contentByLocale, localeCode, this._filename, this._subsetRoot);
     }
+    /* Modify an existing Lexicon by adding another lexicon  */
+    addSubLexicon(subLexicon, subLexiconName) {
+        for (const locale of Object.keys(this._contentByLocale)) {
+            this._contentByLocale[locale][subLexiconName] = subLexicon.locale(locale);
+        }
+    }
     /*
        Return a value from the Lexicon, in the current locale.
        If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,

@@ -4,9 +4,11 @@ var Lexicon_1 = require("./Lexicon");
 exports.Lexicon = Lexicon_1.Lexicon;
 var EditWrapper_1 = require("./EditWrapper");
 exports.EditWrapper = EditWrapper_1.default;
-exports.VERSION = '2.9.4';
+exports.VERSION = '2.10.0';
 /*
   Change History - API changes since last version
+
+  v2.10.0 — Added "AddSubLexicon" function as a shortcut to embed lexicons in lexicons.
 
   v2.8.4 — Server has button to check if Github access token is working.
 

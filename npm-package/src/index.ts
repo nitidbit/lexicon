@@ -1,10 +1,12 @@
 export { Lexicon } from './Lexicon';
 export { default as EditWrapper } from './EditWrapper';
 
-export const VERSION = '2.9.4'
+export const VERSION = '2.10.0'
 
 /*
   Change History - API changes since last version
+
+  v2.10.0 — Added "AddSubLexicon" function as a shortcut to embed lexicons in lexicons.
 
   v2.8.4 — Server has button to check if Github access token is working.
 
