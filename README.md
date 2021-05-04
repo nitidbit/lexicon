@@ -74,7 +74,7 @@ When you create an `EditWrapper`, you now need to tell it where to send changes.
 
 - An **endpoint on your own Rails app** that will call [Services::LexiconSaver](https://github.com/nitidbit/lexicon-server/blob/master/app/services/lexicon_saver.rb) Take a look at how Bedsider does it. Generally you'll add an endpoint which forwards params to LexiconSaver.
 
-- Use the endpoint on **[ Nitid's Lexicon Server ](http://lexicon-server-staging.herokuapp.com/)**.  — See the [Lexicon Server README](https://github.com/nitidbit/lexicon-server/blob/master/README.md) about how to add your app.
+- Use the endpoint on **[ Nitid's Lexicon Server ](http://lexicon-production.herokuapp.com/)**.  — See the [Lexicon Server README](https://github.com/nitidbit/lexicon-server/blob/master/README.md) about how to add your app.
 
 ```jsx
 <EditWrapper
