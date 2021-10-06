@@ -1,5 +1,6 @@
 require 'argon2'
 require 'jwt'
+require 'httparty'
 
 def permitted_changes(params)
   params.require(:changes).map{|c| c.permit(:filename, :key, :newValue)}
@@ -14,7 +15,31 @@ class ApiController < ApplicationController
 
   # Update API endpoint, authenticated via JWT token in header
   def update
-    changes = permitted_changes(params)
+    if @authenticated_client_app.slack_workflow_url
+      changes = permitted_changes(params)
+      message = "from #{@authenticated_client_app.app_url} "
+      @authenticated_client_app.users.each do |user|
+        message += "#{user.email} "
+      end
+      message += "has changed Lexicon text: \n"
+      changes.each do |change|
+        message += "\"#{change['key']}\" has changed to \"#{change['newValue']}\""
+        message += "\n"
+      end
+      response = HTTParty.post(@authenticated_client_app.slack_workflow_url,
+        :body => ({ "message" => message }).to_json,
+        :headers => { 'Content-Type' => 'application/json' }
+        )
+      case response.code
+        when 200
+          puts "lexicon message sent to slack"
+        when 404
+          puts "slack not found"
+        when 500...600
+          puts "error #{response.code}"
+      end
+    end
+
     # Security note: Someone can send any filename, and we will try to modify it. We are trusing
     # our authenticated users.
     lsaver = lexicon_saver

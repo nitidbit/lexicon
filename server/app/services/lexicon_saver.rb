@@ -38,9 +38,7 @@ module Services
 
     def put_entry(filename, key, value, commit_message)
       raise ArgumentError, 'no value supplied' if value.nil?
-
       Rails.logger.info("put_entry() filename=#{filename} key=#{key} value=#{value} msg=#{commit_message}")
-
       begin
         hash = adapter.read(filename)
         set(object: hash, keys: key.split('.'), value: value)
