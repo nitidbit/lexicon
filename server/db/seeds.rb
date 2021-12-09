@@ -4,6 +4,8 @@
 
 User.create(
   email: 'foo@nitidbit.com',
-  password: 'joust.galaga.pacman' # Be sure to change this
+  password: 'joust.galaga.pacman', # Be sure to change this
+  is_admin: true
 )
+
 
