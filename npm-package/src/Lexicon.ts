@@ -60,12 +60,15 @@ export class Lexicon {
     return new Lexicon(this._contentByLocale, localeCode, this._filename, this._subsetRoot);
   }
 
-  /* Modify an existing Lexicon by adding another lexicon  */
-  addSubLexicon(subLexicon: Lexicon, subLexiconName: string): void {
+  /* Merge a second 'subLexicon' in under the key 'branchKey'. */
+  addBranch(subLexicon: Lexicon, branchKey: string): void {
     for (const locale of Object.keys(this._contentByLocale)) {
-      this._contentByLocale[locale][subLexiconName] = subLexicon.locale(locale);
+      this._contentByLocale[locale][branchKey] = subLexicon.locale(locale);
     }
   }
+
+  /* DEPRECATED. an alias for addBranch() */
+  addSubLexicon(subLexicon: Lexicon, branchKey: string) { this.addBranch(subLexicon, branchKey); }
 
   /*
      Return a value from the Lexicon, in the current locale.

@@ -66,6 +66,17 @@ Arrays can be accessed using numeric keys
 
     lex.get('faq.0.question')                           // => 'What is the meaning of life,
                                                         //     the universe, and everything?'
+
+One lexicons can added as a branch of another so that values from both are accessible
+
+      lex1 = new Lexicon({en: { one: 'ONE' }}, 'en', 'lex1.json');
+      lex2 = new Lexicon({en: { two: 'TWO' }}, 'en', 'lex2.json');
+
+      lex1.addBranch(lex2, 'added');
+      lex1.get('one')                                   // => 'ONE'
+      lex1.get('added.two')                             // => 'TWO'
+
+
 EditWrapper
 -----------
 EditWrapper is a React component that takes your component, and a Lexicon and adds an Edit Contents button. Admins can then edit a Lexicon, see changes live, and then save them to a Lexicon-Server.

@@ -316,19 +316,41 @@ describe('Lexicon module', () => {
     });
   });
 
+  describe('addBranch()', () => {
+    let lex1, lex2;
+
+    beforeEach( () => {
+      lex1 = new Lexicon({en: { one: 'ONE' }}, 'en', 'lex1.json');
+      lex2 = new Lexicon({en: { two: 'TWO' }}, 'en', 'lex2.json');
+
+      lex1.addBranch(lex2, 'added');
+    });
+
+    test('returns a Lexicon containing keys from both underlying Lexicons', () => {
+      expect(lex1.get('one')).toEqual('ONE');
+      expect(lex1.get('added.two')).toEqual('TWO');
+    });
+
+    test('subsets work with added subLexicons', () => {
+      let addedLex = lex1.subset('added');
+      expect(addedLex.get('two')).toEqual('TWO');
+    });
+
+    test('saving/updating subsets of a sub-lexicon work', () => {
+      let addedLex = lex1.subset('added');
+      lex.update(addedLex.source('two').updatePath, 'NEW VALUE');
+      expect(addedLex.get('two')).toEqual('TWO');
+    })
+  })
+
   describe('addSubLexicon()', () => {
-    test('can add a lexicon inside the current lexicon', () => {
-      const subLex2 = new Lexicon({
-          en: { subFoo: 'SUB FOO TWO' }}, 'en', 'subLex2.json');
+    test('addSubLexicon is an alias for addBranch', () => {
+      let lex1 = new Lexicon({en: { one: 'ONE' }}, 'en', 'lex1.json');
+      let lex2 = new Lexicon({en: { two: 'TWO' }}, 'en', 'lex2.json');
 
-      lex.addSubLexicon(subLex2, 'AddedSubLexicon');
+      lex1.addSubLexicon(lex2, 'added');
 
-      expect(lex.subset('AddedSubLexicon').get('subFoo')).toEqual('SUB FOO TWO');
-
-      const subLexUpdatePath = lex.subset('AddedSubLexicon').source('subFoo').updatePath;
-      lex.update(subLexUpdatePath, 'NEW VALUE');
-      expect(lex.subset('AddedSubLexicon').get('subFoo')).toEqual('NEW VALUE');
+      expect(lex1.get('added.two')).toEqual('TWO');
     });
   });
-
 });

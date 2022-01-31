@@ -10,7 +10,8 @@ export declare class Lexicon {
     private _subsetRoot;
     constructor(contentByLocale: ContentByLocale, localeCode: LocaleCode, filename: string, subset?: KeyPath);
     locale(localeCode: LocaleCode): Lexicon | null;
-    addSubLexicon(subLexicon: Lexicon, subLexiconName: string): void;
+    addBranch(subLexicon: Lexicon, branchKey: string): void;
+    addSubLexicon(subLexicon: Lexicon, branchKey: string): void;
     get(keyPath: KeyPath, templateSubstitutions?: object): any;
     getExact(keyPath: KeyPath): any;
     subset(keyPath: KeyPath): Lexicon | null;
