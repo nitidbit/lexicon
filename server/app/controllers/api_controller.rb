@@ -15,8 +15,9 @@ class ApiController < ApplicationController
 
   # Update API endpoint, authenticated via JWT token in header
   def update
-    if @authenticated_client_app.slack_workflow_url
-      changes = permitted_changes(params)
+    changes = permitted_changes(params)
+
+    if @authenticated_client_app.slack_workflow_url # Alert on slack?
       message = "User \"#{@authenticated_user.email}\" on app #{@authenticated_client_app.app_url} has changed Lexicon text: \n"
       changes.each do |change|
         message += "\"#{change['key']}\" has changed to \"#{change['newValue']}\""
@@ -36,7 +37,7 @@ class ApiController < ApplicationController
       end
     end
 
-    # Security note: Someone can send any filename, and we will try to modify it. We are trusing
+    # SECURITY NOTE: Someone can send any filename, and we will try to modify it. We are trusing
     # our authenticated users.
     lsaver = lexicon_saver
 
