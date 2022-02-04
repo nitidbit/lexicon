@@ -111,4 +111,6 @@ Change History
 See: [src/index.ts](src/index.ts)
 
 
-
+TO DO
+-----
+- Better error message if you accidentally pass the wrong path for the JSON file.
