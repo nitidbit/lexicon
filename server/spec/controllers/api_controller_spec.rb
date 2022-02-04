@@ -63,6 +63,20 @@ RSpec.describe ApiController, type: :controller do
         expect(JSON.parse(contents)['parent']).to eq('child' => 'new child')
       end
 
+      it 'alerts changes via Slack when "slack_workflow_url" is filled in' do
+        @client_app.update(slack_workflow_url: 'http://blah.slack.com')
+
+        expect(HTTParty).to receive(:post)
+        put(:update, params: @lexicon_changes)
+      end
+
+      it 'does not talk to Slack when "slack_workflow_url" is empty string' do
+        @client_app.update(slack_workflow_url: '')
+
+        expect(HTTParty).to_not receive(:post)
+        put(:update, params: @lexicon_changes)
+      end
+
       it 'fails when user is not permitted to access repo'
       it 'fails when lexiconServerToken has timed out'
     end
@@ -103,7 +117,6 @@ RSpec.describe ApiController, type: :controller do
         expect(lexicon_adapter).to receive(:write).with('sample-filename.json', anything, anything)
         put(:update, params: @lexicon_changes)
       end
-
     end
   end
 end
