@@ -3,7 +3,17 @@ require 'jwt'
 
 RSpec.describe ApiController, type: :controller do
   describe '#update' do
+
+    let(:mock_response) { double(HTTParty::Response, code: 200, parsed_response: nil) }
+
     before do
+
+      allow(HTTParty).to receive(:post).with(
+        "http://blah.slack.com", any_args
+      ).and_return mock_response
+
+      # allow(HTTParty).to receive(:post).and_return mock_response
+
       @original_content = {
         key: 'old value',
         parent: {
@@ -25,6 +35,18 @@ RSpec.describe ApiController, type: :controller do
 
       @user = User.create!(email: 'blaaa@example.com', password: 'super.blah.foofy.foo')
       @client_app = ClientApp.create!(name: 'sample client app', app_url: 'example.com', adapter: 'file')
+      @client_app_with_slack = ClientApp.create!(
+        name: 'sample client app with slack',
+        app_url: 'example.com',
+        adapter: 'file',
+        slack_workflow_url: 'http://blah.slack.com'
+        )
+      @client_app_with_slack_empty = ClientApp.create!(
+        name: 'sample client app with slack',
+        app_url: 'example.com',
+        adapter: 'file',
+        slack_workflow_url: ''
+        )
     end
 
     after do
@@ -64,14 +86,16 @@ RSpec.describe ApiController, type: :controller do
       end
 
       it 'alerts changes via Slack when "slack_workflow_url" is filled in' do
-        @client_app.update(slack_workflow_url: 'http://blah.slack.com')
+        @token = ApiController::lexicon_server_token(@user, @client_app_with_slack)
+        request.headers['Authorization'] = "Bearer #{@token}"
 
-        expect(HTTParty).to receive(:post)
+        expect(HTTParty).to receive(:post).with("http://blah.slack.com", any_args)
         put(:update, params: @lexicon_changes)
       end
 
       it 'does not talk to Slack when "slack_workflow_url" is empty string' do
-        @client_app.update(slack_workflow_url: '')
+        @token = ApiController::lexicon_server_token(@user, @client_app_with_slack_empty)
+        request.headers['Authorization'] = "Bearer #{@token}"
 
         expect(HTTParty).to_not receive(:post)
         put(:update, params: @lexicon_changes)

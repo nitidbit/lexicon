@@ -17,7 +17,7 @@ class ApiController < ApplicationController
   def update
     changes = permitted_changes(params)
 
-    if @authenticated_client_app.slack_workflow_url # Alert on slack?
+    if @authenticated_client_app.slack_workflow_url.present? # Alert on slack?
       message = "User \"#{@authenticated_user.email}\" on app #{@authenticated_client_app.app_url} has changed Lexicon text: \n"
       changes.each do |change|
         message += "\"#{change['key']}\" has changed to \"#{change['newValue']}\""
