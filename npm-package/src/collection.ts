@@ -1,14 +1,11 @@
-import isString from 'lodash/isString';
-import isMap from 'lodash/isMap';
-import isArray from 'lodash/isArray';
-import isObject from 'lodash/isObject';
-import isNil from 'lodash/isNil';
-import lodash_size from 'lodash/size';
-import lodash_set from 'lodash/set';
-import lodash_has from 'lodash/has';
-import lodash_entries from 'lodash/entries';
-import lodash_keys from 'lodash/keys';
-import lodash_compact from 'lodash/compact';
+import isObject from 'lodash.isobject';
+import lodash_size from 'lodash.size';
+import lodash_set from 'lodash.set';
+import isMap from 'lodash.ismap';
+import isNil from 'lodash.isnil';
+import lodash_has from 'lodash.has';
+import isString from 'lodash.isstring';
+import lodash_compact from 'lodash.compact';
 
 /*
  * Functions that can manipulate 'Collections' irrespective of the actual storage type.
@@ -35,7 +32,7 @@ export function keyPathAsArray(keyPath: KeyPath): Array<string> {
 
 /* return in dotted-string form, e.g. ['my', 'key', 'path'] -> 'my.key.path' */
 export function keyPathAsString(keyPath: KeyPath): string {
-  if (isArray(keyPath)) {
+  if (Array.isArray(keyPath)) {
     keyPath = keyPath.join('.');
   }
   return keyPath
@@ -43,7 +40,7 @@ export function keyPathAsString(keyPath: KeyPath): string {
 
 export function isCollection(maybeCollection: any): boolean {
   return isMap(maybeCollection)
-    || isArray(maybeCollection)
+    || Array.isArray(maybeCollection)
     || isObject(maybeCollection)
 }
 
@@ -71,13 +68,13 @@ export function get(data: Collection, keyPath: KeyPath): any {
 // Equivalent to lodash.keys(), but works with Maps
 export function keys(c: Collection): Array<string> {
   if (isMap(c)) return [...c.keys()];
-  return lodash_keys(c);
+  return Object.keys(c);
 }
 
 // Equivalent to lodash.entries(), but works with Maps
 export function entries(c: Collection): Array<[any, any]> {
   if (isMap(c)) return [...c.entries()];
-  return lodash_entries(c);
+  return Object.entries(c);
 }
 
 // Equivalent to lodash.has(), but works with Maps
@@ -109,7 +106,7 @@ export function size(c: Collection): Number {
 // Returns an iterator for the collection
 // export function iterator(c: Collection): Iterator<any> {
 //   if (isObject(c)) return lodash_entries(c)[Symbol.iterator]();
-//   if (isArray(c)) return (c as Array<any>)[Symbol.iterator]();
+//   if (Array.isArray(c)) return (c as Array<any>)[Symbol.iterator]();
 //   else return (c as Map<any, any>)[Symbol.iterator]();
 // }
 

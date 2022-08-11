@@ -49,7 +49,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     updateTextFromEditor: OnChangeCallback;
     switchLocale: (newLocale: string) => void;
     saveChanges: () => void;
-    changePosition: (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => void;
+    changePosition: (e: React.MouseEvent<HTMLInputElement>) => void;
     render(): JSX.Element;
 }
 export {};
