@@ -1,3 +1,0 @@
-# For Heroku
-web:     bin/rails server -p $PORT -e $RAILS_ENV
-release: ./heroku_ctl.rb procfile_release

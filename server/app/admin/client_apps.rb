@@ -21,8 +21,8 @@ ActiveAdmin.register ClientApp do
       row :adapter
       row :github_repo
       row :git_branch
-      row :github_api_token
       row :github_user
+      row :github_api_token
       row :users
       row :slack_workflow_url
 
@@ -69,8 +69,8 @@ ActiveAdmin.register ClientApp do
       input :adapter, hint: '"github" or "file"'
       input :github_repo, hint: 'Where should Lexicon edits be saved? Only for github adapter'
       input :git_branch, hint: 'Which branch should Lexicon use? The branch must already exist.'
-      input :github_user, hint: 'For security, make a new GitHub user with access to just this one repo.'
-      input :github_api_token, hint: 'Personal access token. Give it "repo" access'
+      input :github_user, hint: 'Which user has this token? Youll want to know when its time to renew.'
+      input :github_api_token, hint: '(1) Enable access tokens at Github > Org Settings > Third Party Access > Personal access tokens. (2) Create token at (your profile) > Settings > Developer Settings > Personal access tokens. Give it Contents—Write access'
       input :slack_workflow_url, hint: 'Setup: Slack->tools->Workflow Builder (edit or Create) get url at "Starts when an app or service sends a web request"'
       input :users, as: :select, multiple: true,
         collection: User.all.map{|user| [user.email, user.id]}

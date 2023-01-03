@@ -85,12 +85,12 @@ When you create an `EditWrapper`, you now need to tell it where to send changes.
 
 - An **endpoint on your own Rails app** that will call [Services::LexiconSaver](https://github.com/nitidbit/lexicon/blob/main/SERVER.md) Take a look at how Bedsider does it. Generally you'll add an endpoint which forwards params to LexiconSaver.
 
-- Use the endpoint on **[ Nitid's Lexicon Server ](http://lexicon-production.herokuapp.com/)**.  — See the [Lexicon Server README](https://github.com/nitidbit/lexicon/blob/main/SERVER.md) about how to add your app.
+- Use the endpoint on **[ Nitid's Lexicon Server ](https://lexicon.nitid.co/)**.  — See the [Lexicon Server README](https://github.com/nitidbit/lexicon/blob/main/SERVER.md) about how to add your app.
 
 ```jsx
 <EditWrapper
   // other props...
-  apiUpdateUrl="https://lexicon-editor.herokuapp.com/update" // or whatever the correct URL is
+  apiUpdateUrl="https://lexicon.nitid.co/update" // or whatever the correct URL is
 />
 ```
 
@@ -102,7 +102,7 @@ Where are we using Lexicon and Lexicon-Server?
 
 - www.bedsider.org - uses internal server, i.e. edits are posted to bedsider/lexicon/update
 
-- https://lexicon-production.herokuapp.com/admin
+- https://lexicon.nitid.co/admin
     Several static sites uses this server for making Lexicon changes.
 
 

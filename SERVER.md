@@ -1,8 +1,8 @@
 Lexicon Server
 ==============
 
-- production: https://lexicon-production.herokuapp.com/sign_in
-- staging: https://lexicon-staging.herokuapp.com/sign_in -- Just use for testing Lexicon itself
+- production: https://lexicon.nitid.co/sign_in
+- staging: https://lexicon-staging.onrender.com/sign_in -- Just use for testing Lexicon itself
 
 Pages:
 - /demo — See Lexicon in action. Also a testbed for making sure it's working.
@@ -17,10 +17,10 @@ Server comes in. You can configure Lexicon Server to write to your GitHub repo, 
 who will be editing. Here's how (using the Lexicon staging server):
 
 Create your React app, with EditWrappers. For the <EditWrapper apiUpdateUrl={}> prop, use
-$SERVER/update, e.g. http://lexicon-server-staging.herokuapp.com/update
+$SERVER/update, e.g. http://lexicon-server-staging.onrender.com/update
 
 Create a Client App on Lexicon which represents your instance of MyApp.
-- Sign in as an admin: http://lexicon-server-staging.herokuapp.com/sign_in
+- Sign in as an admin: http://lexicon-server-staging.onrender.com/sign_in
 - Go to Admin > Client Apps, create a new one.
 - You'll need to create a GitHub personal access token for the API call. We recommend making a user
   account at github with only 'repo' access to one repo, rather than making an access token on your
@@ -43,15 +43,6 @@ Test that all the access keys work
 Share Lexicon User credentials and the secret /sign-in/ link with your clients.
 
 
-Adding a Lexicon API endpoint to my Rails app so I can host Lexicon editing
----------------------------------------------------------------------------
-For now, you'll need to copy the Lexicon Saver and Adapter files to your Rails app. Eventually we
-will make a Gem that you can bundle in.
-
-- Copy these files:
-- Add an API endpoint:
-
-
 Developer Setup
 ---------------
 
@@ -61,11 +52,17 @@ Developer Setup
     rails s
     browse http://localhost:3000/sign_in
 
+Handy Scripts dealing with server
+---------------------------------
+- bundle exec rails render:import_db — Import lastest.dump to local DB
+- bundle exec rails render:restore_db — Restore latest.dump some Postgres server, e.g. staging
+- psql lexicon_development < ___.sql — restore DB from Render.com. Download the .sql.gz from Render
+
 Deploy
 ------
 - Change the version in `lib/lexicon.rb`
-- staging — Heroku is configured to automatically deploy from Github's 'main' branch.
-- production — automatic deploy from 'production' branch
+- staging — Render.com is configured to automatically deploy from Github's 'main' branch.
+- production — Similarly, automatic deploy from 'production' branch
 
 Configuration
 -------------
