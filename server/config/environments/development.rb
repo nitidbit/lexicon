@@ -55,6 +55,8 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
+JWT_SECRET = 'e132af279585ca5a7390a35004dbde4558f092bc2a3d63f7700b188296b4ee2098eb2831900b26a919141bf3d087d00d94e4dd31322c255c5d2ad7a8727a2c20'.freeze
+
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 end

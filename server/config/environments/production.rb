@@ -67,3 +67,6 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
+
+JWT_SECRET = ENV['JWT_SECRET']
+raise 'Environment variable JWT_SECRET is not defined. Set it to 64 random hex chars.' if JWT_SECRET.nil?

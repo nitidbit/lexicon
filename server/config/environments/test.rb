@@ -48,3 +48,5 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 end
+
+JWT_SECRET = '5530a2064d07b12bd0e4fe74b5e1d4c7627caf3966c8292c2a4c9d81f2a6eb736e2234bbcfc285e9cd3752bcf31d205e6d22014f71369b8fbc3a066191fce5fe'.freeze

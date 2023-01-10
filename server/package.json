@@ -2,8 +2,8 @@
   "name": "lexicon-server",
   "private": true,
   "scripts": {
-    "build": "node build.js",
-    "build:watch": "node build.js -- --watch",
+    "build": "node build.mjs",
+    "build:watch": "node build.mjs -- --watch",
     "XXX-build": "esbuild app/javascript/* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets --loader:.scss=css",
     "build:css": "sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
   },
