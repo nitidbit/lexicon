@@ -1,0 +1,35 @@
+// Shared styles for regular pages. Include this in each CSS file, instead of making global CSS in application.css
+
+$light_blue: #83cfdd;
+$medium_blue: #009cba;
+$dark_blue: #006477;
+$dark_gray_blue: #004d5d;
+
+$lightest_green: #afca40;
+$lighter_green: #acce19; // used in .button:hover
+$light_green: #a2c800;
+$olive: #94b800;
+$link_green: #690;
+$dark_green: #5d9200;
+
+$yellow: #fade1d;
+$orange: #faac1d;
+$dark_orange: #f37928;
+
+$purple: #8d2e8d;
+$dark_purple: #521a53;
+
+$text_black: #323537; // same as ActiveAdmin
+$link_blue: #38678b; // same as ActiveAdmin
+
+@mixin regular {
+  font-family: "helvetica neue", helvetica, sanserif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: $text_black;
+
+  a {
+    color: $link_blue;
+  }
+}
+

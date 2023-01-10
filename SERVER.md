@@ -77,3 +77,9 @@ You also need a `JWT_SECRET`, a secret key used to authenticate access to the Le
 ## Create first user
     User.create!(email: 'winston@nitidbit.com', password: '...')
 
+### Rails upgrade
+I upgraded to Rails 7 using this command:
+
+  rails new Lexicon --javascript=esbuild  --minimal --database postgresql --asset-pipeline=sprokets --no-skip-active-record --css sass
+
+and then copied files over.

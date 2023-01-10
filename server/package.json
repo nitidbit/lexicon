@@ -1,0 +1,27 @@
+{
+  "name": "lexicon-server",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "build:watch": "node build.js -- --watch",
+    "XXX-build": "esbuild app/javascript/* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets --loader:.scss=css",
+    "build:css": "sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
+  },
+  "dependencies": {
+    "@babel/core": "7",
+    "@babel/plugin-transform-runtime": "7",
+    "@babel/preset-env": "7",
+    "@babel/runtime": "7",
+    "babel-loader": "8",
+    "babel-plugin-macros": "^3.1.0",
+    "esbuild": "^0.16.16",
+    "esbuild-plugin-sass": "^1.0.1",
+    "lexicon": "git+https://f534df08ec35a6569d211a8cf041a9a0fdba02c9:x-oauth-basic@github.com/nitidbit/lexicon.git#2.8.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "sass": "^1.57.1"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.7.0"
+  }
+}
