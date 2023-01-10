@@ -47,6 +47,7 @@ Developer Setup
 ---------------
 
     bundle
+    yarn
     rails db:create db:schema:load db:test:prepare
     rspec
     rails s
