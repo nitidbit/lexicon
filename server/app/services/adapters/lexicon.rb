@@ -65,7 +65,7 @@ module Adapters
 
         begin
           root_dir = github.contents(@repo)
-          msgs << "Able to read of repo."
+          msgs << "Able to read from repo."
         rescue Octokit::NotFound => exc
           succeeded = false
           msgs << "Unable to access repo: #{exc.to_s}" # an error occurred. Here's a clue why.
