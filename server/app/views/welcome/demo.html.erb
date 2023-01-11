@@ -4,7 +4,7 @@
   require 'lexicon'
   lexicon = Lexicon.new('app/views/welcome/demo.json')
 %>
-<%= stylesheet_include_tag('demo') %>
+<%= stylesheet_link_tag('demo') %>
 <%= javascript_include_tag('demo') %>
 
 <h1> <%= lexicon.get('title') %> </h1>
