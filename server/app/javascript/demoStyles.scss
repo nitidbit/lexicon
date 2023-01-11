@@ -1,15 +1,16 @@
 body.welcome_controller.demo_action {
 
   .DemoComponent {
-    background-color: #ddd;
+    border: 1px solid lightgray;
     padding:  2px 10px;
+    margin: 10px 50px;
+    width: 400px;
   }
 
   h3 {
     font-size: 15px;
-    font-weight: lighter;
-    text-decoration: underline;
-    color: #548291;
+    font-weight: bold;
+    color: #404040;
   }
 
   pre {

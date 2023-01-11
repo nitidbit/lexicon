@@ -47,10 +47,10 @@ Developer Setup
 ---------------
 
     bundle
-    yarn
-    rails db:create db:schema:load db:test:prepare
+    npm i
+    rails db:create db:schema:load db:test:prepare db:seed
     rspec
-    rails s
+    ./runit.sh
     browse http://localhost:3000/sign_in
 
 Handy Scripts dealing with server
