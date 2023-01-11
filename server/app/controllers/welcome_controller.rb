@@ -22,6 +22,6 @@ class WelcomeController < ApplicationController
   end
 
   def demo
-    @how_is_lexicon_module_linked = %x(ls -l node_modules/lexicon)
+    # @how_is_lexicon_module_linked = %x(ls -l node_modules/lexicon)
   end
 end

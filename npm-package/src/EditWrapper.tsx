@@ -98,7 +98,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
 
   updateTextFromEditor:OnChangeCallback = (change) => {
     this.setState(oldState => {
-      const newLexicon = oldState.lexicon.clone();
+      const newLexicon = oldState.lexicon.cloneDeep();
       newLexicon.update(change.updatePath, change.newValue);
 
       const fileKey = JSON.stringify({

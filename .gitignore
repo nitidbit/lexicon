@@ -1,2 +1,7 @@
 node_modules
 latest.dump
+
+server/tmp
+server/log
+server/app/assets/builds
+server/spec/examples.txt

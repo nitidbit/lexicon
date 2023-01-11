@@ -14,7 +14,7 @@ class ClientApp < ApplicationRecord
       repo: github_repo,
       branch: git_branch,
     }
-    adapter = Services::Adapters::Lexicon.configure(config_hash)
+    adapter = Adapters::Lexicon.configure(config_hash)
   end
 end
 

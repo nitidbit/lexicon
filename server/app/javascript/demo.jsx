@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Lexicon, EditWrapper, VERSION} from 'lexicon';
+import {Lexicon, EditWrapper, VERSION} from '@nitidbit/lexicon';
 import './demoStyles.scss';
 
 let lexicon = new Lexicon(
-  require('../../../app/views/welcome/demo.json'), 'en',
-                   'app/views/welcome/demo.json');
+  require('../views/welcome/demo.json'), 'en',
+             'server/app/views/welcome/demo.json');
 
 function AuthenticationStatus() {
   return (
