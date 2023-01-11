@@ -1,5 +1,6 @@
 require 'rails_helper'
 require 'jwt'
+# require 'services/lexicon_saver'
 
 RSpec.describe ApiController, type: :controller do
   describe '#update' do
@@ -116,7 +117,7 @@ RSpec.describe ApiController, type: :controller do
         @token = ApiController::lexicon_server_token(@user, @client_app)
         request.headers['Authorization'] = "Bearer #{@token}"
 
-        allow(Services::Adapters::Lexicon).to receive(:configure).and_return(
+        allow(Adapters::Lexicon).to receive(:configure).and_return(
           double('sample lexicon adapter',
             read: {},
             write: nil
@@ -126,7 +127,7 @@ RSpec.describe ApiController, type: :controller do
       end
 
       it "uses that Clientapp's GitHub access key" do
-        expect(Services::Adapters::Lexicon).to receive(:configure).with({
+        expect(LexiconServer::Services::Adapters::Lexicon).to receive(:configure).with({
           class: 'github',
           repo: 'sample github_repo',
           branch: 'sample git_branch',
@@ -136,7 +137,7 @@ RSpec.describe ApiController, type: :controller do
       end
 
       it "writes to filename set in ClientApp" do
-        lexicon_adapter = Services::Adapters::Lexicon.configure({})
+        lexicon_adapter = LexiconServer::Services::Adapters::Lexicon.configure({})
         expect(lexicon_adapter).to receive(:read).with('sample-filename.json')
         expect(lexicon_adapter).to receive(:write).with('sample-filename.json', anything, anything)
         put(:update, params: @lexicon_changes)

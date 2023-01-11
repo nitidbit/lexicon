@@ -77,7 +77,7 @@ class ApiController < ApplicationController
   private
 
   def lexicon_saver
-    Services::LexiconSaver.new(@authenticated_client_app.lexicon_adapter)
+    LexiconSaver.new(@authenticated_client_app.lexicon_adapter)
   end
 
   # Examine the 'Authorization: Bearer <JWT token>' header, check signature
