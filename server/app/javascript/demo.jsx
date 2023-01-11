@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Lexicon, EditWrapper, VERSION} from 'lexicon';
+import {Lexicon, EditWrapper, VERSION} from '@nitidbit/lexicon';
 import './demoStyles.scss';
 
 let lexicon = new Lexicon(
