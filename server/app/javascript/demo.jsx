@@ -5,7 +5,7 @@ import './demoStyles.scss';
 
 let lexicon = new Lexicon(
   require('../views/welcome/demo.json'), 'en',
-             'views/welcome/demo.json');
+             'server/app/views/welcome/demo.json');
 
 function AuthenticationStatus() {
   return (

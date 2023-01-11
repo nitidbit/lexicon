@@ -242,6 +242,7 @@ ActiveAdmin.setup do |config|
   config.namespace :admin do |admin|
     admin.build_menu :default do |menu|
       menu.add label: "Apps to Edit", url: "/edit"
+      menu.add label: "React Demo", url: "/demo"
     end
   end
 
