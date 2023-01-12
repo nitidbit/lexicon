@@ -1,0 +1,31 @@
+body.clearance\/passwords_controller {
+
+  form {
+    div {
+      line-height: 2.0;
+      input {
+        height: 20px;
+        width: 200px
+      }
+    }
+  }
+
+  label {
+    width: 200px;
+    display: inline-block;
+    text-align: right;
+    padding-right: 10px;
+  }
+
+  .submit-field {
+    padding-left: 213px;
+
+    input {
+      width: 210px;
+      background-color: #b6d2fd;
+      border: none;
+      border-radius: 3px;
+    }
+  }
+}
+

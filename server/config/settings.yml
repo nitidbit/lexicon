@@ -1,0 +1,11 @@
+test:
+  APP_URL: http://lexicon.example.com
+
+development:
+  APP_URL: http://localhost:3000
+
+staging:
+  APP_URL: https://lexicon-staging.onrender.com
+
+production:
+  APP_URL: https://lexicon.nitid.co

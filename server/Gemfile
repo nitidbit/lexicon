@@ -19,6 +19,8 @@ gem 'rack-cors'
 gem 'rails', '~> 7.0.4'
 gem 'rodash'              # used by lexicon.rb -- lodash-style .get()
 gem 'sass-rails', '~> 5.0'
+gem 'sendgrid-actionmailer'       # https://github.com/eddiezane/sendgrid-actionmailer
+gem 'sendgrid-ruby'               # SendGrid's official api gem -- https://github.com/sendgrid/sendgrid-ruby
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
