@@ -47,7 +47,7 @@ Developer Setup
 ---------------
 
     bundle
-    npm i
+    yarn
     rails db:create db:schema:load db:test:prepare db:seed
     rspec
     ./runit.sh

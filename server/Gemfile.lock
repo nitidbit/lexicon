@@ -95,8 +95,6 @@ GEM
       railties (>= 5.0)
     concurrent-ruby (1.1.10)
     crass (1.0.6)
-    cssbundling-rails (1.1.2)
-      railties (>= 6.0.0)
     date (3.3.3)
     debug (1.7.1)
       irb (>= 1.5.0)
@@ -298,7 +296,6 @@ DEPENDENCIES
   argon2
   bcrypt
   clearance
-  cssbundling-rails (~> 1.1)
   debug
   foreman
   httparty

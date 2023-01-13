@@ -7,7 +7,6 @@ gem 'activeadmin'
 gem 'argon2' # used by JWT
 gem 'bcrypt' # used by clearance
 gem 'clearance' # pwd management -- https://github.com/thoughtbot/clearance/
-gem 'cssbundling-rails', '~> 1.1'
 gem 'foreman'
 gem 'httparty'
 gem 'jsbundling-rails', '~> 1.1'
