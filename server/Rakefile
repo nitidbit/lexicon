@@ -13,7 +13,7 @@ Rake::Task['javascript:build'].clear if Rake::Task.task_defined?('javascript:bui
 namespace :javascript do
   desc "Build your JavaScript bundle"
   task :build do
-    puts "Lexicon Rakefile: running javascript:build"
+    puts "-- Lexicon Rakefile: running javascript:build --"
     unless system "npm install && npm run build"
       raise "Lexicon Rakefile: Command javascript:build failed, ensure npm is installed and `npm run build` runs without errors"
     end
@@ -21,13 +21,13 @@ namespace :javascript do
 end
 
 Rake::Task['css:build'].clear if Rake::Task.task_defined?('css:build')
-namespace :css do
-  desc "Build your CSS bundle"
-  task :build do
-    puts "-- Lexicon Rakefile: running css:build"
-    unless system "npm install && npm run build:css"
-      raise "Lexicon Rakefile: Command css:build failed, ensure npm is installed and `npm run build:css` runs without errors or use SKIP_CSS_BUILD env variable"
-    end
-  end
-end
+# namespace :css do
+#   desc "Build your CSS bundle"
+#   task :build do
+#     puts "-- Lexicon Rakefile: running css:build --"
+#     unless system "npm install && npm run build:css"
+#       raise "Lexicon Rakefile: Command css:build failed, ensure npm is installed and `npm run build:css` runs without errors or use SKIP_CSS_BUILD env variable"
+#     end
+#   end
+# end
 
