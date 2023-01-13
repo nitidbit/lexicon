@@ -8,7 +8,6 @@ Rails.application.configure do
 
   if sendgrid_api_key
     config.action_mailer.default_url_options = {
-      scheme: APP_URL.scheme,
       host: APP_URL.host,
       port: APP_URL.port }
     config.action_mailer.delivery_method = :sendgrid_actionmailer
