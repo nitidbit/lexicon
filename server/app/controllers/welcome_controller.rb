@@ -6,6 +6,7 @@ class WelcomeController < ApplicationController
 
   def edit
 
+    @message_of_day = ENV.fetch('MESSAGE_OF_DAY', nil)
     @client_app_links = current_user.client_apps
       .order(:github_repo, :name)
       .map do |client_app|

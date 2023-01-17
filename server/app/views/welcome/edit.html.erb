@@ -1,6 +1,14 @@
 <%= render 'masthead' %>
 
+<% if @message_of_day.present?  %>
+  <p class='message-of-the-day'>
+  <strong> Message of the Day </strong> —
+    <%= @message_of_day %>
+  </p>
+<% end %>
+
 <main>
+
   <h2>Apps to Edit</h2>
   <p>
     Click on one of these links to enable Lexicon editing on that app. When you click on a link below,
@@ -8,6 +16,7 @@
     allow you to change text. Editing is enabled as long as your browser is open. If you want to edit
     later, you will have to sign-in at this Lexicon Server again.
   </p>
+
   <table class='app_links'>
     <tr>
       <th> App Name </th>
