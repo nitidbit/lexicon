@@ -2,25 +2,27 @@ Lexicon Server
 ==============
 
 - production: https://lexicon.nitid.co/sign_in
-- staging: https://lexicon-staging.onrender.com/sign_in -- Just use for testing Lexicon itself
+- staging: https://lexicon-staging.onrender.com/sign_in -- for testing Lexicon itself
 
 Pages:
 - /demo — See Lexicon in action. Also a testbed for making sure it's working.
 - /sign_in — for configuring and editing other websites that use Lexicon
 
 
-Using Lexicon-Server to Edit Content on a Server-less App
----------------------------------------------------------
-Lets say you have a server-less app, like the MyPath disseminations sites. Let's call it "MyApp."
-You want to use Lexicon editing which requires a server but your app has none. That's where Lexicon
-Server comes in. You can configure Lexicon Server to write to your GitHub repo, and add the users
-who will be editing. Here's how (using the Lexicon staging server):
+What is Lexicon-Server For?
+---------------------------
+Let's say you have a JS app that has textual content and you want clients to be able to update that
+content without involving engineers. Lexicon's EditWrapper allows editing, but it must save the
+changes somewhere. That's what Lexicon-Server is for. EditWrapper sends it to Lexicon-Server, and it
+will then save the changes into your github repo, ready for the next build.
 
+Using Lexicon-Server with Clients for Content Editing
+-----------------------------------------------------
 Create your React app, with EditWrappers. For the <EditWrapper apiUpdateUrl={}> prop, use
 $SERVER/update, e.g. http://lexicon-server-staging.onrender.com/update
 
 Create a Client App on Lexicon which represents your instance of MyApp.
-- Sign in as an admin: http://lexicon-server-staging.onrender.com/sign_in
+- Sign in as an admin: https://lexicon.nitid.co/sign_in
 - Go to Admin > Client Apps, create a new one.
 - You'll need to create a GitHub personal access token for the API call. We recommend making a user
   account at github with only 'repo' access to one repo, rather than making an access token on your
@@ -42,6 +44,9 @@ Test that all the access keys work
 
 Share Lexicon User credentials and the secret /sign-in/ link with your clients.
 
+
+Developer Information
+=====================
 
 Developer Setup
 ---------------
@@ -77,9 +82,3 @@ You also need a `JWT_SECRET`, a secret key used to authenticate access to the Le
 ## Create first user
     User.create!(email: 'winston@nitidbit.com', password: '...')
 
-### Rails upgrade
-I upgraded to Rails 7 using this command:
-
-  rails new Lexicon --javascript=esbuild  --minimal --database postgresql --asset-pipeline=sprokets --no-skip-active-record --css sass
-
-and then copied files over.
