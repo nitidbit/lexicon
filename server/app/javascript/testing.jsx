@@ -1,11 +1,13 @@
+console.info('Loading: server/app/javascript/testing.jsx')
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Lexicon, EditWrapper, VERSION} from '@nitidbit/lexicon';
-import './demoStyles.scss';
+import './testingStyles.scss';
 
 let lexicon = new Lexicon(
-  require('../views/welcome/demo.json'), 'en',
-             'server/app/views/welcome/demo.json');
+  require('../views/welcome/testing.json'), 'en',
+             'server/app/views/welcome/testing.json');
 
 function AuthenticationStatus() {
   return (
@@ -16,8 +18,8 @@ function AuthenticationStatus() {
     </div>);
 }
 
-let DemoComponent = ({lexicon}) => (
-  <div className="DemoComponent" >
+let TestingComponent = ({lexicon}) => (
+  <div className="TestingComponent" >
     <h2> { lexicon.get('title') } </h2>
     <p> { lexicon.get('description') } </p>
     <p> { lexicon.get('array_of_strings.intro') } </p>
@@ -38,7 +40,7 @@ function CookieAuthenticatedDemo() {
 
       <EditWrapper
         lexicon={lexicon.subset('CookieAuthenticatedDemo')}
-        component={DemoComponent}
+        component={TestingComponent}
         allowEditing={true}
         apiUpdateUrl="/cookie_auth_update"
         extraHeaders={{ 'X-CSRF-Token': token }}
@@ -52,8 +54,8 @@ function JwtAuthenticatedDemo() {
     <div>
       <EditWrapper
         lexicon={lexicon.subset('JwtAuthenticatedDemo')}
-        component={DemoComponent}
-        apiUpdateUrl="/update"
+        component={TestingComponent}
+        apiUpdateUrl="http://localhost:3000/update"
       />
     </div>
   );
@@ -64,7 +66,7 @@ function PigLatinDemo() {
     <div>
       <EditWrapper
         lexicon={lexicon.locale('pg').subset('PigLatinDemo')}
-        component={DemoComponent}
+        component={TestingComponent}
         apiUpdateUrl="/update"
       />
     </div>

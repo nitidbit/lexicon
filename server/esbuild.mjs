@@ -19,7 +19,7 @@ async function entryPoints() {
   const results = dirCont
     .filter( filename => filename.match(/\.(js|jsx|css|scss)$/ig))
     .map( filename => JS_DIR + filename )
-  // console.log('!!! entryPoints = ', results)
+  console.log('!!! entryPoints = ', results)
   return results
 }
 

@@ -7,3 +7,4 @@ server/log
 server/app/assets/builds
 server/spec/examples.txt
 server/public/assets
+server/yarn-error.log

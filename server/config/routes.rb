@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
   get '/edit' => 'welcome#edit'
   get '/demo' => 'welcome#demo'
+  get '/testing' => 'welcome#testing'
 
   # API routes
   put '/update' => 'api#update'

@@ -1,0 +1,31 @@
+<%= render 'masthead' %>
+
+<%
+  require 'lexicon'
+  lexicon = Lexicon.new('app/views/welcome/testing.json')
+%>
+<%= javascript_include_tag('testing') %>
+<%= stylesheet_link_tag('testing') %>
+
+<h1> <%= lexicon.get('title') %> </h1>
+
+<h3>React component:</h3>
+<div class="CookieAuthenticatedDemo"> (This should be replaced by <Demo> component) </div>
+
+<h3>Same React component but using different Lexicon:</h3>
+<div class="JwtAuthenticatedDemo"> (This should be replaced by <Demo> component) </div>
+
+<h3>Same React component but using different Lexicon:</h3>
+<div class="PigLatinDemo"> (This should be replaced by <Demo> component) </div>
+
+<h3>Using Lexicon from Ruby:</h3>
+<%= lexicon.get('introduction') %>
+
+<ul>
+  <li>Lexicon-Ruby version: <%= Lexicon::VERSION %></li>
+  <li>Lexicon-JS version: <span class="LexiconJsVersion"/></li>
+  <!--
+      <li>How is Lexicon linked? <pre><%= @how_is_lexicon_module_linked %></pre></li>
+  -->
+</ul>
+
