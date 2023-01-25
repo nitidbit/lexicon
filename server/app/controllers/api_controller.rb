@@ -17,24 +17,8 @@ class ApiController < ApplicationController
   def update
     changes = permitted_changes(params)
 
-    if @authenticated_client_app.slack_workflow_url.present? # Alert on slack?
-      message = "User \"#{@authenticated_user.email}\" on app #{@authenticated_client_app.app_url} has changed Lexicon text: \n"
-      changes.each do |change|
-        message += "\"#{change['key']}\" has changed to \"#{change['newValue']}\""
-        message += "\n"
-      end
-      response = HTTParty.post(@authenticated_client_app.slack_workflow_url,
-        :body => ({ "message" => message }).to_json,
-        :headers => { 'Content-Type' => 'application/json' }
-        )
-      case response.code
-        when 200
-          puts "lexicon message sent to slack"
-        when 404
-          puts "slack not found"
-        when 500...600
-          puts "error #{response.code}"
-      end
+    if @authenticated_client_app.slack_workflow_url.present?
+      ApiController.slack_alert(@authenticated_client_app, @authenticated_user.email, changes)
     end
 
     # SECURITY NOTE: Someone can send any filename, and we will try to modify it. We are trusing
@@ -74,6 +58,27 @@ class ApiController < ApplicationController
     token = JWT.encode(payload, JWT_SECRET, JWT_ALGORITHM)
   end
 
+  def self.slack_alert(client_app, whodunnit, changes)
+    message = "User \"#{whodunnit}\" on app #{client_app.app_url} has changed Lexicon text: \n"
+    changes.each do |change|
+      message += "\"#{change['key']}\" has changed to \"#{change['newValue']}\""
+      message += "\n"
+    end
+    response = HTTParty.post(client_app.slack_workflow_url,
+      :body => ({ "message" => message }).to_json,
+      :headers => { 'Content-Type' => 'application/json' }
+      )
+
+    case response.code
+      when 200
+        puts "slack_alert for #{client_app.app_url}: lexicon message sent to slack"
+      when 404
+        puts "slack_alert for #{client_app.app_url}: slack not found"
+      when 500...600
+        puts "slack_alert for #{client_app.app_url}: error #{response.code}"
+      end
+  end
+
   private
 
   def lexicon_saver
@@ -81,7 +86,7 @@ class ApiController < ApplicationController
   end
 
   # Examine the 'Authorization: Bearer <JWT token>' header, check signature
-  # sets '@authenticated_user'
+  # sets '@authenticated_user' and '@authenticated_client_app'
   def authenticate_jwt_header
     @authenticated_user = nil
     @authenticated_client_app = nil
