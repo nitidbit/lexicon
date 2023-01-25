@@ -102,6 +102,12 @@ RSpec.describe ApiController, type: :controller do
         put(:update, params: @lexicon_changes)
       end
 
+      it 'includes CORS header for allowed origin' do
+        @client_app.update(app_url: 'http://blah.example.com:123/test?x=y')
+        put(:update, params: @lexicon_changes)
+        expect(response.headers['Access-Control-Allow-Origin']).to eq('http://blah.example.com:123')
+      end
+
       it 'fails when user is not permitted to access repo'
       it 'fails when lexiconServerToken has timed out'
     end
@@ -109,7 +115,7 @@ RSpec.describe ApiController, type: :controller do
     context 'when server token is for a particular ClientApp at GitHub' do
       before do
         @client_app.update(
-          app_url: 'sample app_url',
+          app_url: 'sample.example.com',
           adapter: 'github',
           github_repo: 'sample github_repo',
           git_branch: 'sample git_branch',
@@ -144,4 +150,5 @@ RSpec.describe ApiController, type: :controller do
       end
     end
   end
+
 end

@@ -15,18 +15,20 @@ class ApiController < ApplicationController
 
   # Update API endpoint, authenticated via JWT token in header
   def update
+    # CORS headers
+    app_url = URI(@authenticated_client_app.app_url)
+    response.headers['Access-Control-Allow-Origin'] = "#{app_url.scheme}://#{app_url.host}:#{app_url.port}"
+
     changes = permitted_changes(params)
 
     if @authenticated_client_app.slack_workflow_url.present?
       ApiController.slack_alert(@authenticated_client_app, @authenticated_user.email, changes)
     end
 
-    # SECURITY NOTE: Someone can send any filename, and we will try to modify it. We are trusing
-    # our authenticated users.
-    lsaver = lexicon_saver
-
     begin
-      lsaver.update_changes(@authenticated_user.email, changes)
+      # SECURITY NOTE: Someone can send any filename, and we will try to modify it. We are trusing
+      # our authenticated users.
+      lexicon_saver.update_changes(@authenticated_user.email, changes)
       response = { successful: true, error: nil }
     rescue => exc
       response = { successful: false, error: exc.inspect }
