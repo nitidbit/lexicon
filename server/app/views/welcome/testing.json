@@ -5,40 +5,29 @@
     "CookieAuthenticatedDemo": {
       "title": "CookieAuthenticatedDemo",
       "description": "This is a React component using Lexicon. Edited contents are updated live.\n",
-      "array_of_strings": {
-        "intro": "Lexicon can store arrays of strings:",
-        "items": [
-          "Common Lisp",
-          "Scheme",
-          "AutoLISP",
-          "Clojure"
-        ]
-      }
+      "array_of_strings": [
+        "Common Lisp",
+        "Scheme",
+        "AutoLISP",
+        "Clojure"
+      ]
     },
     "JwtAuthenticatedDemo": {
       "title": "JwtAuthenticatedDemo",
       "description": "This is the same Demo component, but it uses JWT headers to authenticate & save.\n",
-      "array_of_strings": {
-        "intro": "Cowgirl Creamery cheeses:",
-        "items": [
-          "Red Hawk",
-          "Mt. Tam"
-        ]
-      }
+      "array_of_strings": [
+        "Red Hawk",
+        "Mt. Tam"
+      ]
     },
-    "en,CookieAuthenticatedDemo,array_of_strings,items,3": "Clojurer"
-  },
-  "pg": {
-    "PigLatinDemo": {
-      "title": "Pig Latin Demo",
-      "description": "isthay isay ethay amesay emoday omponentcay, utbay inay igpay atinlay\n",
-      "array_of_strings": {
-        "intro": "Cowgirl Creamery cheeses:",
-        "items": [
-          "Red Hawk",
-          "Mt. Tam"
-        ]
-      }
+    "CorsTester": {
+      "title": "Cors Tester",
+      "description": "To test CORS, point 'cors.test' in your /etc/hosts to this server. Than edit via the CorsTest ClientApp. You'll need to add the Github api token.  It's testing CORS because LexiconServer is at http://localhost, and the ClientApp is on http://cors.test",
+      "array_of_strings": [
+        "aqua",
+        "orange",
+        "magenta"
+      ]
     }
   }
 }

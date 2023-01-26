@@ -59,4 +59,7 @@ JWT_SECRET = 'e132af279585ca5a7390a35004dbde4558f092bc2a3d63f7700b188296b4ee2098
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
+
+
+  config.hosts << "cors.test" # for testing CORS!
 end

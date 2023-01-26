@@ -2,14 +2,37 @@
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 
 
-foo_user = User.create( is_admin: true, email: 'foo@nitidbit.com', password: 'joust.galaga.pacman') # Be sure to change this
+if ! User.find_by(email: 'foo@nitidbit.com')
+  puts User.create( is_admin: true, email: 'foo@nitidbit.com', password: 'joust.galaga.pacman') # Be sure to change this
+end
+foo_user = User.find_by( email: 'foo@nitidbit.com')
 
-ClientApp.create(name: 'Lexicon React Demo',
-                app_url: '/demo',
-                adapter: 'github',
-                github_repo: 'nitid/lexicon',
-                users: [foo_user]
-               )
+if ! ClientApp.find_by(name: 'Lexicon React Demo')
+  puts ClientApp.create(name: 'Lexicon React Demo',
+                   app_url: '/demo',
+                   adapter: 'github',
+                   github_repo: 'nitidbit/lexicon',
+                   git_branch: 'lexicon-test',
+                   users: [foo_user]
+                  )
+end
 
+if ! ClientApp.find_by(name: 'Localhost test')
+  puts ClientApp.create(name: 'Localhost test',
+                   app_url: 'http://localhost:3000/testing',
+                   adapter: 'github',
+                   github_repo: 'nitidbit/lexicon',
+                   git_branch: 'lexicon-test',
+                   users: [foo_user]
+                  )
+end
 
-
+if ! ClientApp.find_by(name: 'CORS test')
+  puts ClientApp.create(name: 'CORS test',
+                   app_url: 'http://cors.test:3000/testing',
+                   adapter: 'github',
+                   github_repo: 'nitidbit/lexicon',
+                   git_branch: 'lexicon-test',
+                   users: [foo_user]
+                  )
+end

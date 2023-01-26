@@ -11,20 +11,19 @@ let lexicon = new Lexicon(
 
 function AuthenticationStatus() {
   return (
-    <div className="AuthenticationStatus">
+    <div className="AuthenticationStatus border-solid">
       <div>JWT authentication:
         { sessionStorage.hasOwnProperty('lexiconServerToken') ? " SIGNED IN" : " SIGNED OUT" }
       </div>
     </div>);
 }
 
-let TestingComponent = ({lexicon}) => (
-  <div className="TestingComponent" >
+let BlurbAndList = ({lexicon}) => (
+  <div className="BlurbAndList border-solid" >
     <h2> { lexicon.get('title') } </h2>
     <p> { lexicon.get('description') } </p>
-    <p> { lexicon.get('array_of_strings.intro') } </p>
     <ul>
-      { lexicon.get('array_of_strings.items').map( dialect => (<li key={dialect}> { dialect } </li>) ) }
+      { lexicon.get('array_of_strings').map( dialect => (<li key={dialect}> { dialect } </li>) ) }
     </ul>
   </div>
 );
@@ -40,7 +39,7 @@ function CookieAuthenticatedDemo() {
 
       <EditWrapper
         lexicon={lexicon.subset('CookieAuthenticatedDemo')}
-        component={TestingComponent}
+        component={BlurbAndList}
         allowEditing={true}
         apiUpdateUrl="/cookie_auth_update"
         extraHeaders={{ 'X-CSRF-Token': token }}
@@ -54,20 +53,20 @@ function JwtAuthenticatedDemo() {
     <div>
       <EditWrapper
         lexicon={lexicon.subset('JwtAuthenticatedDemo')}
-        component={TestingComponent}
+        component={BlurbAndList}
         apiUpdateUrl="http://localhost:3000/update"
       />
     </div>
   );
 }
 
-function PigLatinDemo() {
+function CorsTester() {
   return (
     <div>
       <EditWrapper
-        lexicon={lexicon.locale('pg').subset('PigLatinDemo')}
-        component={TestingComponent}
-        apiUpdateUrl="/update"
+        lexicon={lexicon.subset('CorsTester')}
+        component={BlurbAndList}
+        apiUpdateUrl="http://localhost:3000/update"
       />
     </div>
   );
@@ -79,10 +78,11 @@ function replacePlaceholders(selector, component) {
   });
 }
 
+// Install cpmponents when page loads
 document.addEventListener('DOMContentLoaded', () => {
   replacePlaceholders('.CookieAuthenticatedDemo', CookieAuthenticatedDemo);
   replacePlaceholders('.JwtAuthenticatedDemo', JwtAuthenticatedDemo);
-  replacePlaceholders('.PigLatinDemo', PigLatinDemo);
+  replacePlaceholders('.CorsTester', CorsTester);
   replacePlaceholders('.LexiconJsVersion', LexiconJsVersion);
 });
 
