@@ -48,33 +48,46 @@ function CookieAuthenticatedDemo() {
   );
 }
 
-function JwtAuthenticatedDemo() {
+function JwtAuthenticatedDemo({apiUpdateUrl}) {
+  console.log('JWT auth demo apiUrlupdate=', apiUpdateUrl)
   return (
     <div>
       <EditWrapper
         lexicon={lexicon.subset('JwtAuthenticatedDemo')}
         component={BlurbAndList}
-        apiUpdateUrl="http://localhost:3000/update"
+        apiUpdateUrl={apiUpdateUrl}
       />
     </div>
   );
 }
 
-function CorsTester() {
+function CorsTester({apiUpdateUrl}) {
   return (
     <div>
       <EditWrapper
         lexicon={lexicon.subset('CorsTester')}
         component={BlurbAndList}
-        apiUpdateUrl="http://localhost:3000/update"
+        apiUpdateUrl={apiUpdateUrl}
       />
     </div>
   );
 }
 
+/*
+   Replace 'selector' with React 'component'. If you want to pass params from Ruby to React,
+   you can can add a data-params attribute containg a JSON string. e.g.
+        <___ data-params='{"myParam": "myValue"}'>
+   will pass 'myParam' to your React component.
+*/
 function replacePlaceholders(selector, component) {
   document.querySelectorAll(selector).forEach(placeholder => {
-    ReactDOM.render(React.createElement(component), placeholder);
+    let dataParams = placeholder?.attributes['data-params']?.value
+    if (dataParams) {
+      dataParams = JSON.parse(dataParams)
+    } else {
+      dataParams = {}
+    }
+    ReactDOM.render(React.createElement(component, dataParams), placeholder);
   });
 }
 
