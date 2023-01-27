@@ -16,8 +16,7 @@ class ApiController < ApplicationController
   # Update API endpoint, authenticated via JWT token in header
   def update
     # CORS headers
-    app_url = URI(@authenticated_client_app.app_url)
-    response.headers['Access-Control-Allow-Origin'] = "#{app_url.scheme}://#{app_url.host}:#{app_url.port}"
+    response.headers['Access-Control-Allow-Origin'] = ApiController.cors_friendly_origin(@authenticated_client_app.app_url)
 
     changes = permitted_changes(params)
 
@@ -35,6 +34,16 @@ class ApiController < ApplicationController
     end
 
     render json: response
+  end
+
+  def self.cors_friendly_origin(origin_url)
+    uri = URI(origin_url)
+    port = if [80, 443].include? uri.port
+             ''
+           else
+             ":#{uri.port}"
+           end
+    "#{uri.scheme}://#{uri.host}#{port}"
   end
 
   # Update API endpoint, authenticated by session/login
