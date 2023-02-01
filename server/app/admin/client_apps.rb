@@ -35,6 +35,10 @@ ActiveAdmin.register ClientApp do
     link_to 'Test Github Access', test_github_access_admin_client_app_path(id: resource.id)
   end
 
+  action_item :test_slack_connection, only: [:show, :edit]  do
+    link_to 'Test Slack Announcements', test_slack_connection_admin_client_app_path(id: resource.id)
+  end
+
   member_action :test_github_access, method: :get do
     client_app = resource
     status = client_app.lexicon_adapter.test_access
@@ -43,6 +47,13 @@ ActiveAdmin.register ClientApp do
     else
       flash[:error] = status[:msgs].join('  ')
     end
+    redirect_to admin_client_app_path(id: client_app)
+  end
+
+  member_action :test_slack_connection, method: :get do
+    client_app = resource
+    status_msg = ApiController.slack_alert(client_app, current_user.email, [])
+    flash[:notice] = status_msg
     redirect_to admin_client_app_path(id: client_app)
   end
 
@@ -71,7 +82,7 @@ ActiveAdmin.register ClientApp do
       input :git_branch, hint: 'Which branch should Lexicon use? The branch must already exist.'
       input :github_user, hint: 'Which user has this token? Youll want to know when its time to renew.'
       input :github_api_token, hint: '(1) Enable access tokens at Github > Org Settings > Third Party Access > Personal access tokens. (2) Create token at (your profile) > Settings > Developer Settings > Personal access tokens. Give it Contents—Write access'
-      input :slack_workflow_url, hint: 'Setup: Slack->tools->Workflow Builder (edit or Create) get url at "Starts when an app or service sends a web request"'
+      input :slack_workflow_url, hint: 'Setup: Slack->Nitid Bitters->tools->Workflow Builder->Create or All Published->"Starts when an app or service sends a web request"->Copy URL'
       input :users, as: :select, multiple: true,
         collection: User.all.map{|user| [user.email, user.id]}
     end

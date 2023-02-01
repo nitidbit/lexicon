@@ -80,14 +80,14 @@ class ApiController < ApplicationController
       :headers => { 'Content-Type' => 'application/json' }
       )
 
-    case response.code
-      when 200
-        puts "slack_alert for #{client_app.app_url}: lexicon message sent to slack"
-      when 404
-        puts "slack_alert for #{client_app.app_url}: slack not found"
-      when 500...600
-        puts "slack_alert for #{client_app.app_url}: error #{response.code}"
+    result = case response.code
+      when 200 then "slack_alert for #{client_app.app_url}: lexicon message sent to slack"
+      when 404 then "slack_alert for #{client_app.app_url}: slack not found"
+      else "slack_alert for #{client_app.app_url}: error #{response.code}"
       end
+
+    puts result
+    result
   end
 
   private
