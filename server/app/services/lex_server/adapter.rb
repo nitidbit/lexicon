@@ -1,7 +1,8 @@
 require 'octokit'
 
-module Adapters
-  module Lexicon
+# Adapters to write Lexicon changes to either a local file, or to GitHub.
+module LexServer
+  module Adapter
 
     # Allow a config file to describe which adapter to use.
     def self.configure(configuration_hash)
@@ -18,6 +19,7 @@ module Adapters
     end
 
 
+    # Save changes to a local file
     class File
 
       # Returns true if we are able to access the repo, otherwise false.
@@ -40,6 +42,7 @@ module Adapters
     end
 
 
+    # Save changes to a github repo
     class GitHub
       attr_accessor :github
 
@@ -50,22 +53,25 @@ module Adapters
         @branch = branch
       end
 
-      # Returns empty array if we are able to access the repo, otherwise an array of error strings.
+      # Tries to contact the Github repo, and returns status plus messages about what worked and
+      # what didn't
       def test_access
         succeeded = true
         msgs = []
 
+        # Test that access_token is accepted
         begin
           login_name = github.user.login
-          msgs << "User '#{login_name}' authenticated successfully."
+          msgs << "User '#{login_name}' authenticated successfully so access_token is good."
         rescue Octokit::Unauthorized => exc
           succeeded = false
           msgs << exc.to_s # an error occurred. Here's a clue why.
         end
 
+        # Test that we have read permissions at least in the repo.
         begin
           root_dir = github.contents(@repo)
-          msgs << "Able to read from repo."
+          msgs << "Able to read from repo so at least READ permissions are good."
         rescue Octokit::NotFound => exc
           succeeded = false
           msgs << "Unable to access repo: #{exc.to_s}" # an error occurred. Here's a clue why.
