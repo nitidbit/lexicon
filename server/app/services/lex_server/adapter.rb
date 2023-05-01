@@ -33,10 +33,10 @@ module LexServer
         JSON.parse f
       end
 
-      def write(filename, hash, _commit_message)
+      def write(filename, new_lexicon_as_hash, _commit_message)
         Rails.logger.info("Lexicon: Writing to local file system '#{filename}'")
         ::File.open(filename, 'w') do |f|
-          f.write JSON.pretty_generate(hash)
+          f.write JSON.pretty_generate(new_lexicon_as_hash)
         end
       end
     end
@@ -47,10 +47,14 @@ module LexServer
       attr_accessor :github
 
       def initialize(access_token:, repo:, branch:)
-        self.github = Octokit::Client.new access_token: access_token
+        @access_token = access_token
         @shas = {}
         @repo = repo
         @branch = branch
+      end
+
+      def github
+        Octokit::Client.new access_token: @access_token
       end
 
       # Tries to contact the Github repo, and returns status plus messages about what worked and
@@ -93,7 +97,7 @@ module LexServer
         JSON.parse(Base64.decode64(resource.content))
       end
 
-      def write(filename, hash, commit_message)
+      def write(filename, new_lexicon_as_hash, commit_message)
         Rails.logger.info("Lexicon: Writing to github '#{filename}'")
         # make sure we have an updated SHA for the file
         read(filename)
@@ -103,9 +107,39 @@ module LexServer
           filename,
           commit_message,
           @shas[filename],
-          JSON.pretty_generate(hash),
+          JSON.pretty_generate(new_lexicon_as_hash),
           branch: @branch
         )
+      end
+
+      # Creates and pushes a commit to github, containing the files in 'filename_content_hash'
+      # This article describes adding a commit with Octokit:
+      #   http://mattgreensmith.net/2013/08/08/commit-directly-to-github-via-api-with-octokit/
+      def write_changed_files(commit_message, filename_content_hash)
+        ref = "heads/#{@branch}"
+
+        # SHA of commit at head of 'branch'
+        sha_latest_commit = github.ref(@repo, ref).object.sha
+        # SHA of the tree at head of 'branch'
+        sha_base_tree = github.commit(@repo, sha_latest_commit).commit.tree.sha
+
+        added_files = filename_content_hash.map do |filename, contents|
+          blob_sha = github.create_blob(@repo, Base64.encode64(contents), "base64")
+          { path: filename,
+            sha: blob_sha,
+            mode: "100644",
+            type: "blob",
+          }
+        end
+        sha_new_tree = github.create_tree(@repo,
+                                   added_files,
+                                   {:base_tree => sha_base_tree }).sha
+
+        # new commit containing the tree object that we just created
+        sha_new_commit = github.create_commit(@repo, commit_message, sha_new_tree, sha_latest_commit).sha
+
+        # move the reference heads/(branch) to point to our new commit object
+        updated_ref = github.update_ref(@repo, ref, sha_new_commit)
       end
     end
   end
