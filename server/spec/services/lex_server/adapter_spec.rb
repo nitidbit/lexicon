@@ -2,6 +2,9 @@ require 'rails_helper'
 
 RSpec.describe LexServer::Adapter do
   describe LexServer::Adapter::File do
+    describe '#write_changed_files' do
+      it 'writes all changed files to the file system'
+    end
   end
 
   describe LexServer::Adapter::GitHub do

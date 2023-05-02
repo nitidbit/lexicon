@@ -11,22 +11,22 @@ module LexServer
     end
 
     def update_changes(editor_name, changes)
-      changes.each do |change|
-        change.require [:filename, :key, :newValue]
-        newValue =
-          if change[:newValue].is_a?(String)
-            change[:newValue].delete("\r")
-          else
-            change[:newValue]
-          end
 
-        put_entry(
-          change[:filename],
-          change[:key],
-          newValue,
-          "#{editor_name} via Lexicon Editor"
-        )
+      files_with_changes = changes.group_by { |row| row["filename"] }
+
+      # For each file modified:
+      filenames_and_contents = files_with_changes.map do |filename, changes|
+        hash = adapter.read(filename) # Read old version
+        changes.each do |change| # Add all the changes for this file
+          set(object: hash, keys: change["key"].split('.'), value: change["newValue"])
+        end
+        [filename, JSON.pretty_generate(hash)]
       end
+        .to_h
+
+      # Push a commit with all the change files.
+      commit_msg = "#{editor_name} via Lexicon Editor"
+      adapter.write_changed_files(commit_msg, filenames_and_contents)
     end
 
   private
@@ -35,18 +35,6 @@ module LexServer
       entries = {}
       flatten adapter.read, entries
       entries
-    end
-
-    def put_entry(filename, key, value, commit_message)
-      raise ArgumentError, 'no value supplied' if value.nil?
-      Rails.logger.info("put_entry() filename=#{filename} key=#{key} value=#{value} msg=#{commit_message}")
-      begin
-        hash = adapter.read(filename)
-        set(object: hash, keys: key.split('.'), value: value)
-        adapter.write(filename, hash, commit_message)
-      rescue => exc
-        raise StandardError, "Problem adding entry for filename: #{filename.inspect} key: #{key.inspect} commit_message: #{commit_message.inspect} exception: #{exc.inspect}"
-      end
     end
 
     def set(object:, keys:, value:)

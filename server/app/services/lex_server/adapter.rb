@@ -84,6 +84,7 @@ module LexServer
         {succeeded: succeeded, msgs: msgs}
       end
 
+      # Returns a Hash of the JSON contents of 'filename'
       def read(filename)
         Rails.logger.info("Lexicon: Reading from github '#{filename}'")
         resource =
@@ -97,22 +98,15 @@ module LexServer
         JSON.parse(Base64.decode64(resource.content))
       end
 
-      def write(filename, new_lexicon_as_hash, commit_message)
-        Rails.logger.info("Lexicon: Writing to github '#{filename}'")
-        # make sure we have an updated SHA for the file
-        read(filename)
-
-        github.update_contents(
-          @repo,
-          filename,
-          commit_message,
-          @shas[filename],
-          JSON.pretty_generate(new_lexicon_as_hash),
-          branch: @branch
-        )
-      end
-
       # Creates and pushes a commit to github, containing the files in 'filename_content_hash'
+      #
+      # filename_content_hash = what to write, e.g.
+      #     {
+      #       'path/file.json' => '{ "key": "value" }'
+      #       'path/other.json' => 'contents of other.json as a string'
+      #     }
+      #   where the values are the complete new contents of each file.
+      #
       # This article describes adding a commit with Octokit:
       #   http://mattgreensmith.net/2013/08/08/commit-directly-to-github-via-api-with-octokit/
       def write_changed_files(commit_message, filename_content_hash)
