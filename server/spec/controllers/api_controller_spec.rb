@@ -126,7 +126,7 @@ RSpec.describe ApiController, type: :controller do
         allow(LexServer::Adapter).to receive(:configure).and_return(
           double('sample lexicon adapter',
             read: {},
-            write: nil
+            write_changed_files: nil
           ))
 
         @lexicon_changes[:changes][0][:filename] = 'sample-filename.json'
@@ -145,7 +145,7 @@ RSpec.describe ApiController, type: :controller do
       it "writes to filename set in ClientApp" do
         lexicon_adapter = LexServer::Adapter.configure({})
         expect(lexicon_adapter).to receive(:read).with('sample-filename.json')
-        expect(lexicon_adapter).to receive(:write).with('sample-filename.json', anything, anything)
+        expect(lexicon_adapter).to receive(:write_changed_files).with('blaaa@example.com via Lexicon Editor', anything)
         put(:update, params: @lexicon_changes)
       end
     end

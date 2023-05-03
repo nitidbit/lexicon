@@ -33,13 +33,6 @@ module LexServer
         JSON.parse f
       end
 
-      def write(filename, new_lexicon_as_hash, _commit_message)
-        Rails.logger.info("Lexicon: Writing to local file system '#{filename}'")
-        ::File.open(filename, 'w') do |f|
-          f.write JSON.pretty_generate(new_lexicon_as_hash)
-        end
-      end
-
       def write_changed_files(commit_message, filename_content_hash)
         filename_content_hash.each do |filename, contents|
           ::File.open(filename, 'w') { |f| f.write contents }
