@@ -2,8 +2,23 @@ require 'rails_helper'
 
 RSpec.describe LexServer::Adapter do
   describe LexServer::Adapter::File do
+    let(:file_adapter) { LexServer::Adapter::File.new }
+
     describe '#write_changed_files' do
-      it 'writes all changed files to the file system'
+      it 'writes all changed files to the file system' do
+        # create a temp json file
+        File.open('/tmp/lex-adapter.json', 'w') do |f|
+          f.write JSON.pretty_generate({ "a": "old value" })
+        end
+
+        # run write_changed_files() with some sample changes
+        file_adapter.write_changed_files('test commit with two files', {
+          '/tmp/lex-adapter.json' => '{ "b": "REPLACED VALUE" }',
+        })
+
+        # verify the temp json file has been modified.
+        expect(File.read('/tmp/lex-adapter.json')).to eq('{ "b": "REPLACED VALUE" }')
+      end
     end
   end
 
