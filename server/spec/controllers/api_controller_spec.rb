@@ -1,5 +1,8 @@
+require 'factory_bot'
+require 'factories/user'
 require 'rails_helper'
 require 'jwt'
+require "clearance/rspec"
 # require 'services/lexicon_saver'
 
 RSpec.describe ApiController, type: :controller do

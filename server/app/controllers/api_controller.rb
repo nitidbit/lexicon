@@ -46,19 +46,20 @@ class ApiController < ApplicationController
     "#{uri.scheme}://#{uri.host}#{port}"
   end
 
-  # Update API endpoint, authenticated by session/login
-  def cookie_auth_update
-    changes = permitted_changes(params)
-    lsaver = lexicon_saver(:file, nil)
+  # /api/cookie_auth_update -- This endpoint updates a Lexicon file, but the user is authenticated
+  # by session/login, not a HTTP header with JWT token. It's only used by Lexicon's demo page.
+  # def cookie_auth_update
+  #   changes = permitted_changes(params)
+  #   lsaver = lexicon_saver # (:file, nil)
 
-    begin
-      lsaver.update_changes(@authenticated_user.email, changes)
-      response = { successful: true, error: nil }
-    rescue => exc
-      response = { successful: false, error: exc.inspect }
-    end
-    render json: response
-  end
+  #   begin
+  #     lsaver.update_changes(@authenticated_user.email, changes)
+  #     response = { successful: true, error: nil }
+  #   rescue => exc
+  #     response = { successful: false, error: exc.inspect }
+  #   end
+  #   render json: response
+  # end
 
   # Return the token that 'authenticate_jwt_header' requires
   def self.lexicon_server_token(user, client_app)
