@@ -29,15 +29,10 @@ module LexiconServer
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
 
     # Don't generate system test files.
     config.generators.system_tests = nil
 
-
-    config.autoload_paths << Rails.root.join('app')
-    config.autoload_paths << Rails.root.join('lib')
-    config.autoload_paths << Rails.root.join('admin')
   end
 end
 

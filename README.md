@@ -83,7 +83,7 @@ EditWrapper is a React component that takes your component, and a Lexicon and ad
 
 When you create an `EditWrapper`, you now need to tell it where to send changes. There are several configurations:
 
-- An **endpoint on your own Rails app** that will call [Services::LexiconSaver](https://github.com/nitidbit/lexicon/blob/main/SERVER.md) Take a look at how Bedsider does it. Generally you'll add an endpoint which forwards params to LexiconSaver.
+- An **endpoint on your own Rails app** that will call [LexServe::Saver](https://github.com/nitidbit/lexicon/blob/main/SERVER.md) Take a look at how Bedsider does it. Generally you'll add an endpoint which forwards params to LexServe::Saver.
 
 - Use the endpoint on **[ Nitid's Lexicon Server ](https://lexicon.nitid.co/)**.  — See the [Lexicon Server README](https://github.com/nitidbit/lexicon/blob/main/SERVER.md) about how to add your app.
 
