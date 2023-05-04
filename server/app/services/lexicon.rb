@@ -1,7 +1,7 @@
 # Ruby version of a Lexicon
 class Lexicon
 
-  VERSION = '2.5.0'
+  VERSION = '2.6.0'
 
   def initialize(filename)
     extension = File.extname(filename)

@@ -66,7 +66,7 @@ Handy Scripts dealing with server
 
 Deploy
 ------
-- Change the version in `lib/lexicon.rb`
+- Change the version in `server/app/services/lexicon.rb`
 - staging — Render.com is configured to automatically deploy from Github's 'main' branch.
 - production — Similarly, automatic deploy from 'production' branch
 
