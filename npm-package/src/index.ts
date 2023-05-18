@@ -1,12 +1,13 @@
 export { Lexicon } from "./Lexicon";
 export { default as EditWrapper } from "./EditWrapper";
 
-export const VERSION = "2.11.1";
+export const VERSION = "2.11.2";
 
 /*
   Change History - API changes since last version
 
-  v2.11.1 - Reduce package size by moving reacto to peer dependency
+  v2.11.2 - Up to react17 in peer dependency
+  v2.11.1 - Reduce package size by moving react16 to peer dependency
   v2.11.0 — Renamed "addSubLexicon" to "addBranch", with old name aliased.
 
   v2.10.0 — Added "AddSubLexicon" function as a shortcut to embed lexicons in lexicons.
