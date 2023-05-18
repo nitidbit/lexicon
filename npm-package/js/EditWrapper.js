@@ -26,7 +26,7 @@ class EditWrapper extends react_1.default.Component {
         };
         this.updateTextFromEditor = (change) => {
             this.setState(oldState => {
-                const newLexicon = oldState.lexicon.clone();
+                const newLexicon = oldState.lexicon.cloneDeep();
                 newLexicon.update(change.updatePath, change.newValue);
                 const fileKey = JSON.stringify({
                     filename: change.filename,

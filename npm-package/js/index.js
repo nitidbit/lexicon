@@ -4,10 +4,11 @@ var Lexicon_1 = require("./Lexicon");
 exports.Lexicon = Lexicon_1.Lexicon;
 var EditWrapper_1 = require("./EditWrapper");
 exports.EditWrapper = EditWrapper_1.default;
-exports.VERSION = '2.11.0';
+exports.VERSION = "2.11.1";
 /*
   Change History - API changes since last version
 
+  v2.11.1 - Reduce package size by moving reacto to peer dependency
   v2.11.0 — Renamed "addSubLexicon" to "addBranch", with old name aliased.
 
   v2.10.0 — Added "AddSubLexicon" function as a shortcut to embed lexicons in lexicons.
