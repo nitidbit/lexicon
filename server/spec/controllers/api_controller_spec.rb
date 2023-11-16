@@ -113,7 +113,8 @@ RSpec.describe ApiController, type: :controller do
         put(:update, params: @lexicon_changes)
         # expect(response.headers['Access-Control-Allow-Origin']).to eq('http://*.example.com:123')
         # expect(response.headers['Access-Control-Allow-Origin']).to eq('http://blah.example.com:123')
-        expect(response.headers['Access-Control-Allow-Origin']).to eq('https://lexicon.example.com')
+        # expect(response.headers['Access-Control-Allow-Origin']).to eq('https://lexicon.example.com')
+        expect(response.headers['Access-Control-Allow-Origin']).to eq('https://www.example.com')
         # expect(response.headers['Access-Control-Allow-Origin']).to eq('*')
       end
 
@@ -169,7 +170,8 @@ RSpec.describe ApiController, type: :controller do
 
     it 'excludes port when the port IS the normal one' do
       url = 'https://lexicon.nitid.co/mydir'
-      expect(ApiController.cors_friendly_origin(url)).to eq('https://lexicon.nitid.co')
+      # expect(ApiController.cors_friendly_origin(url)).to eq('https://lexicon.nitid.co')
+      expect(ApiController.cors_friendly_origin(url)).to eq('https://www.nitid.co')
       # expect(ApiController.cors_friendly_origin(url)).to eq('https://*.nitid.co')
       # expect(ApiController.cors_friendly_origin(url)).to eq('*')
     end
