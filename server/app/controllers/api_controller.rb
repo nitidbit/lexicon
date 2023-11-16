@@ -43,16 +43,29 @@ class ApiController < ApplicationController
            else
              ":#{uri.port}"
            end
-    full_host = uri.host
-    if (uri.host != 'localhost')
-      return '*'
+
+    # most unrestrictive
+    # full_host = uri.host
+    # if (uri.host != 'localhost')
+      # return '*'
+    # else
+      # return "#{uri.scheme}://#{full_host}#{port}"
+    # end
+
+    # hoping something like this
+    # full_host = uri.host
+    # if (uri.host != 'localhost')
       # domain = PublicSuffix.parse(uri.host).domain
-      # full_host = "*.#{domain}"
+      # return "lexicon.#{domain}"
     # end
     # "#{uri.scheme}://#{full_host}#{port}"
-    else
-      return "#{uri.scheme}://#{full_host}#{port}"
-    end
+    # else
+      # return "#{uri.scheme}://#{full_host}#{port}"
+    # end
+
+    # original
+    "#{uri.scheme}://#{uri.host}#{port}"
+
   end
 
   # /api/cookie_auth_update -- This endpoint updates a Lexicon file, but the user is authenticated
