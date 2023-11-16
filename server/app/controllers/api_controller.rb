@@ -45,10 +45,14 @@ class ApiController < ApplicationController
            end
     full_host = uri.host
     if (uri.host != 'localhost')
-      domain = PublicSuffix.parse(uri.host).domain
-      full_host = "*.#{domain}"
+      return '*'
+      # domain = PublicSuffix.parse(uri.host).domain
+      # full_host = "*.#{domain}"
+    # end
+    # "#{uri.scheme}://#{full_host}#{port}"
+    else
+      return "#{uri.scheme}://#{full_host}#{port}"
     end
-    "#{uri.scheme}://#{full_host}#{port}"
   end
 
   # /api/cookie_auth_update -- This endpoint updates a Lexicon file, but the user is authenticated
