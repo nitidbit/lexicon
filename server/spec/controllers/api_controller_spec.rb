@@ -38,19 +38,19 @@ RSpec.describe ApiController, type: :controller do
         }]}
 
       @user = User.create!(email: 'blaaa@example.com', password: 'super.blah.foofy.foo')
-      # @client_app = ClientApp.create!(name: 'sample client app', app_url: 'http://example.com', adapter: 'file')
-      @client_app = ClientApp.create!(name: 'sample client app', app_url: 'example.com', adapter: 'file')
+      @client_app = ClientApp.create!(name: 'sample client app', app_url: 'http://example.com', adapter: 'file')
+      # @client_app = ClientApp.create!(name: 'sample client app', app_url: 'example.com', adapter: 'file')
       @client_app_with_slack = ClientApp.create!(
         name: 'sample client app with slack',
-        # app_url: 'http://example.com',
-        app_url: 'example.com',
+        app_url: 'http://example.com',
+        # app_url: 'example.com',
         adapter: 'file',
         slack_workflow_url: 'http://blah.slack.com'
         )
       @client_app_with_slack_empty = ClientApp.create!(
         name: 'sample client app with slack',
-        # app_url: 'http://example.com',
-        app_url: 'example.com',
+        app_url: 'http://example.com',
+        # app_url: 'example.com',
         adapter: 'file',
         slack_workflow_url: ''
         )
@@ -112,7 +112,8 @@ RSpec.describe ApiController, type: :controller do
         @client_app.update(app_url: 'http://blah.example.com:123/test?x=y')
         put(:update, params: @lexicon_changes)
         # expect(response.headers['Access-Control-Allow-Origin']).to eq('http://*.example.com:123')
-        expect(response.headers['Access-Control-Allow-Origin']).to eq('http://blah.example.com:123')
+        # expect(response.headers['Access-Control-Allow-Origin']).to eq('http://blah.example.com:123')
+        expect(response.headers['Access-Control-Allow-Origin']).to eq('https://lexicon.example.com')
         # expect(response.headers['Access-Control-Allow-Origin']).to eq('*')
       end
 
@@ -123,8 +124,8 @@ RSpec.describe ApiController, type: :controller do
     context 'when server token is for a particular ClientApp at GitHub' do
       before do
         @client_app.update(
-          # app_url: 'http://sample.example.com',
-          app_url: 'sample.example.com',
+          app_url: 'http://sample.example.com',
+          # app_url: 'sample.example.com',
           adapter: 'github',
           github_repo: 'sample github_repo',
           git_branch: 'sample git_branch',
