@@ -161,6 +161,7 @@ export class Lexicon {
           updatePath: rootPrefix, // argument for `rootLexicon.update()`
           value: node,          // contents of the node we searched for
         };
+        console.debug('find() result=', result)
         return result; // Found it!
       };
 

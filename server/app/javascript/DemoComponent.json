@@ -1,6 +1,10 @@
 {
   "en": {
-    "title": "Demo page for Lexicon"
+    "title": "Demo page for Lexicon",
+    "faq": [
+      { "question": "Favorite color", "answer": "Chartreuse" },
+      { "question": "Favorite food", "answer": "Ice Cream" }
+    ]
   },
   "es": {
     "title": "Spanish Demo page for Lexicon"

@@ -1,3 +1,16 @@
 .DemoComponent {
-  background-color: salmon;
+  border: 1px solid salmon;
+}
+
+.Faq {
+  padding-left: 20px;
+
+  .question {
+    padding-top: 10px;
+    font-weight: bold;
+  }
+
+  .answer {
+    font-weight: normal;
+  }
 }
