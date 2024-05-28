@@ -18,7 +18,7 @@ async function entryPoints() {
   const JS_DIR = 'app/javascript/'
   const dirCont = await readdir(JS_DIR);
   const results = dirCont
-    .filter( filename => filename.match(/\.(js|jsx|css|scss)$/ig))
+    .filter( filename => filename.match(/\.(js|jsx|ts|tsx|css|scss)$/ig))
     .map( filename => JS_DIR + filename )
   console.log('esbuild.mjs: entryPoints = ', results)
   return results

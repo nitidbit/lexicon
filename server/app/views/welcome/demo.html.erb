@@ -4,8 +4,10 @@
   require 'lexicon'
   lexicon = Lexicon.new('app/views/welcome/demo.json')
 %>
-<%= stylesheet_link_tag('demo') %>
-<%= javascript_include_tag('demo') %>
+<%= javascript_include_tag('DemoComponent') %>
+<%= stylesheet_link_tag('DemoComponent') %>
 
 <h1> <%= lexicon.get('title') %> </h1>
+
+<div class="placeholder-DemoComponent"></div>
 
