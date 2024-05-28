@@ -13,7 +13,7 @@ import sassPlugin from "esbuild-plugin-sass"
 const watchMode = process.argv.includes('--watch')
 
 
-// Which JS files should we build?
+// Which JS/TS/SCSS files should be entry-points?
 async function entryPoints() {
   const JS_DIR = 'app/javascript/'
   const dirCont = await readdir(JS_DIR);
@@ -45,7 +45,7 @@ esbuild
     bundle: true,
     watch: watchMode,
     outdir: "app/assets/builds",
-    sourcemap: true,
+    sourcemap: 'linked',
     plugins: [sassPlugin(), notifyWhenBuilding ],
   })
   .catch((e) => console.error(e.message));
