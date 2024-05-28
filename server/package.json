@@ -2,8 +2,7 @@
   "name": "lexicon-server",
   "private": true,
   "scripts": {
-    "build": "node esbuild.mjs",
-    "build:watch": "npm run build -- --watch --analyze=verbose"
+    "build": "node esbuild.mjs"
   },
   "dependencies": {
     "@babel/core": "7",
