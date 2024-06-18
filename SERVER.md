@@ -81,5 +81,5 @@ The GitHub adapter requires three arguments: an access token, the repository nam
 You also need a `JWT_SECRET`, a secret key used to authenticate access to the LexiconServer's API. This can be generated at the command line with `rails secret` and stored in `JWT_SECRET` in the configuration for any environment. In production, the environment variable `JWT_SECRET` is automatically used.
 
 ## Create first user
-    User.create!(email: 'winston@nitidbit.com', password: '...')
+    User.create!(is_admin: true, email: 'winston@nitidbit.com', password: '...')
 
