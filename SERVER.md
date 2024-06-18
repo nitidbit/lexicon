@@ -51,6 +51,7 @@ Developer Information
 Developer Setup
 ---------------
 
+    cd (lexicon proj folder)/server
     bundle
     yarn
     rails db:create db:schema:load db:test:prepare db:seed

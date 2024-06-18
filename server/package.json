@@ -2,24 +2,24 @@
   "name": "lexicon-server",
   "private": true,
   "scripts": {
-    "build": "node esbuild.mjs",
-    "build:watch": "npm run build -- --watch --analyze=verbose"
+    "build": "node esbuild.mjs"
   },
   "dependencies": {
     "@babel/core": "7",
     "@babel/plugin-transform-runtime": "7",
     "@babel/preset-env": "7",
     "@babel/runtime": "7",
+    "@jgoz/esbuild-plugin-livereload": "^2.1.0",
     "@nitidbit/lexicon": "^2.8.5",
-    "babel-loader": "8",
+    "babel-loader": "^9.1.3",
     "babel-plugin-macros": "^3.1.0",
-    "esbuild": "^0.16.16",
+    "esbuild": "^0.21.4",
     "esbuild-plugin-sass": "^1.0.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "sass": "^1.57.1"
+    "react": "18",
+    "react-dom": "18",
+    "sass": "^1.77.2"
   },
   "devDependencies": {
-    "@babel/preset-react": "^7.7.0"
+    "@babel/preset-react": "^7.24.6"
   }
 }

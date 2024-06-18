@@ -3,22 +3,23 @@
 
   usage:
     npm run build
-    npm run build -- --watch
  */
 
 import { readdir } from 'node:fs/promises'
 import esbuild from "esbuild"
 import sassPlugin from "esbuild-plugin-sass"
+import { livereloadPlugin } from '@jgoz/esbuild-plugin-livereload'
 
-const watchMode = process.argv.includes('--watch')
+const RED = "\x1b[31m"
+const GREEN = "\x1b[32m"
+const RESET = "\x1b[39m"
 
-
-// Which JS files should we build?
+// Which JS/TS/SCSS files should be entry-points?
 async function entryPoints() {
   const JS_DIR = 'app/javascript/'
   const dirCont = await readdir(JS_DIR);
   const results = dirCont
-    .filter( filename => filename.match(/\.(js|jsx|css|scss)$/ig))
+    .filter( filename => filename.match(/\.(js|jsx|ts|tsx)$/ig))
     .map( filename => JS_DIR + filename )
   console.log('esbuild.mjs: entryPoints = ', results)
   return results
@@ -28,24 +29,27 @@ async function entryPoints() {
 const notifyWhenBuilding = {
   name: 'notifyWhenBuilding',
   setup(build) {
-    // build.onStart(() => {
-    //   console.log('esbuild.mjs: build started')
-    // })
-
     build.onEnd(result => {
-      console.log(`esbuild.mjs: build done with ${result.errors.length} errors`)
+      const numErrors = result.errors.length
+      const color = numErrors ? RED : GREEN
+      console.log(`${ color }esbuild.mjs: build done with ${result.errors.length} errors`,  RESET)
     })
   },
 }
 
 
-esbuild
-  .build({
-    entryPoints: await entryPoints(),
-    bundle: true,
-    watch: watchMode,
-    outdir: "app/assets/builds",
-    sourcemap: true,
-    plugins: [sassPlugin(), notifyWhenBuilding ],
-  })
-  .catch((e) => console.error(e.message));
+
+let esBuildConfig = await esbuild.context({
+  entryPoints: await entryPoints(),
+  bundle: true,
+  outdir: "app/assets/builds",
+  sourcemap: 'linked',
+  plugins: [
+    sassPlugin(),
+    notifyWhenBuilding,
+    livereloadPlugin({fullReloadOnCssUpdates: true}),
+  ],
+})
+
+console.log('watching...')
+await esBuildConfig.watch()
