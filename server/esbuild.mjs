@@ -3,12 +3,17 @@
 
   usage:
     npm run build
+    npm run build -- --watch
  */
+
+const watchMode = process.argv.includes('--watch')
+console.log(`esbuild.mjs: watchMode=${watchMode}`)
 
 import { readdir } from 'node:fs/promises'
 import esbuild from "esbuild"
 import sassPlugin from "esbuild-plugin-sass"
 import { livereloadPlugin } from '@jgoz/esbuild-plugin-livereload'
+
 
 const RED = "\x1b[31m"
 const GREEN = "\x1b[32m"
@@ -25,7 +30,6 @@ async function entryPoints() {
   return results
 }
 
-
 const notifyWhenBuilding = {
   name: 'notifyWhenBuilding',
   setup(build) {
@@ -37,19 +41,26 @@ const notifyWhenBuilding = {
   },
 }
 
+const options = {
+    entryPoints: await entryPoints(),
+    bundle: true,
+    outdir: "app/assets/builds",
+    sourcemap: 'linked',
+    plugins: [
+      sassPlugin(),
+    ],
+  }
 
+if (watchMode) {
+  console.log('esbuild.mjs: watching...')
 
-let esBuildConfig = await esbuild.context({
-  entryPoints: await entryPoints(),
-  bundle: true,
-  outdir: "app/assets/builds",
-  sourcemap: 'linked',
-  plugins: [
-    sassPlugin(),
-    notifyWhenBuilding,
-    livereloadPlugin({fullReloadOnCssUpdates: true}),
-  ],
-})
+  options.plugins.push(notifyWhenBuilding)
+  options.plugins.push(livereloadPlugin({fullReloadOnCssUpdates: true}))
 
-console.log('watching...')
-await esBuildConfig.watch()
+  let esBuildConfig = await esbuild.context(options)
+  await esBuildConfig.watch()
+} else {
+  console.log('esbuild.mjs: building...')
+  console.log(await esbuild.build(options))
+  console.log('esbuild.mjs: building...DONE')
+}

@@ -1,4 +1,4 @@
-import lodash_get from 'lodash/get';
+import { get as lodash_get } from 'lodash';
 
 
 //

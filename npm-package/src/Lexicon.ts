@@ -1,13 +1,14 @@
-import isString from 'lodash/isString';
-import isUndefined from 'lodash/isUndefined';
-import isNil from 'lodash/isNil';
-import cloneDeepWith from 'lodash/cloneDeepWith';
-import lodash_has from 'lodash/has';
-import lodash_compact from 'lodash/compact';
-import lodash_concat from 'lodash/concat';
-import lodash_map from 'lodash/map';
-import { Collection, KeyPath, keyPathAsArray, KeyPathArray, KeyPathString } from './collection';
+import {
+  isString,
+  isUndefined,
+  isNil,
+  cloneDeepWith,
+  has as lodash_has,
+  compact as lodash_compact,
+  concat as lodash_concat,
+  map as lodash_map } from 'lodash';
 import * as col from './collection';
+import { Collection, KeyPath, keyPathAsArray, KeyPathArray, KeyPathString } from './collection';
 import {evaluateTemplate } from './util';
 
 export type ContentByLocale = {

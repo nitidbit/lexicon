@@ -2,7 +2,8 @@
   "name": "lexicon-server",
   "private": true,
   "scripts": {
-    "build": "node esbuild.mjs"
+    "build": "node esbuild.mjs",
+    "build:watch": "node esbuild.mjs -- --watch"
   },
   "dependencies": {
     "@babel/core": "7",
@@ -10,7 +11,7 @@
     "@babel/preset-env": "7",
     "@babel/runtime": "7",
     "@jgoz/esbuild-plugin-livereload": "^2.1.0",
-    "@nitidbit/lexicon": "^2.8.5",
+    "@nitidbit/lexicon": "file:../npm-package",
     "babel-loader": "^9.1.3",
     "babel-plugin-macros": "^3.1.0",
     "esbuild": "^0.21.4",
