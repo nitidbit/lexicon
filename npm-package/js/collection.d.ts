@@ -1,7 +1,7 @@
-export declare type Collection = Map<any, any> | Array<any> | object;
-export declare type KeyPathArray = Array<string>;
-export declare type KeyPathString = string;
-export declare type KeyPath = KeyPathArray | KeyPathString;
+export type Collection = Map<any, any> | Array<any> | object;
+export type KeyPathArray = Array<string>;
+export type KeyPathString = string;
+export type KeyPath = KeyPathArray | KeyPathString;
 export declare function keyPathAsArray(keyPath: KeyPath): Array<string>;
 export declare function keyPathAsString(keyPath: KeyPath): string;
 export declare function isCollection(maybeCollection: any): boolean;

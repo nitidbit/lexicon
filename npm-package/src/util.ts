@@ -1,4 +1,4 @@
-import { get as lodash_get } from 'lodash';
+import { get as lodash_get } from 'lodash-es';
 
 
 //

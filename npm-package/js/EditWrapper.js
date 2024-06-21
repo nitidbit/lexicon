@@ -22,7 +22,7 @@ class EditWrapper extends react_1.default.Component {
     constructor(props) {
         super(props);
         this.toggleEditor = () => {
-            this.setState(Object.assign({}, this.state, { isEditorVisible: !this.state.isEditorVisible }));
+            this.setState(Object.assign(Object.assign({}, this.state), { isEditorVisible: !this.state.isEditorVisible }));
         };
         this.updateTextFromEditor = (change) => {
             this.setState(oldState => {
@@ -89,7 +89,7 @@ class EditWrapper extends react_1.default.Component {
         };
         if (!(props.lexicon instanceof Lexicon_1.Lexicon))
             throw new Error(`'lexicon' prop should be a Lexicon object, but it is: ${JSON.stringify(props.lexicon).substring(0, 50)}`);
-        let lexiconServerToken = util_1.getURLParameter('lexiconServerToken');
+        let lexiconServerToken = (0, util_1.getURLParameter)('lexiconServerToken');
         if (lexiconServerToken) {
             sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token
             // Remove token from URL

@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.LexiconEditor = void 0;
 const react_1 = __importDefault(require("react"));
 require("../styles/LexiconEditorStyles.scss");
 const collection_1 = require("./collection");
@@ -24,8 +25,8 @@ class LexiconEditor extends react_1.default.Component {
             const source = this.props.lexicon.source(localPath);
             const changeInfo = {
                 filename: source.filename,
-                localPath: collection_1.keyPathAsString(source.localPath),
-                updatePath: collection_1.keyPathAsString(source.updatePath),
+                localPath: (0, collection_1.keyPathAsString)(source.localPath),
+                updatePath: (0, collection_1.keyPathAsString)(source.updatePath),
                 newValue: newValue
             };
             this.props.onChange(changeInfo);

@@ -6,7 +6,7 @@ import {
   has as lodash_has,
   compact as lodash_compact,
   concat as lodash_concat,
-  map as lodash_map } from 'lodash';
+  map as lodash_map } from 'lodash-es';
 import * as col from './collection';
 import { Collection, KeyPath, keyPathAsArray, KeyPathArray, KeyPathString } from './collection';
 import {evaluateTemplate } from './util';
@@ -92,7 +92,7 @@ export class Lexicon {
     let val = info.value;
 
     if (isString(val) && !isUndefined(templateSubstitutions)) {
-      val = evaluateTemplate(val, templateSubstitutions);
+      val = evaluateTemplate(val as string, templateSubstitutions);
     }
 
     return val;

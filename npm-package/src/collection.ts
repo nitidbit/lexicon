@@ -8,7 +8,7 @@ import { isString,
   has as lodash_has,
   entries as lodash_entries,
   keys as lodash_keys,
-  compact as lodash_compact } from 'lodash';
+  compact as lodash_compact } from 'lodash-es';
 
 /*
  * Functions that can manipulate 'Collections' irrespective of the actual storage type.

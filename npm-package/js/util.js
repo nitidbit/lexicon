@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const lodash_1 = require("lodash");
+exports.evaluateTemplate = void 0;
+exports.getURLParameter = getURLParameter;
+const lodash_es_1 = require("lodash-es");
 //
 //      Other functions
 //
-exports.evaluateTemplate = (template, substitutions) => {
+const evaluateTemplate = (template, substitutions) => {
     let escaped = false;
     let replaced = '';
     for (let i = 0; i < template.length; i++) {
@@ -30,7 +32,7 @@ exports.evaluateTemplate = (template, substitutions) => {
                     level--;
                 i++;
             }
-            const path = template.substring(startPos, i - 1), value = lodash_1.get(substitutions, path);
+            const path = template.substring(startPos, i - 1), value = (0, lodash_es_1.get)(substitutions, path);
             replaced += value;
             i--;
             continue;
@@ -41,6 +43,7 @@ exports.evaluateTemplate = (template, substitutions) => {
     }
     return replaced;
 };
+exports.evaluateTemplate = evaluateTemplate;
 // Extract and return a query parameter from the current 'location'
 // e.g. at http://example.com?myvar=999
 //      getURLParameter('myvar')        // returns: '999'
@@ -49,4 +52,3 @@ exports.evaluateTemplate = (template, substitutions) => {
 function getURLParameter(name) {
     return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
 }
-exports.getURLParameter = getURLParameter;

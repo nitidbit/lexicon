@@ -1,8 +1,9 @@
+import * as col from './collection';
 import { Collection, KeyPath, KeyPathString } from './collection';
-export declare type ContentByLocale = {
+export type ContentByLocale = {
     [localeCode: string]: Collection;
 };
-declare type LocaleCode = string;
+type LocaleCode = string;
 export declare class Lexicon {
     private _contentByLocale;
     currentLocaleCode: LocaleCode;
@@ -18,9 +19,9 @@ export declare class Lexicon {
     private fullKey;
     private find;
     source(keyPath: KeyPath): {
-        filename: any;
-        localPath: any[];
-        updatePath: any;
+        filename: string;
+        localPath: string[];
+        updatePath: col.KeyPathArray;
     };
     locales(): Array<LocaleCode>;
     filename(): string;

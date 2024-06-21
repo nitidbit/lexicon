@@ -22,7 +22,7 @@ interface EditWrapperProps {
     };
     OptionalLogoutButton?: React.FC<any>;
 }
-declare type EditWrapperChanges = Map<string, {
+type EditWrapperChanges = Map<string, {
     originalValue: string;
     newValue: string;
 }>;
@@ -49,7 +49,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     updateTextFromEditor: OnChangeCallback;
     switchLocale: (newLocale: string) => void;
     saveChanges: () => void;
-    changePosition: (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => void;
-    render(): JSX.Element;
+    changePosition: (e: React.MouseEvent<HTMLInputElement>) => void;
+    render(): React.JSX.Element;
 }
 export {};
