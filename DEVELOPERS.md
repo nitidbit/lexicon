@@ -62,9 +62,10 @@ available to people using the package. This is already done if you've been runni
     cd npm-package
     npm run tsc
     npm publish
-    git add . && git commit -m "Version x.y.z"
-    git tag 'X.Y.Z'
-    git push && git push origin 'X.Y.Z'
+    VER='x.y.x'     # use actual numbers
+    git add . && git commit -m "Version $VER"
+    git tag '$VER'
+    git push && git push origin '$VER'
 
 
 Thoughts
