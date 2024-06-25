@@ -1,11 +1,12 @@
 export { Lexicon } from "./Lexicon";
 export { default as EditWrapper } from "./EditWrapper";
 
-export const VERSION = "2.11.3";
+export const VERSION = "2.11.4";
 
 /*
   Change History - API changes since last version
 
+  v2.11.4 - Use lodash-es so we can compile on Render.com but we still reduce package size.
   v2.11.3 - Up to react18 in peer dependency
   v2.11.2 - Up to react17 in peer dependency
   v2.11.1 - Reduce package size by moving react16 to peer dependency
