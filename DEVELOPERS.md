@@ -1,11 +1,14 @@
 Read-Me for Developers working on Lexicon itself
 ================================================
 
+Github package registry:
+- https://github.com/nitidbit/lexicon/pkgs/npm/lexicon
+
 
 Developing the Lexicon NPM Package
 ----------------------------------
 
-If you are just using Lexicon in your project, ignore this section.
+If you are just using Lexicon in your project, you can ignore this file.
 
 ### Editing Lexicon and your project at the same time
 Create a symbolic link from your projects folder to your lexicon folder

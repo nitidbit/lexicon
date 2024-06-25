@@ -4,15 +4,15 @@
   usage:
     npm run build
     npm run build -- --watch
+    npm run build -- --analyze
  */
-
-const watchMode = process.argv.includes('--watch')
-console.log(`esbuild.mjs: watchMode=${watchMode}`)
 
 import { readdir } from 'node:fs/promises'
 import esbuild from "esbuild"
 import sassPlugin from "esbuild-plugin-sass"
 import { livereloadPlugin } from '@jgoz/esbuild-plugin-livereload'
+import fs from 'node:fs'
+
 
 
 const RED = "\x1b[31m"
@@ -26,12 +26,13 @@ async function entryPoints() {
   const results = dirCont
     .filter( filename => filename.match(/\.(js|jsx|ts|tsx)$/ig))
     .map( filename => JS_DIR + filename )
-  console.log('esbuild.mjs: entryPoints = ', results)
+  console.log('esbuild.mjs: entryPoints, i.e. bundles that will be built =', results)
   return results
 }
 
-const notifyWhenBuilding = {
-  name: 'notifyWhenBuilding',
+// When in watch mode, tell me when a build has happened.
+const pluginNotifyWhenBuilding = {
+  name: 'pluginNotifyWhenBuilding',
   setup(build) {
     build.onEnd(result => {
       const numErrors = result.errors.length
@@ -51,16 +52,35 @@ const options = {
     ],
   }
 
-if (watchMode) {
-  console.log('esbuild.mjs: watching...')
-
-  options.plugins.push(notifyWhenBuilding)
-  options.plugins.push(livereloadPlugin({fullReloadOnCssUpdates: true}))
-
-  let esBuildConfig = await esbuild.context(options)
-  await esBuildConfig.watch()
-} else {
+async function build() {
   console.log('esbuild.mjs: building...')
   console.log(await esbuild.build(options))
   console.log('esbuild.mjs: building...DONE')
+  console.log('esbuild.mjs: bundles in:', options.outdir)
 }
+
+async function buildWatchMode() {
+  console.log('esbuild.mjs: watching...')
+
+  options.plugins.push(pluginNotifyWhenBuilding)
+  options.plugins.push(livereloadPlugin({fullReloadOnCssUpdates: true}))
+
+  let esBuildResult = await esbuild.context(options)
+  await esBuildResult.watch()
+}
+
+// Creates a metafile which can be analyzed to see how much space in the ESBuild package is taken up
+// by various libraries. E.g. we want Lodash to be about 100kb.
+async function analyze() {
+  const METAFILE_FILENAME = '/tmp/lexicon-esbuild-meta.json'
+  console.log('esbuild.mjs: analyzing...')
+  options.metafile = true
+  let esBuildResult = await esbuild.build(options)
+  fs.writeFileSync(METAFILE_FILENAME, JSON.stringify(esBuildResult.metafile))
+  console.log('esbuild.mjs: analyzing...DONE')
+  console.log('esbuild.mjs: metafile:', METAFILE_FILENAME, '  Use it here: https://esbuild.github.io/analyze/')
+}
+
+if (process.argv.includes('--watch')) buildWatchMode()
+else if (process.argv.includes('--analyze')) analyze()
+else build()
