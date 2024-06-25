@@ -8,11 +8,12 @@ var Lexicon_1 = require("./Lexicon");
 Object.defineProperty(exports, "Lexicon", { enumerable: true, get: function () { return Lexicon_1.Lexicon; } });
 var EditWrapper_1 = require("./EditWrapper");
 Object.defineProperty(exports, "EditWrapper", { enumerable: true, get: function () { return __importDefault(EditWrapper_1).default; } });
-exports.VERSION = "2.11.4";
+exports.VERSION = "2.11.5";
 /*
   Change History - API changes since last version
 
-  v2.11.4 - Use lodash-es so we can compile on Render.com but we still reduce package size.
+  v2.11.5 - go back to lodash
+  v2.11.4 - DID NOT WORK--use lodash-es so we can compile on Render.com but we still reduce package size.
   v2.11.3 - Up to react18 in peer dependency
   v2.11.2 - Up to react17 in peer dependency
   v2.11.1 - Reduce package size by moving react16 to peer dependency

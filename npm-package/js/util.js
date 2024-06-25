@@ -1,8 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.evaluateTemplate = void 0;
 exports.getURLParameter = getURLParameter;
-const lodash_es_1 = require("lodash-es");
+const get_1 = __importDefault(require("lodash/get"));
 //
 //      Other functions
 //
@@ -32,7 +35,7 @@ const evaluateTemplate = (template, substitutions) => {
                     level--;
                 i++;
             }
-            const path = template.substring(startPos, i - 1), value = (0, lodash_es_1.get)(substitutions, path);
+            const path = template.substring(startPos, i - 1), value = (0, get_1.default)(substitutions, path);
             replaced += value;
             i--;
             continue;

@@ -1,14 +1,14 @@
-import { isString,
-  isMap,
-  isArray,
-  isObject,
-  isNil,
-  size as lodash_size,
-  set as lodash_set,
-  has as lodash_has,
-  entries as lodash_entries,
-  keys as lodash_keys,
-  compact as lodash_compact } from 'lodash-es';
+import isString from 'lodash/isString';
+import isMap from 'lodash/isMap';
+import isArray from 'lodash/isArray';
+import isObject from 'lodash/isObject';
+import isNil from 'lodash/isNil';
+import lodash_size from 'lodash/size';
+import lodash_set from 'lodash/set';
+import lodash_has from 'lodash/has';
+import lodash_entries from 'lodash/entries';
+import lodash_keys from 'lodash/keys';
+import lodash_compact from 'lodash/compact';
 
 /*
  * Functions that can manipulate 'Collections' irrespective of the actual storage type.
