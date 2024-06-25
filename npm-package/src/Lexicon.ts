@@ -89,7 +89,7 @@ export class Lexicon {
       }
     }
 
-    let val = info.value;
+    let val:any = info.value;
 
     if (isString(val) && !isUndefined(templateSubstitutions)) {
       val = evaluateTemplate(val as string, templateSubstitutions);
