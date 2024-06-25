@@ -64,8 +64,8 @@ available to people using the package. This is already done if you've been runni
     npm publish
     VER='x.y.x'     # use actual numbers
     git add . && git commit -m "Version $VER"
-    git tag '$VER'
-    git push && git push origin '$VER'
+    git tag "$VER"
+    git push && git push origin "$VER"
 
 
 Thoughts
