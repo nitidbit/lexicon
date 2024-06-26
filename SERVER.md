@@ -53,6 +53,7 @@ Developer Setup
 
     cd (lexicon proj folder)/server
     bundle
+    npm install -g yarn
     yarn
     rails db:create db:schema:load db:test:prepare db:seed
     rspec

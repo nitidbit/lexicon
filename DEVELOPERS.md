@@ -28,7 +28,7 @@ should output this which shows it's a symbolic link:
 ### Compilation
 
 While developing, run tsc in the background, watching your changes and recompiling
-
+    yarn
     npm run watch
 
 You should also make sure that all tests pass:
