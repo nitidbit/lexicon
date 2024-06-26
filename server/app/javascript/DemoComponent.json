@@ -1,8 +1,8 @@
 {
   "en": {
-    "title": "Demo page for Lexicon",
+    "title": "Demo page for #{appName}",
     "faq": [
-      { "question": "Favorite color", "answer": "Chartreuse" },
+      { "question": "Favorite color", "answer": "blue" },
       { "question": "Favorite food", "answer": "Ice Cream" }
     ]
   },
