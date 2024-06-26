@@ -4,7 +4,7 @@
 echo "=== render_build./.sh: building Lexicon NPM package first ==="
 cd ../npm-package
 npm i
-npm run tsc
+npm run build
 
 echo "=== render_build./.sh: installing yarn ==="
 cd ../server

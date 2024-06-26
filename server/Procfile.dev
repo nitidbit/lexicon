@@ -1,3 +1,3 @@
 web:         bundle exec puma -p 3000
-npm-package: cd ../npm-package; npm run watch
+npm-package: cd ../npm-package; npm run build:watch
 server-js:   npm run build:watch

@@ -13,8 +13,8 @@
   },
   "scripts": {
     "test": "jest --verbose --no-watchman",
-    "tsc": "tsc",
-    "watch": "tsc --watch"
+    "build": "tsc",
+    "build:watch": "tsc --watch --preserveWatchOutput"
   },
   "jest": {
     "roots": [
