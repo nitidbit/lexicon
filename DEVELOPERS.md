@@ -29,6 +29,7 @@ should output this which shows it's a symbolic link:
 
 While developing, run tsc in the background, watching your changes and recompiling
     yarn
+    npm i react # installing peer dependencies, which the server will require
     npm run watch
 
 You should also make sure that all tests pass:
