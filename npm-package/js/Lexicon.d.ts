@@ -14,6 +14,7 @@ export declare class Lexicon {
     addBranch(subLexicon: Lexicon, branchKey: string): void;
     addSubLexicon(subLexicon: Lexicon, branchKey: string): void;
     get(keyPath: KeyPath, templateSubstitutions?: object): any;
+    interpolateArray(templateArray: string[], params: object): string[];
     getExact(keyPath: KeyPath): any;
     subset(keyPath: KeyPath): Lexicon | null;
     private fullKey;
