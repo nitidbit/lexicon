@@ -82,10 +82,46 @@ class EditWrapper extends react_1.default.Component {
             });
         };
         this.changePosition = (e) => {
-            const newPos = e.target.name;
-            if (newPos == 'left' || newPos == 'bottom' || newPos == 'right') {
-                this.setState({ position: newPos });
+            const newPos = e.currentTarget.name;
+            if ((newPos === 'left' || newPos === 'right') && this.state.position !== 'bottom') {
+                const currentWidth = this.state.editorWidth;
+                this.setState({
+                    position: newPos,
+                    editorWidth: currentWidth,
+                });
             }
+            else if ((newPos === 'left' || newPos === 'right') && this.state.position === 'bottom') {
+                this.setState({
+                    position: newPos,
+                    editorHeight: undefined,
+                });
+            }
+            else if (newPos === 'bottom' && (this.state.position === 'left' || this.state.position === 'right')) {
+                this.setState({
+                    position: newPos,
+                    editorWidth: undefined,
+                });
+            }
+        };
+        this.startResizing = (e) => {
+            window.addEventListener('mousemove', this.resize);
+            window.addEventListener('mouseup', this.stopResizing);
+        };
+        this.resize = (e) => {
+            const { position } = this.state;
+            if (position === 'right') {
+                this.setState({ editorWidth: window.innerWidth - e.clientX });
+            }
+            else if (position === 'left') {
+                this.setState({ editorWidth: e.clientX });
+            }
+            else if (position === 'bottom') {
+                this.setState({ editorHeight: window.innerHeight - e.clientY });
+            }
+        };
+        this.stopResizing = () => {
+            window.removeEventListener('mousemove', this.resize);
+            window.removeEventListener('mouseup', this.stopResizing);
         };
         if (!(props.lexicon instanceof Lexicon_1.Lexicon))
             throw new Error(`'lexicon' prop should be a Lexicon object, but it is: ${JSON.stringify(props.lexicon).substring(0, 50)}`);
@@ -105,6 +141,8 @@ class EditWrapper extends react_1.default.Component {
             unsavedChanges: new Map(),
             savingState: SavingState.NoChanges,
             position: 'left',
+            editorWidth: undefined,
+            editorHeight: undefined,
         };
     }
     getToken() {
@@ -126,7 +164,7 @@ class EditWrapper extends react_1.default.Component {
         return result;
     }
     render() {
-        const { component, children, OptionalLogoutButton } = this.props, { isEditorVisible, lexicon } = this.state;
+        const { component, children, OptionalLogoutButton } = this.props, { isEditorVisible, lexicon, editorWidth, editorHeight } = this.state;
         // Did the caller pass just a component, or a [component, {with: props}]?
         let renderedComponent = null;
         let renderedComponentProps = {};
@@ -179,7 +217,7 @@ class EditWrapper extends react_1.default.Component {
                 react_1.default.createElement("div", { className: 'buttons' },
                     react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Lexicon' : 'Edit Lexicon'),
                     OptionalLogoutButton && react_1.default.createElement(OptionalLogoutButton, null)),
-                react_1.default.createElement("div", { className: `wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}` },
+                react_1.default.createElement("div", { className: `wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`, style: { width: editorWidth, height: editorHeight } },
                     react_1.default.createElement("hgroup", null,
                         react_1.default.createElement("h2", { className: "wrapper-heading" }, "Lexicon"),
                         react_1.default.createElement("div", { className: "position" }, [['left', '\u25e7'],
@@ -197,7 +235,8 @@ class EditWrapper extends react_1.default.Component {
                             index_1.VERSION,
                             " "),
                         react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText)),
-                    this.state.savingState == SavingState.Error && react_1.default.createElement("p", { className: "error-message" }, this.state.errorMessage))));
+                    this.state.savingState == SavingState.Error && react_1.default.createElement("p", { className: "error-message" }, this.state.errorMessage),
+                    react_1.default.createElement("div", { className: "resizer", onMouseDown: this.startResizing }))));
         }
     }
 }

@@ -158,4 +158,13 @@
       font-size: 14px;
     }
   }
+  .resizer {
+    width: 10px;
+    height: 10px;
+    background: #333;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    cursor: se-resize; /* South-East resize cursor */
+  }
 }
