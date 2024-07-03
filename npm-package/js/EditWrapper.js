@@ -217,7 +217,7 @@ class EditWrapper extends react_1.default.Component {
                 react_1.default.createElement("div", { className: 'buttons' },
                     react_1.default.createElement("button", { onClick: this.toggleEditor, className: "edit-wrapper-button" }, isEditorVisible ? 'Hide Lexicon' : 'Edit Lexicon'),
                     OptionalLogoutButton && react_1.default.createElement(OptionalLogoutButton, null)),
-                react_1.default.createElement("div", { className: `wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`, style: { width: editorWidth, height: editorHeight } },
+                react_1.default.createElement("div", { className: `wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`, style: { width: this.state.editorWidth, height: this.state.editorHeight } },
                     react_1.default.createElement("hgroup", null,
                         react_1.default.createElement("h2", { className: "wrapper-heading" }, "Lexicon"),
                         react_1.default.createElement("div", { className: "position" }, [['left', '\u25e7'],
@@ -236,7 +236,7 @@ class EditWrapper extends react_1.default.Component {
                             " "),
                         react_1.default.createElement("button", { onClick: this.saveChanges, disabled: !buttonEnabled }, buttonText)),
                     this.state.savingState == SavingState.Error && react_1.default.createElement("p", { className: "error-message" }, this.state.errorMessage),
-                    react_1.default.createElement("div", { className: "resizer", onMouseDown: this.startResizing }))));
+                    react_1.default.createElement("div", { className: `resizer resizer-${this.state.position}`, onMouseDown: this.startResizing }))));
         }
     }
 }

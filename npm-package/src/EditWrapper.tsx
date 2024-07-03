@@ -281,7 +281,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
           { /* Content Editor on the side */ }
           <div
             className={`wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`}
-            style={{ width: editorWidth, height: editorHeight }}
+            style={{ width: this.state.editorWidth, height: this.state.editorHeight }}
           >
             <hgroup>
               <h2 className="wrapper-heading">Lexicon</h2>
@@ -315,7 +315,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
               </button>
             </div>
             { this.state.savingState == SavingState.Error && <p className="error-message">{this.state.errorMessage}</p> }
-            <div className="resizer" onMouseDown={this.startResizing}></div>
+            <div className={`resizer resizer-${this.state.position}`} onMouseDown={this.startResizing}></div>
           </div>
         </div>
       );
