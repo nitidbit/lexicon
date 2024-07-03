@@ -129,6 +129,9 @@
           background-color: $clickable;
           border-radius: 20px;
         }
+        button {
+          display: none;
+        }
       }
     }
 
