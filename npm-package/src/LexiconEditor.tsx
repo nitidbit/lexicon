@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, FC } from 'react';
 
 import '../styles/LexiconEditorStyles.scss';
 import { Lexicon } from './Lexicon';
@@ -48,13 +48,31 @@ interface FieldProps {
   onChange: HtmlOnChangeCallback;
 }
 
-const Field = ({ localPath, value, onChange }: FieldProps) => (
-  <textarea
-    name={localPath}
-    value={value}
-    onChange={onChange}
-  />
-);
+function Field({ localPath, value, onChange }: FieldProps) {
+  const [height, setHeight] = useState('auto');
+  const textareaRef = useRef<HTMLTextAreaElement>();
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      setHeight(`${textareaRef.current.scrollHeight}px`);
+    }
+  }, [value]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setHeight('auto'); // Reset height to auto to recalculate
+    onChange(event);
+  };
+
+  return (
+    <textarea
+      ref={textareaRef}
+      name={localPath}
+      value={value}
+      onChange={handleChange}
+      style={{ height }}
+    />
+  );
+};
 
 export interface LexiconEditorProps {
   lexicon: Lexicon;
