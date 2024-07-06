@@ -37,20 +37,46 @@ const FormRow = (props) => (react_1.default.createElement("div", { id: "FormRow"
         react_1.default.createElement("span", { className: "label" }, props.label),
         props.children)));
 function Field({ localPath, value, onChange }) {
-    const [height, setHeight] = (0, react_1.useState)('auto');
-    const textareaRef = (0, react_1.useRef)();
+    const [isExpanded, setIsExpanded] = (0, react_1.useState)(false);
+    const textareaRef = (0, react_1.useRef)(null);
+    const timeoutRef = (0, react_1.useRef)(null);
     (0, react_1.useEffect)(() => {
-        if (textareaRef.current) {
-            setHeight(`${textareaRef.current.scrollHeight}px`);
+        if (textareaRef.current && isExpanded) {
+            adjustHeight();
         }
-    }, [value]);
-    const handleChange = (event) => {
-        setHeight('auto'); // Reset height to auto to recalculate
-        onChange(event);
+    }, [value, isExpanded]);
+    const adjustHeight = () => {
+        if (textareaRef.current) {
+            textareaRef.current.style.height = 'auto';
+            const scrollHeight = textareaRef.current.scrollHeight;
+            const maxHeight = window.innerHeight * 0.8;
+            textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+        }
     };
-    return (react_1.default.createElement("textarea", { ref: textareaRef, name: localPath, value: value, onChange: handleChange, style: { height } }));
+    const handleFocus = () => {
+        setIsExpanded(true);
+    };
+    const handleBlur = () => {
+        setIsExpanded(false);
+        if (textareaRef.current) {
+            textareaRef.current.style.height = '1.5em';
+        }
+    };
+    const handleChange = (event) => {
+        onChange(event);
+        // Debounce the height adjustment
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+        timeoutRef.current = window.setTimeout(adjustHeight, 10);
+    };
+    return (react_1.default.createElement("textarea", { ref: textareaRef, name: localPath, value: value, onChange: handleChange, onFocus: handleFocus, onBlur: handleBlur, style: {
+            height: isExpanded ? 'auto' : '1.5em',
+            overflow: isExpanded ? 'auto' : 'hidden',
+            resize: 'none',
+            transition: 'height 0.1s',
+        } }));
 }
-;
 class LexiconEditor extends react_1.default.Component {
     constructor() {
         super(...arguments);

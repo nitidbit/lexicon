@@ -49,18 +49,44 @@ interface FieldProps {
 }
 
 function Field({ localPath, value, onChange }: FieldProps) {
-  const [height, setHeight] = useState('auto');
-  const textareaRef = useRef<HTMLTextAreaElement>();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (textareaRef.current) {
-      setHeight(`${textareaRef.current.scrollHeight}px`);
+    if (textareaRef.current && isExpanded) {
+      adjustHeight();
     }
-  }, [value]);
+  }, [value, isExpanded]);
+
+  const adjustHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const maxHeight = window.innerHeight * 0.8;
+      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+    }
+  };
+
+  const handleFocus = () => {
+    setIsExpanded(true);
+  };
+
+  const handleBlur = () => {
+    setIsExpanded(false);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = '1.5em';
+    }
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setHeight('auto'); // Reset height to auto to recalculate
     onChange(event);
+
+    // Debounce the height adjustment
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = window.setTimeout(adjustHeight, 10);
   };
 
   return (
@@ -69,10 +95,17 @@ function Field({ localPath, value, onChange }: FieldProps) {
       name={localPath}
       value={value}
       onChange={handleChange}
-      style={{ height }}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      style={{
+        height: isExpanded ? 'auto' : '1.5em',
+        overflow: isExpanded ? 'auto' : 'hidden',
+        resize: 'none',
+        transition: 'height 0.1s',
+      }}
     />
   );
-};
+}
 
 export interface LexiconEditorProps {
   lexicon: Lexicon;
