@@ -45,6 +45,20 @@ function Field({ localPath, value, onChange }) {
             adjustHeight();
         }
     }, [value, isExpanded]);
+    (0, react_1.useEffect)(() => {
+        const handleGlobalClick = (e) => {
+            if (isExpanded && textareaRef.current && !textareaRef.current.contains(e.target)) {
+                const clickedElement = e.target;
+                if (clickedElement.tagName === 'TEXTAREA') {
+                    setIsExpanded(false);
+                }
+            }
+        };
+        document.addEventListener('mousedown', handleGlobalClick);
+        return () => {
+            document.removeEventListener('mousedown', handleGlobalClick);
+        };
+    }, [isExpanded]);
     const adjustHeight = () => {
         if (textareaRef.current) {
             textareaRef.current.style.height = 'auto';
@@ -56,21 +70,14 @@ function Field({ localPath, value, onChange }) {
     const handleFocus = () => {
         setIsExpanded(true);
     };
-    const handleBlur = () => {
-        setIsExpanded(false);
-        if (textareaRef.current) {
-            textareaRef.current.style.height = '1.5em';
-        }
-    };
     const handleChange = (event) => {
         onChange(event);
-        // Debounce the height adjustment
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
         timeoutRef.current = window.setTimeout(adjustHeight, 10);
     };
-    return (react_1.default.createElement("textarea", { ref: textareaRef, name: localPath, value: value, onChange: handleChange, onFocus: handleFocus, onBlur: handleBlur, style: {
+    return (react_1.default.createElement("textarea", { ref: textareaRef, name: localPath, value: value, onChange: handleChange, onFocus: handleFocus, style: {
             height: isExpanded ? 'auto' : '1.5em',
             overflow: isExpanded ? 'auto' : 'hidden',
             resize: 'none',

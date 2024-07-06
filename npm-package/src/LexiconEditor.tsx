@@ -59,6 +59,23 @@ function Field({ localPath, value, onChange }: FieldProps) {
     }
   }, [value, isExpanded]);
 
+  useEffect(() => {
+    const handleGlobalClick = (e: MouseEvent) => {
+      if (isExpanded && textareaRef.current && !textareaRef.current.contains(e.target as Node)) {
+        const clickedElement = e.target as HTMLElement;
+        if (clickedElement.tagName === 'TEXTAREA') {
+          setIsExpanded(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleGlobalClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleGlobalClick);
+    };
+  }, [isExpanded]);
+
   const adjustHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -72,17 +89,9 @@ function Field({ localPath, value, onChange }: FieldProps) {
     setIsExpanded(true);
   };
 
-  const handleBlur = () => {
-    setIsExpanded(false);
-    if (textareaRef.current) {
-      textareaRef.current.style.height = '1.5em';
-    }
-  };
-
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event);
 
-    // Debounce the height adjustment
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -96,7 +105,6 @@ function Field({ localPath, value, onChange }: FieldProps) {
       value={value}
       onChange={handleChange}
       onFocus={handleFocus}
-      onBlur={handleBlur}
       style={{
         height: isExpanded ? 'auto' : '1.5em',
         overflow: isExpanded ? 'auto' : 'hidden',
