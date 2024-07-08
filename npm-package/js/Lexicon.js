@@ -28,6 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Lexicon = void 0;
 const isString_1 = __importDefault(require("lodash/isString"));
+const isArray_1 = __importDefault(require("lodash/isArray"));
 const isUndefined_1 = __importDefault(require("lodash/isUndefined"));
 const isNil_1 = __importDefault(require("lodash/isNil"));
 const cloneDeepWith_1 = __importDefault(require("lodash/cloneDeepWith"));
@@ -75,8 +76,9 @@ class Lexicon {
     addSubLexicon(subLexicon, branchKey) { this.addBranch(subLexicon, branchKey); }
     /*
        Return a value from the Lexicon, in the current locale.
-       If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
+       If you pass 'templateSubsitutions', and the value is a string, then they are inserted into your string or array,
           e.g. "hello #{name}" -> "hello Winston"
+          "["hello #{name}"] -> ["hello Winston"]"
     */
     get(keyPath, templateSubstitutions) {
         if ((0, isNil_1.default)(keyPath))
@@ -89,10 +91,16 @@ class Lexicon {
             }
         }
         let val = info.value;
-        if ((0, isString_1.default)(val) && !(0, isUndefined_1.default)(templateSubstitutions)) {
+        if ((0, isArray_1.default)(val) && !(0, isUndefined_1.default)(templateSubstitutions)) {
+            val = this.interpolateArray(val, templateSubstitutions);
+        }
+        else if ((0, isString_1.default)(val) && !(0, isUndefined_1.default)(templateSubstitutions)) {
             val = (0, util_1.evaluateTemplate)(val, templateSubstitutions);
         }
         return val;
+    }
+    interpolateArray(templateArray, params) {
+        return templateArray.map(item => (0, util_1.evaluateTemplate)(item, params));
     }
     /*
      * Gets value, but if the value is not found, return 'undefined'. I.e. don't roll over to default

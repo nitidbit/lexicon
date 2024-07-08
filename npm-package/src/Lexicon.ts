@@ -1,4 +1,5 @@
 import isString from 'lodash/isString';
+import isArray from 'lodash/isArray';
 import isUndefined from 'lodash/isUndefined';
 import isNil from 'lodash/isNil';
 import cloneDeepWith from 'lodash/cloneDeepWith';
@@ -72,8 +73,9 @@ export class Lexicon {
 
   /*
      Return a value from the Lexicon, in the current locale.
-     If you pass 'templateSubsitutions', and the value is a string, then they they are inserted into your string,
+     If you pass 'templateSubsitutions', and the value is a string, then they are inserted into your string or array,
         e.g. "hello #{name}" -> "hello Winston"
+        "["hello #{name}"] -> ["hello Winston"]"
   */
   get(keyPath: KeyPath, templateSubstitutions?: object): any {
     if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
@@ -90,11 +92,17 @@ export class Lexicon {
 
     let val:any = info.value;
 
-    if (isString(val) && !isUndefined(templateSubstitutions)) {
-      val = evaluateTemplate(val as string, templateSubstitutions);
+    if (isArray(val) && !isUndefined(templateSubstitutions)) {
+      val = this.interpolateArray(val, templateSubstitutions);
+    } else if (isString(val) && !isUndefined(templateSubstitutions)) {
+        val = evaluateTemplate(val as string, templateSubstitutions);
     }
 
     return val;
+  }
+
+  interpolateArray(templateArray: string[], params: object): string[] {
+    return templateArray.map(item => evaluateTemplate(item, params));
   }
 
   /*

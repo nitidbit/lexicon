@@ -7,6 +7,8 @@ describe('Lexicon module', () => {
     const subLex = new Lexicon({
         en: { subFoo: 'SUB FOO' }}, 'en', 'subLex.json');
 
+    let color:string = "";
+
     const lexObj = {
       en: {
         foo: 'bar',
@@ -22,6 +24,11 @@ describe('Lexicon module', () => {
         template: '\\#{escaped} \\\\ #{foo} #{bar.baz} #{{{manyBrackets}}}',
         onlyExistsInEnglish: 'EN only',
         subLex: subLex,
+        string: 'this is a #{color} string',
+        array: [
+          'this is the first element in #{color}',
+          'this is the second element',
+        ]
       },
       es: {
         foo: 'bar_es',
@@ -88,10 +95,22 @@ describe('Lexicon module', () => {
         bar: { baz: 'baz' },
         '{{manyBrackets}}': 'qux'
       })).toEqual('#{escaped} \\ foo baz qux');
-    })
+    });
 
     test('works with Lexicons inside Lexicons', () => {
       expect(lex.get('subLex.subFoo')).toEqual('SUB FOO');
+    });
+
+    test('returns correct values for "string" key', () => {
+      expect(lex.get('string', { color: 'blue'})).toEqual('this is a blue string');
+    });
+
+    test('interpolates array elements correctly', () => {
+      const result = lex.get('array', { color: 'blue' });
+      expect(result).toEqual([
+          'this is the first element in blue',
+          'this is the second element'
+      ]);
     });
   });
 
@@ -168,6 +187,9 @@ describe('Lexicon module', () => {
         'template',
         'onlyExistsInEnglish',
         'subLex.subFoo',
+        'string',
+        'array.0',
+        'array.1'
       ]);
     });
 
