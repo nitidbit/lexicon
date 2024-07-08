@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, FC } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import '../styles/LexiconEditorStyles.scss';
 import { Lexicon } from './Lexicon';

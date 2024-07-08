@@ -281,7 +281,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
           { /* Content Editor on the side */ }
           <div
             className={`wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`}
-            style={{ width: this.state.editorWidth, height: this.state.editorHeight }}
+            style={{ width: editorWidth, height: editorHeight }}
           >
             <hgroup>
               <h2 className="wrapper-heading">Lexicon</h2>
@@ -310,7 +310,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
             />
             <div className="save-box">
               <span> v{VERSION} </span>
-              <button onClick={this.saveChanges} disabled={!buttonEnabled}>
+              <button onClick={this.saveChanges} disabled={ !buttonEnabled }>
                 {buttonText}
               </button>
             </div>
