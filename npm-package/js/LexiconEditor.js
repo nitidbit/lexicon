@@ -80,7 +80,6 @@ function Field({ localPath, value, onChange }) {
     return (react_1.default.createElement("textarea", { ref: textareaRef, name: localPath, value: value, onChange: handleChange, onFocus: handleFocus, style: {
             height: isExpanded ? 'auto' : '1.5em',
             overflow: isExpanded ? 'auto' : 'hidden',
-            resize: 'none',
             transition: 'height 0.1s',
         } }));
 }

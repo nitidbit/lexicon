@@ -108,7 +108,6 @@ function Field({ localPath, value, onChange }: FieldProps) {
       style={{
         height: isExpanded ? 'auto' : '1.5em',
         overflow: isExpanded ? 'auto' : 'hidden',
-        resize: 'none',
         transition: 'height 0.1s',
       }}
     />
