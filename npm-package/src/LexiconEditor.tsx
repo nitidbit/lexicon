@@ -59,23 +59,6 @@ function Field({ localPath, value, onChange }: FieldProps) {
     }
   }, [value, isExpanded]);
 
-  useEffect(() => {
-    const handleGlobalClick = (e: MouseEvent) => {
-      if (isExpanded && textareaRef.current && !textareaRef.current.contains(e.target as Node)) {
-        const clickedElement = e.target as HTMLElement;
-        if (clickedElement.tagName === 'TEXTAREA') {
-          setIsExpanded(false);
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleGlobalClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleGlobalClick);
-    };
-  }, [isExpanded]);
-
   const adjustHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
