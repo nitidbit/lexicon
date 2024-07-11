@@ -40,6 +40,8 @@ interface EditWrapperState {
     savingState: SavingState;
     errorMessage?: string;
     position: 'left' | 'bottom' | 'right';
+    editorWidth: number;
+    editorHeight: number;
 }
 export default class EditWrapper extends React.Component<EditWrapperProps, EditWrapperState> {
     constructor(props: EditWrapperProps);
@@ -50,6 +52,9 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     switchLocale: (newLocale: string) => void;
     saveChanges: () => void;
     changePosition: (e: React.MouseEvent<HTMLInputElement>) => void;
+    startResizing: (e: React.MouseEvent) => void;
+    resize: (e: MouseEvent) => void;
+    stopResizing: () => void;
     render(): React.JSX.Element;
 }
 export {};

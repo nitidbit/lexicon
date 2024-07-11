@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import '../styles/LexiconEditorStyles.scss';
 import { Lexicon } from './Lexicon';
@@ -48,13 +48,54 @@ interface FieldProps {
   onChange: HtmlOnChangeCallback;
 }
 
-const Field = ({ localPath, value, onChange }: FieldProps) => (
-  <textarea
-    name={localPath}
-    value={value}
-    onChange={onChange}
-  />
-);
+function Field({ localPath, value, onChange }: FieldProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const timeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (textareaRef.current && isExpanded) {
+      adjustHeight();
+    }
+  }, [value, isExpanded]);
+
+  const adjustHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const maxHeight = window.innerHeight * 0.8;
+      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+    }
+  };
+
+  const handleFocus = () => {
+    setIsExpanded(true);
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChange(event);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = window.setTimeout(adjustHeight, 10);
+  };
+
+  return (
+    <textarea
+      ref={textareaRef}
+      name={localPath}
+      value={value}
+      onChange={handleChange}
+      onFocus={handleFocus}
+      style={{
+        height: isExpanded ? 'auto' : '1.5em',
+        overflow: isExpanded ? 'auto' : 'hidden',
+        transition: 'height 0.1s',
+      }}
+    />
+  );
+}
 
 export interface LexiconEditorProps {
   lexicon: Lexicon;

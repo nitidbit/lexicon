@@ -39,6 +39,8 @@ interface EditWrapperState {
   savingState: SavingState;
   errorMessage?: string;
   position: 'left' | 'bottom' | 'right';
+  editorWidth: number;
+  editorHeight: number;
 }
 
 interface LexiconAPIResponse {
@@ -71,6 +73,8 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       unsavedChanges: new Map(),
       savingState: SavingState.NoChanges,
       position: 'left',
+      editorWidth: undefined,
+      editorHeight: undefined,
     };
   }
 
@@ -165,16 +169,52 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
   }
 
   changePosition = (e: React.MouseEvent<HTMLInputElement>) => {
-    const newPos = (e.target as HTMLInputElement).name;
+    const newPos = e.currentTarget.name;
 
-    if (newPos == 'left' || newPos == 'bottom' || newPos == 'right') {
-      this.setState({ position: newPos });
+    if ((newPos === 'left' || newPos === 'right') && this.state.position !== 'bottom') {
+      const currentWidth = this.state.editorWidth;
+      this.setState({
+        position: newPos,
+        editorWidth: currentWidth,
+      });
+    } else if ((newPos === 'left' || newPos === 'right') && this.state.position === 'bottom') {
+      this.setState({
+        position: newPos,
+        editorHeight: undefined,
+      });
+    } else if (newPos === 'bottom' && (this.state.position === 'left' || this.state.position === 'right')) {
+      this.setState({
+        position: newPos,
+        editorWidth: undefined,
+      });
     }
+  }
+
+  startResizing = (e: React.MouseEvent) => {
+    window.addEventListener('mousemove', this.resize);
+    window.addEventListener('mouseup', this.stopResizing);
+  }
+
+  resize = (e: MouseEvent) => {
+    const { position } = this.state;
+
+    if (position === 'right') {
+      this.setState({ editorWidth: window.innerWidth - e.clientX });
+    } else if (position === 'left') {
+      this.setState({ editorWidth: e.clientX });
+    } else if (position === 'bottom') {
+      this.setState({ editorHeight: window.innerHeight - e.clientY });
+    }
+  }
+
+  stopResizing = () => {
+    window.removeEventListener('mousemove', this.resize);
+    window.removeEventListener('mouseup', this.stopResizing);
   }
 
   render() {
     const { component, children, OptionalLogoutButton } = this.props,
-      { isEditorVisible, lexicon } = this.state;
+      { isEditorVisible, lexicon, editorWidth, editorHeight } = this.state;
 
     // Did the caller pass just a component, or a [component, {with: props}]?
     let renderedComponent = null;
@@ -186,7 +226,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       renderedComponent = component;
     }
 
-    if (! this.allowEditing()) {
+    if (!this.allowEditing()) {
       return React.createElement(renderedComponent, { lexicon, ...renderedComponentProps }, children);
 
     } else {
@@ -239,7 +279,10 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
           </div>
 
           { /* Content Editor on the side */ }
-          <div className={`wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`}>
+          <div
+            className={`wrapped-lexicon-editor docked-${this.state.position}${this.state.isEditorVisible ? ' is-visible' : ''}`}
+            style={{ width: editorWidth, height: editorHeight }}
+          >
             <hgroup>
               <h2 className="wrapper-heading">Lexicon</h2>
 
@@ -272,6 +315,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
               </button>
             </div>
             { this.state.savingState == SavingState.Error && <p className="error-message">{this.state.errorMessage}</p> }
+            <div className={`resizer resizer-${this.state.position}`} onMouseDown={this.startResizing}></div>
           </div>
         </div>
       );

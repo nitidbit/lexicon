@@ -14,7 +14,8 @@
   "scripts": {
     "test": "jest --verbose --no-watchman",
     "build": "tsc",
-    "build:watch": "tsc --watch --preserveWatchOutput"
+    "build:watch": "tsc --watch --preserveWatchOutput",
+    "clean": "rm -rf js"
   },
   "jest": {
     "roots": [
@@ -39,6 +40,7 @@
     "typescript": "^5.5.2"
   },
   "peerDependencies": {
-    "react": "^18.3.1"
+    "react": "18.x",
+    "react-dom": "18.x"
   }
 }
