@@ -1,6 +1,6 @@
 {
   "name": "@nitidbit/lexicon",
-  "version": "2.12.0",
+  "version": "2.12.2",
   "description": "Nitid Lexicon Library for text-based content management via web UI",
   "main": "js/index.js",
   "typings": "js/index",
