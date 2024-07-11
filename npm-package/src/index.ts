@@ -1,11 +1,15 @@
 export { Lexicon } from "./Lexicon";
 export { default as EditWrapper } from "./EditWrapper";
 
-export const VERSION = "2.11.5";
+export const VERSION = "2.12.0";
 
 /*
   Change History - API changes since last version
 
+  v2.12.0 - Updates to editor for better editing experience
+    https://app.shortcut.com/lexicon/story/2350/drag-lexicon-editor-to-expand
+    https://app.shortcut.com/lexicon/story/2426/var-substitution-in-array
+    https://app.shortcut.com/lexicon/story/2348/make-a-test-app-in-lexicon-repo-where-we-can-start-experimenting
   v2.11.5 - go back to lodash
   v2.11.4 - DID NOT WORK--use lodash-es so we can compile on Render.com but we still reduce package size.
   v2.11.3 - Up to react18 in peer dependency

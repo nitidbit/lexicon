@@ -61,7 +61,7 @@ Right before you `git commit` and `npm publish`, Build the JS ouput before you c
 available to people using the package. This is already done if you've been running `npm run watch`
 
     cd npm-package
-    npm run tsc
+    npm run build
     npm publish
     VER='x.y.x'     # use actual numbers
     git add . && git commit -m "Version $VER"
