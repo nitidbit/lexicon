@@ -4,7 +4,7 @@ import { Lexicon, EditWrapper } from '../../../npm-package/src';
 import "./DemoComponent.scss";
 import demoStrings from "./DemoComponent.json";
 
-const demoLexicon = new Lexicon(demoStrings, "en", "server/app/javascript/DemoComponentStrings.json")
+const demoLexicon = new Lexicon(demoStrings, "en", "app/javascript/DemoComponent.json")
 
 type FaqList = [ { question: String, answer: String } ]
 
@@ -37,7 +37,7 @@ function DemoComponent() {
   )
 }
 
-const UPDATE_URL = "localhost:3000/update"
+const UPDATE_URL = "update"
 
 function EditableDemoComponent(props) {
   return (
