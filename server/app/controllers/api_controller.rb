@@ -37,6 +37,10 @@ class ApiController < ApplicationController
   end
 
   def self.cors_friendly_origin(origin_url)
+    if origin_url.start_with?('/')
+      origin_url = "#{URI(Settings.fetch(:APP_URL))}#{origin_url}"
+    end
+
     uri = URI(origin_url)
     port = if [80, 443].include? uri.port
              ''
