@@ -51,8 +51,11 @@ class ApiController < ApplicationController
     full_host = uri.host
     if (uri.host != 'localhost')
       domain = PublicSuffix.parse(uri.host).domain
-      return "https://www.#{domain}"
-
+      if uri.host.start_with?('dev-') || uri.host.start_with?('staging-') || uri.host.start_with?('staging.')
+        return "#{uri.scheme}://#{uri.host}"
+      else
+        return "https://www.#{domain}"
+      end
     else
       return "#{uri.scheme}://#{full_host}#{port}"
     end
