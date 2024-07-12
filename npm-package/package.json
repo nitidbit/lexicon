@@ -37,7 +37,9 @@
     "jest": "^24.8.0",
     "jest-cli": "^24.8.0",
     "ts-jest": "^24.0.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "react": "file:../server/node_modules/react",
+    "react-dom": "file:../server/node_modules/react-dom"
   },
   "peerDependencies": {
     "react": "18.x",

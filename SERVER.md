@@ -54,7 +54,6 @@ Developer Setup
     cd (lexicon proj folder)/server
     bundle
     npm i
-    npm link  ../npm-package/node_modules/react # workaround issue with two copies of React
     rails db:create db:schema:load db:test:prepare db:seed
     rspec
     ./runit.sh
