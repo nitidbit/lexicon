@@ -37,9 +37,6 @@ class ApiController < ApplicationController
   end
 
   def self.cors_friendly_origin(origin_url)
-    # if origin_url.start_with?('/')
-    #   origin_url = "#{URI(Settings.fetch(:APP_URL))}#{origin_url}"
-    # end
     puts "this is the value of origin_url: #{origin_url}"
     uri = URI(origin_url)
     puts "this is the value of uri: #{uri}"
@@ -53,12 +50,11 @@ class ApiController < ApplicationController
     puts "this is the value of full_host: #{full_host}"
     if (uri.host != 'localhost')
       domain = PublicSuffix.parse(uri.host).domain
-      # if uri.host.start_with?('dev') || uri.host.start_with?('staging')
-      #   return "#{uri.scheme}://#{uri.host}"
-      # else
-      #   return "https://www.#{domain}"
-      # end
+      puts "this is the value of the if condition's return: https://www.#{domain}"
+      return "https://www.#{domain}"
+
     else
+      puts "this is the value of the else condition's return: #{uri.scheme}://#{full_host}#{port}"
       return "#{uri.scheme}://#{full_host}#{port}"
     end
   end

@@ -9,7 +9,7 @@ foo_user = User.find_by( email: 'foo@nitidbit.com')
 
 if ! ClientApp.find_by(name: 'Lexicon React Demo')
   puts ClientApp.create(name: 'Lexicon React Demo',
-                   app_url: '/demo',
+                   app_url: 'http://localhost:3000/demo',
                    adapter: 'github',
                    github_repo: 'nitidbit/lexicon',
                    git_branch: 'lexicon-test',
