@@ -37,28 +37,14 @@ class ApiController < ApplicationController
   end
 
   def self.cors_friendly_origin(origin_url)
-    puts "this is the value of origin_url: #{origin_url}"
     uri = URI(origin_url)
-    puts "this is the value of uri: #{uri}"
-    port = if [80, 443].include? uri.port
-             ''
-           else
-             ":#{uri.port}"
-           end
 
-    full_host = uri.host
-    puts "this is the value of full_host: #{full_host}"
-    # if (uri.host != 'localhost')
-    #   domain = PublicSuffix.parse(uri.host).domain
-    #   puts "this is the value of the if condition's return: https://www.#{domain}"
-    #   return "https://www.#{domain}"
+    if (uri.host != 'localhost')
+      return "https://#{uri.host}"
 
-    # else
-    #   puts "this is the value of the else condition's return: #{uri.scheme}://#{full_host}#{port}"
-    #   return "#{uri.scheme}://#{full_host}#{port}"
-    # end
-    puts "this is the value of the else condition's return: #{uri.scheme}://#{full_host}#{port}"
-    return "#{uri.scheme}://#{full_host}#{port}"
+    else
+      return "#{uri.scheme}://#{uri.host}:#{uri.port}"
+    end
   end
 
   # /api/cookie_auth_update -- This endpoint updates a Lexicon file, but the user is authenticated
