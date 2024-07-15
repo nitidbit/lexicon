@@ -48,15 +48,17 @@ class ApiController < ApplicationController
 
     full_host = uri.host
     puts "this is the value of full_host: #{full_host}"
-    if (uri.host != 'localhost')
-      domain = PublicSuffix.parse(uri.host).domain
-      puts "this is the value of the if condition's return: https://www.#{domain}"
-      return "https://www.#{domain}"
+    # if (uri.host != 'localhost')
+    #   domain = PublicSuffix.parse(uri.host).domain
+    #   puts "this is the value of the if condition's return: https://www.#{domain}"
+    #   return "https://www.#{domain}"
 
-    else
-      puts "this is the value of the else condition's return: #{uri.scheme}://#{full_host}#{port}"
-      return "#{uri.scheme}://#{full_host}#{port}"
-    end
+    # else
+    #   puts "this is the value of the else condition's return: #{uri.scheme}://#{full_host}#{port}"
+    #   return "#{uri.scheme}://#{full_host}#{port}"
+    # end
+    puts "this is the value of the else condition's return: #{uri.scheme}://#{full_host}#{port}"
+    return "#{uri.scheme}://#{full_host}#{port}"
   end
 
   # /api/cookie_auth_update -- This endpoint updates a Lexicon file, but the user is authenticated
