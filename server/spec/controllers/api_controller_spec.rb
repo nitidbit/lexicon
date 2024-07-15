@@ -155,14 +155,19 @@ RSpec.describe ApiController, type: :controller do
   end
 
   describe '.cors_friendly_origin' do
-    it 'returns URL including port when the port is NOT the normal one' do
+    it 'returns URL including port when the server is localhost' do
       url = 'http://localhost:3000/mydir'
       expect(ApiController.cors_friendly_origin(url)).to eq('http://localhost:3000')
     end
 
-    it 'excludes port when the port IS the normal one' do
+    it 'excludes port when the host is NOT localhost' do
       url = 'https://lexicon.nitid.co/mydir'
       expect(ApiController.cors_friendly_origin(url)).to eq('https://www.nitid.co')
+    end
+
+    it 'keeps good URL for staging lexicon server' do
+      url = 'https://lexicon-staging.onrender.com/mydir'
+      expect(ApiController.cors_friendly_origin(url)).to eq('https://lexicon-staging.onrender.com')
     end
   end
 
