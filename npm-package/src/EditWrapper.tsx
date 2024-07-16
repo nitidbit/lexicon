@@ -212,11 +212,6 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     window.removeEventListener('mouseup', this.stopResizing);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    console.dir(prevProps);
-    console.dir(prevState);
-  }
-
   render() {
     const { component, children, OptionalLogoutButton } = this.props,
       { isEditorVisible, lexicon, editorWidth, editorHeight } = this.state;

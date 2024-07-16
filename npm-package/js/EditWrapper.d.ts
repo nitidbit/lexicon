@@ -55,7 +55,6 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
     startResizing: (e: React.MouseEvent) => void;
     resize: (e: MouseEvent) => void;
     stopResizing: () => void;
-    componentDidUpdate(prevProps: any, prevState: any): void;
     render(): React.JSX.Element;
 }
 export {};
