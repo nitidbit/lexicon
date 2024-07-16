@@ -2,16 +2,6 @@
   "en": {
     "title": "Testing page for Lexicon",
     "introduction": "Introduction - This page is to show Lexicon-Ruby in action. This part is written in Ruby/ERB",
-    "CookieAuthenticatedDemo": {
-      "title": "CookieAuthenticatedDemo",
-      "description": "This is a React component using Lexicon. Edited contents are updated live.\n",
-      "array_of_strings": [
-        "Common Lisp",
-        "Scheme",
-        "AutoLISP",
-        "Clojure"
-      ]
-    },
     "JwtAuthenticatedDemo": {
       "title": "JwtAuthenticatedDemo",
       "description": "This is the same Demo component, but it uses JWT headers to authenticate & save.\n",

@@ -30,24 +30,6 @@ let BlurbAndList = ({lexicon}) => (
 
 let LexiconJsVersion = () => <span className="LexiconJsVersion"> {VERSION} </span>;
 
-function CookieAuthenticatedDemo() {
-  const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-  return (
-    <div>
-
-      <AuthenticationStatus/>
-
-      <EditWrapper
-        lexicon={lexicon.subset('CookieAuthenticatedDemo')}
-        component={BlurbAndList}
-        allowEditing={true}
-        apiUpdateUrl="/cookie_auth_update"
-        extraHeaders={{ 'X-CSRF-Token': token }}
-      />
-    </div>
-  );
-}
-
 function JwtAuthenticatedDemo({apiUpdateUrl}) {
   console.log('JWT auth demo apiUrlupdate=', apiUpdateUrl)
   return (
@@ -93,7 +75,6 @@ function replacePlaceholders(selector, component) {
 
 // Install cpmponents when page loads
 document.addEventListener('DOMContentLoaded', () => {
-  replacePlaceholders('.CookieAuthenticatedDemo', CookieAuthenticatedDemo);
   replacePlaceholders('.JwtAuthenticatedDemo', JwtAuthenticatedDemo);
   replacePlaceholders('.CorsTester', CorsTester);
   replacePlaceholders('.LexiconJsVersion', LexiconJsVersion);
