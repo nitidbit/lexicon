@@ -163,6 +163,10 @@ class EditWrapper extends react_1.default.Component {
         }
         return result;
     }
+    componentDidUpdate(prevProps, prevState) {
+        console.dir(prevProps);
+        console.dir(prevState);
+    }
     render() {
         const { component, children, OptionalLogoutButton } = this.props, { isEditorVisible, lexicon, editorWidth, editorHeight } = this.state;
         // Did the caller pass just a component, or a [component, {with: props}]?
