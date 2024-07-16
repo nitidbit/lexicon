@@ -97,6 +97,26 @@ When you create an `EditWrapper`, you now need to tell it where to send changes.
 [Here is a diagram of how all the pieces of Lexicon fit together](LexiconComponents.png)
 
 
+Slack alerts when someone saves edits
+-------------------------------------
+A ClientApp can be configured to send a slack message when changes are saved to Git.
+
+Make a Slack Incoming Webhook
+  - go to Slack > (your workspace) > Tool & settings > Manage Apps > Custom Integrations
+  - Find or add the "Incoming Webhooks" integration. (Yes it's deprecated but still works as of 2024)
+  - Configure it to post to one of your channels
+  - At the end of the workflow, you'll have a "Webhook URL"
+Add the Slack Workflow URL to LexiconServer
+  - As an admin, Go to lexicon server
+  - admin > client apps > edit the app
+  - Set "Slack Workflow Url" to the Webhook URL from above
+Verify it works
+  - Make a small edit
+  - See the message appear in Slack. It should be something like:
+    User "___@example.com" on app https://myapp.com/myapp has changed Lexicon text:
+      "en.faq.0.answer" has changed to "___"
+
+
 Where are we using Lexicon and Lexicon-Server?
 ----------------------------------------------
 
