@@ -13,6 +13,7 @@
   },
   "scripts": {
     "test": "jest --verbose --no-watchman",
+    "test:watch": "jest --verbose --watch",
     "build": "tsc",
     "build:watch": "tsc --watch --preserveWatchOutput",
     "clean": "rm -rf js"
@@ -23,7 +24,11 @@
     ],
     "transform": {
       "\\.tsx?$": "ts-jest"
-    }
+    },
+    "moduleNameMapper": {
+      "\\.(scss|css|jpg|png|gif)$": "<rootDir>/file.mock.js"
+    },
+    "testEnvironment": "jsdom"
   },
   "author": "Nitid Bit LLC",
   "license": "CC-BY-SA-4.0",
@@ -31,15 +36,18 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.15",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
+    "@types/jest": "^29",
     "@types/lodash-es": "^4.17.12",
-    "@types/react": "^16.8.22",
-    "jest": "^24.8.0",
-    "jest-cli": "^24.8.0",
-    "ts-jest": "^24.0.2",
-    "typescript": "^5.5.2",
+    "@types/react": "18.x",
+    "jest": "^29",
+    "jest-cli": "^29",
+    "jest-environment-jsdom": "^29.7.0",
     "react": "file:../server/node_modules/react",
-    "react-dom": "file:../server/node_modules/react-dom"
+    "react-dom": "file:../server/node_modules/react-dom",
+    "ts-jest": "^29",
+    "typescript": "^5.5.2"
   },
   "peerDependencies": {
     "react": "18.x",
