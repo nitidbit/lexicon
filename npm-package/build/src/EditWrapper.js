@@ -7,7 +7,7 @@ const react_1 = __importDefault(require("react"));
 const Lexicon_1 = require("./Lexicon");
 const index_1 = require("./index");
 const LexiconEditor_1 = require("./LexiconEditor");
-require("../styles/EditWrapperStyles.scss");
+require("./EditWrapperStyles.css");
 const util_1 = require("./util");
 var SavingState;
 (function (SavingState) {

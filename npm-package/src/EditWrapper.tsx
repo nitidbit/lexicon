@@ -3,7 +3,7 @@ import React, { ChangeEvent } from 'react';
 import { Lexicon } from './Lexicon';
 import { VERSION } from './index';
 import {LexiconEditor, OnChangeCallback} from './LexiconEditor';
-import '../styles/EditWrapperStyles.scss';
+import './EditWrapperStyles.css';
 import { getURLParameter } from './util';
 import {KeyPath, KeyPathString} from './collection';
 

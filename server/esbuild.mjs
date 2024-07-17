@@ -45,7 +45,7 @@ const pluginNotifyWhenBuilding = {
 const options = {
     entryPoints: await entryPoints(),
     bundle: true,
-    outdir: "app/assets/builds",
+    outdir: "builds",
     sourcemap: 'linked',
     plugins: [
       sassPlugin(),

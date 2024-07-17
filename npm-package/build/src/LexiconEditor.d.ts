@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/LexiconEditorStyles.scss';
+import './LexiconEditorStyles.css';
 import { Lexicon } from './Lexicon';
 import { KeyPath, KeyPathString } from './collection';
 export type OnChangeCallback = (change: {

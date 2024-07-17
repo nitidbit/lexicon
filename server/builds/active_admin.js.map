@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../app/javascript/active_admin.js"],
+  "sourcesContent": ["//= require active_admin/base\n//\nconsole.info('Loading: server/app/javascript/active_admin.js')\n"],
+  "mappings": ";;;;;;;;;;;;AAEA,UAAQ,KAAK,gDAAgD;",
+  "names": []
+}

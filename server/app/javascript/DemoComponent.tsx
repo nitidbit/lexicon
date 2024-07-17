@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { createRoot } from "react-dom/client";
-import { Lexicon, EditWrapper } from '../../../npm-package/src';
+import { Lexicon, EditWrapper } from '@nitidbit/lexicon'
 import "./DemoComponent.scss";
 import demoStrings from "./DemoComponent.json";
 

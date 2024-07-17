@@ -1,0 +1,254 @@
+#LexiconEditor {
+  font-family: "helvetica neue";
+  font-size: 14px;
+  text-align: left;
+  padding-right: 10px;
+  background: #ddd;
+  overflow-y: scroll;
+}
+#LexiconEditor h2 {
+  margin: 5px 0;
+  padding-left: 10px;
+  font-size: 16px;
+}
+#LexiconEditor #FormRow {
+  width: 100%;
+}
+#LexiconEditor #FormRow label {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+#LexiconEditor #FormRow label .label {
+  flex: 0 0;
+  font-weight: 300;
+  text-align: right;
+  padding-top: 2px;
+  padding-right: 5px;
+  min-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  direction: rtl;
+}
+#LexiconEditor #FormRow label input, #LexiconEditor #FormRow label textarea, #LexiconEditor #FormRow label select {
+  flex: 1;
+  display: block;
+  font-family: "helvetica neue";
+  font-weight: 400;
+  font-size: 14px;
+  width: 100%;
+  line-height: 1.5;
+  padding: 1px 5px;
+  box-sizing: border-box;
+  background: white;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+}
+#LexiconEditor #FormRow * {
+  flex: 1;
+}
+#LexiconEditor #QuestionAndAnswer {
+  display: flex;
+  flex-direction: column;
+}
+#LexiconEditor #UnknownInputType {
+  color: orangered;
+}
+#LexiconEditor #QuestionAndAnswerCollection .innerEditorBox {
+  display: flex;
+  flex-direction: row;
+}
+#LexiconEditor #QuestionAndAnswerCollection .innerEditorBox .numberTab {
+  min-width: 20px;
+  flex: 0;
+  padding: 4px;
+  margin: 1px;
+  border-radius: 3px;
+  box-sizing: border-box;
+  background: white;
+}
+
+.EditWrapper .buttons {
+  display: flex;
+  justify-content: space-between;
+}
+.EditWrapper .buttons button.edit-wrapper-button, .EditWrapper .buttons div.edit-wrapper-button {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+body.windows .EditWrapper .buttons button.edit-wrapper-button, body.windows .EditWrapper .buttons div.edit-wrapper-button {
+  font-family: "Lucida Sans Unicode", "Lucida", Verdana, Arial, sans-serif;
+}
+.EditWrapper .buttons button.edit-wrapper-button, .EditWrapper .buttons div.edit-wrapper-button {
+  font-style: normal;
+  text-decoration: none;
+  color: white;
+  background-color: #bfbfbf;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+}
+.EditWrapper .buttons button.edit-wrapper-button:hover:not(:disabled), .EditWrapper .buttons div.edit-wrapper-button:hover:not(:disabled) {
+  color: white;
+  background-color: #acce19;
+}
+.EditWrapper .buttons button.edit-wrapper-button:disabled, .EditWrapper .buttons div.edit-wrapper-button:disabled {
+  cursor: not-allowed;
+}
+.EditWrapper .wrapped-lexicon-editor {
+  position: fixed;
+  border-radius: 4px;
+  border: thin solid #404040;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  background-color: #ddd;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.1s visibility, 0.1s opacity, 0.1s position;
+}
+.EditWrapper .wrapped-lexicon-editor.is-visible {
+  visibility: visible;
+  opacity: 1;
+}
+.EditWrapper .wrapped-lexicon-editor.docked-left {
+  width: 30vw;
+  height: calc(100vh - 16px);
+  top: 8px;
+  left: 8px;
+}
+.EditWrapper .wrapped-lexicon-editor.docked-right {
+  width: 30vw;
+  height: calc(100vh - 16px);
+  top: 8px;
+  right: 8px;
+}
+.EditWrapper .wrapped-lexicon-editor.docked-bottom {
+  width: calc(100vw - 32px);
+  height: 30vh;
+  left: 8px;
+  bottom: 8px;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .wrapper-heading {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+body.windows .EditWrapper .wrapped-lexicon-editor hgroup .wrapper-heading {
+  font-family: "Lucida Sans Unicode", "Lucida", Verdana, Arial, sans-serif;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .wrapper-heading {
+  display: inline;
+  margin: 5px 0;
+  padding-left: 10px;
+  font-size: 16px;
+  flex: auto;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .position {
+  flex: 0 0 auto;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .position label {
+  color: #808080;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .position label.selected {
+  color: #404040;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .position label:hover {
+  background-color: #acce19;
+  border-radius: 20px;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .position label input {
+  display: none;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .close-btn {
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 8px;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .close-btn:hover {
+  background-color: #acce19;
+  border-radius: 20px;
+}
+.EditWrapper .wrapped-lexicon-editor hgroup .close-btn button {
+  display: none;
+}
+.EditWrapper .wrapped-lexicon-editor .LexiconEditor {
+  flex: 1;
+}
+.EditWrapper .wrapped-lexicon-editor .save-box {
+  flex: 0 0 auto;
+  text-align: right;
+}
+.EditWrapper .wrapped-lexicon-editor .save-box button {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+body.windows .EditWrapper .wrapped-lexicon-editor .save-box button {
+  font-family: "Lucida Sans Unicode", "Lucida", Verdana, Arial, sans-serif;
+}
+.EditWrapper .wrapped-lexicon-editor .save-box button {
+  font-style: normal;
+  text-decoration: none;
+  color: white;
+  background-color: #bfbfbf;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+}
+.EditWrapper .wrapped-lexicon-editor .save-box button:hover:not(:disabled) {
+  color: white;
+  background-color: #acce19;
+}
+.EditWrapper .wrapped-lexicon-editor .save-box button:disabled {
+  cursor: not-allowed;
+}
+.EditWrapper .wrapped-lexicon-editor .save-box button {
+  margin: 8px;
+  width: 200px;
+  background-color: #acce19;
+}
+.EditWrapper .wrapped-lexicon-editor .save-box button:disabled {
+  background-color: #bfbfbf;
+}
+.EditWrapper .wrapped-lexicon-editor .error-message {
+  padding: 4px;
+  color: #f37928;
+  font-size: 14px;
+}
+.EditWrapper .resizer {
+  background: #bfbfbf;
+  position: absolute;
+  z-index: 1000;
+}
+.EditWrapper .resizer.resizer-left {
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 100%;
+  cursor: ew-resize;
+}
+.EditWrapper .resizer.resizer-right {
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  cursor: ew-resize;
+}
+.EditWrapper .resizer.resizer-bottom {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  cursor: ns-resize;
+}
+
+/*# sourceMappingURL=EditWrapperStyles.css.map */

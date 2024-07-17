@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import '../styles/LexiconEditorStyles.scss';
+import './LexiconEditorStyles.css';
 import { Lexicon } from './Lexicon';
 import { JSXElement } from '@babel/types';
 import {KeyPath, KeyPathString, keyPathAsString} from './collection';
@@ -142,4 +142,3 @@ export class LexiconEditor extends
     );
   }
 }
-

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Lexicon } from './Lexicon';
 import { OnChangeCallback } from './LexiconEditor';
-import '../styles/EditWrapperStyles.scss';
+import './EditWrapperStyles.css';
 interface EditWrapperProps {
     component: // This is the React component rendered inside the wrapper.
     React.FunctionComponent<{

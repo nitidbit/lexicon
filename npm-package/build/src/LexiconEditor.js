@@ -25,7 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LexiconEditor = void 0;
 const react_1 = __importStar(require("react"));
-require("../styles/LexiconEditorStyles.scss");
+require("./LexiconEditorStyles.css");
 const collection_1 = require("./collection");
 function LocaleChooser({ lexicon, switchLocale, selectedLocale }) {
     return (lexicon.locales().map((locale) => (react_1.default.createElement("label", { htmlFor: `localeRadio__${locale}`, key: locale },

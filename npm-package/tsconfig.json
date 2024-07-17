@@ -6,7 +6,7 @@
     "noImplicitAny": false,
     "noLib": false,
     "declaration": true,
-    "outDir": "js",
+    "outDir": "build",
     "esModuleInterop": true,
     "jsx": "react",
     "resolveJsonModule": true

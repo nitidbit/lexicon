@@ -2,8 +2,8 @@
   "name": "@nitidbit/lexicon",
   "version": "2.12.2",
   "description": "Nitid Lexicon Library for text-based content management via web UI",
-  "main": "js/index.js",
-  "typings": "js/index",
+  "main": "build/src/index.js",
+  "typings": "build/src/index",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
@@ -14,9 +14,12 @@
   "scripts": {
     "test": "jest --verbose --no-watchman",
     "test:watch": "jest --verbose --watch",
-    "build": "tsc",
-    "build:watch": "tsc --watch --preserveWatchOutput",
-    "clean": "rm -rf js"
+    "scss": "sass --update --style=expanded src/:build/src",
+    "scss:watch": "npm run scss -- --watch",
+    "build": "tsc; npm run scss",
+    "build:watch": "tsc --watch --preserveWatchOutput & npm run scss:watch && kill $1",
+    "build:watch comment": "the __ & __ && kill $1 is to run both in parallel, and they get interrupted together.",
+    "clean": "rm -rf build"
   },
   "jest": {
     "roots": [
@@ -26,7 +29,7 @@
       "\\.tsx?$": "ts-jest"
     },
     "moduleNameMapper": {
-      "\\.(scss|css|jpg|png|gif)$": "<rootDir>/file.mock.js"
+      "\\.(scss|css|jpg|png|gif)$": "<rootDir>/test/file.mock.js"
     },
     "testEnvironment": "jsdom",
     "testEnvironmentOptions": {
@@ -49,6 +52,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "react": "file:../server/node_modules/react",
     "react-dom": "file:../server/node_modules/react-dom",
+    "sass": "^1.77.8",
     "ts-jest": "^29",
     "typescript": "^5.5.2"
   },
