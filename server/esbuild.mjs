@@ -13,11 +13,19 @@ import sassPlugin from "esbuild-plugin-sass"
 import { livereloadPlugin } from '@jgoz/esbuild-plugin-livereload'
 import fs from 'node:fs'
 
-
-
 const RED = "\x1b[31m"
 const GREEN = "\x1b[32m"
 const RESET = "\x1b[39m"
+
+const esbuildOptions = {
+    entryPoints: await entryPoints(),
+    bundle: true,
+    outdir: "app/assets/builds",
+    sourcemap: 'linked',
+    plugins: [
+      sassPlugin(),
+    ],
+  }
 
 // Which JS/TS/SCSS files should be entry-points?
 async function entryPoints() {
@@ -42,30 +50,20 @@ const pluginNotifyWhenBuilding = {
   },
 }
 
-const options = {
-    entryPoints: await entryPoints(),
-    bundle: true,
-    outdir: "builds",
-    sourcemap: 'linked',
-    plugins: [
-      sassPlugin(),
-    ],
-  }
-
 async function build() {
   console.log('esbuild.mjs: building...')
-  console.log(await esbuild.build(options))
+  console.log(await esbuild.build(esbuildOptions))
   console.log('esbuild.mjs: building...DONE')
-  console.log('esbuild.mjs: bundles in:', options.outdir)
+  console.log('esbuild.mjs: bundles in:', esbuildOptions.outdir)
 }
 
 async function buildWatchMode() {
   console.log('esbuild.mjs: watching...')
 
-  options.plugins.push(pluginNotifyWhenBuilding)
-  options.plugins.push(livereloadPlugin({fullReloadOnCssUpdates: true}))
+  esbuildOptions.plugins.push(pluginNotifyWhenBuilding)
+  esbuildOptions.plugins.push(livereloadPlugin({fullReloadOnCssUpdates: true}))
 
-  let esBuildResult = await esbuild.context(options)
+  let esBuildResult = await esbuild.context(esbuildOptions)
   await esBuildResult.watch()
 }
 
@@ -74,8 +72,8 @@ async function buildWatchMode() {
 async function analyze() {
   const METAFILE_FILENAME = '/tmp/lexicon-esbuild-meta.json'
   console.log('esbuild.mjs: analyzing...')
-  options.metafile = true
-  let esBuildResult = await esbuild.build(options)
+  esbuildOptions.metafile = true
+  let esBuildResult = await esbuild.build(esbuildOptions)
   fs.writeFileSync(METAFILE_FILENAME, JSON.stringify(esBuildResult.metafile))
   console.log('esbuild.mjs: analyzing...DONE')
   console.log('esbuild.mjs: metafile:', METAFILE_FILENAME, '  Use it here: https://esbuild.github.io/analyze/')

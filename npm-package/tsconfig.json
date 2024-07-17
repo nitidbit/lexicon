@@ -14,11 +14,11 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "./jest-setup.ts"
+    "**/*.sass"
   ],
   "exclude": [
     "node_modules",
-    "js",
+    "build",
     "**/*.d.ts",
     "**/*.test.ts"
   ]
