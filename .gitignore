@@ -2,6 +2,9 @@ node_modules
 latest.dump
 .envrc
 
+npm-package/build
+
+server/builds
 server/tmp
 server/log
 server/app/assets/builds
