@@ -28,7 +28,10 @@
     "moduleNameMapper": {
       "\\.(scss|css|jpg|png|gif)$": "<rootDir>/file.mock.js"
     },
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "url": "https://example.com/login"
+    }
   },
   "author": "Nitid Bit LLC",
   "license": "CC-BY-SA-4.0",

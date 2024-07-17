@@ -125,16 +125,7 @@ class EditWrapper extends react_1.default.Component {
         };
         if (!(props.lexicon instanceof Lexicon_1.Lexicon))
             throw new Error(`'lexicon' prop should be a Lexicon object, but it is: ${JSON.stringify(props.lexicon).substring(0, 50)}`);
-        let lexiconServerToken = (0, util_1.getURLParameter)('lexiconServerToken');
-        if (lexiconServerToken) {
-            sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token
-            // Remove token from URL
-            let locationWithoutToken = window.location.href.split("?")[0];
-            window.history.replaceState(null, null, locationWithoutToken);
-            if (document.location.protocol != 'https:') {
-                console.warn('You should use HTTPS otherwise the lexiconServerToken is passed insecurely');
-            }
-        }
+        this.grabLexiconServerTokenAndReload();
         this.state = {
             isEditorVisible: false,
             lexicon: props.lexicon,
@@ -144,6 +135,19 @@ class EditWrapper extends react_1.default.Component {
             editorWidth: undefined,
             editorHeight: undefined,
         };
+    }
+    // If URL has ?lexiconServerToken=___, then store it, reload, and show the editing buttons
+    grabLexiconServerTokenAndReload() {
+        let lexiconServerToken = (0, util_1.getURLParameter)('lexiconServerToken');
+        if (lexiconServerToken) {
+            sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token
+            // Reload to remove token from URL
+            let locationWithoutToken = window.location.href.split("?")[0];
+            window.history.replaceState(null, null, locationWithoutToken);
+            if (document.location.protocol != 'https:') {
+                console.warn('You should use HTTPS otherwise the lexiconServerToken is passed insecurely');
+            }
+        }
     }
     getToken() {
         if ('apiToken' in this.props) {

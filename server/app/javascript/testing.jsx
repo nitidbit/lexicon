@@ -1,7 +1,8 @@
 console.info('Loading: server/app/javascript/testing.jsx')
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from "react-dom/client";
+// import ReactDOM from 'react-dom';
 import {Lexicon, EditWrapper, VERSION} from '@nitidbit/lexicon';
 import './testingStyles.scss';
 
@@ -18,19 +19,19 @@ function AuthenticationStatus() {
     </div>);
 }
 
-let BlurbAndList = ({lexicon}) => (
+const BlurbAndList = ({lexicon, apiUpdateUrl}) => (
   <div className="BlurbAndList border-solid" >
     <h2> { lexicon.get('title') } </h2>
-    <p> { lexicon.get('description') } </p>
+    <p> { lexicon.get('description', {apiUpdateUrl: apiUpdateUrl}) } </p>
     <ul>
       { lexicon.get('array_of_strings').map( dialect => (<li key={dialect}> { dialect } </li>) ) }
     </ul>
   </div>
 );
 
-let LexiconJsVersion = () => <span className="LexiconJsVersion"> {VERSION} </span>;
+const LexiconJsVersion = () => <span className="LexiconJsVersion"> {VERSION} </span>;
 
-function JwtAuthenticatedDemo({apiUpdateUrl}) {
+const JwtAuthenticatedDemo = ({apiUpdateUrl}) => {
   console.log('JWT auth demo apiUrlupdate=', apiUpdateUrl)
   return (
     <div>
@@ -43,12 +44,12 @@ function JwtAuthenticatedDemo({apiUpdateUrl}) {
   );
 }
 
-function CorsTester({apiUpdateUrl}) {
+const CorsTester = ({apiUpdateUrl}) => {
   return (
     <div>
       <EditWrapper
         lexicon={lexicon.subset('CorsTester')}
-        component={BlurbAndList}
+        component={ [BlurbAndList, {apiUpdateUrl: apiUpdateUrl}] }
         apiUpdateUrl={apiUpdateUrl}
       />
     </div>
@@ -69,7 +70,8 @@ function replacePlaceholders(selector, component) {
     } else {
       dataParams = {}
     }
-    ReactDOM.render(React.createElement(component, dataParams), placeholder);
+    createRoot(placeholder)
+      .render(React.createElement(component, dataParams));
   });
 }
 

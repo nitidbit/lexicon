@@ -46,6 +46,7 @@ interface EditWrapperState {
 }
 export default class EditWrapper extends React.Component<EditWrapperProps, EditWrapperState> {
     constructor(props: EditWrapperProps);
+    grabLexiconServerTokenAndReload(): void;
     toggleEditor: () => void;
     getToken(): string;
     allowEditing(): boolean;

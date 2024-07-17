@@ -17,8 +17,8 @@ if ! ClientApp.find_by(name: 'Lexicon React Demo')
                   )
 end
 
-if ! ClientApp.find_by(name: 'Localhost test')
-  puts ClientApp.create(name: 'Localhost test',
+if ! ClientApp.find_by(name: 'Localhost test page')
+  puts ClientApp.create(name: 'Localhost test page',
                    app_url: 'http://localhost:3000/testing',
                    adapter: 'github',
                    github_repo: 'nitidbit/lexicon',
@@ -27,8 +27,8 @@ if ! ClientApp.find_by(name: 'Localhost test')
                   )
 end
 
-if ! ClientApp.find_by(name: 'CORS test')
-  puts ClientApp.create(name: 'CORS test',
+if ! ClientApp.find_by(name: 'CORS test page')
+  puts ClientApp.create(name: 'CORS test page',
                    app_url: 'http://cors.test:3000/testing',
                    adapter: 'github',
                    github_repo: 'nitidbit/lexicon',

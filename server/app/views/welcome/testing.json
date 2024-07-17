@@ -4,19 +4,20 @@
     "introduction": "Introduction - This page is to show Lexicon-Ruby in action. This part is written in Ruby/ERB",
     "JwtAuthenticatedDemo": {
       "title": "JwtAuthenticatedDemo",
-      "description": "This is the same Demo component, but it uses JWT headers to authenticate & save.\n",
+      "description": "This is the <BlurbAndList> demo component. You may enjoy some of these excellent, locally produced cheeses:",
       "array_of_strings": [
         "Red Hawk",
         "Mt. Tam"
       ]
     },
     "CorsTester": {
-      "title": "Cors Tester",
-      "description": "To test CORS, point 'cors.test' in your /etc/hosts to this server. Than edit via the CorsTest ClientApp. You'll need to add the Github api token.  It's testing CORS because LexiconServer is at http://localhost, and the ClientApp is on http://cors.test",
+      "title": "CORS Tester",
+      "description": "This component is configured to POST lexicon updates to '#{apiUpdateUrl}'. You can test CORS by loading the page at a different URL, and seeing that Lexicon saves properly.  E.g.:",
       "array_of_strings": [
-        "aqua",
-        "orange",
-        "magenta"
+        "Edit /etc/hosts/ to have some other domain name like 'cors.test' point to this server",
+        "At Lexicon Server > Client Apps. Make a Client App at 'cors.test/testing'",
+        "Edit this component via that Client App link",
+        "If the saving works, that CORS is working."
       ]
     }
   }
