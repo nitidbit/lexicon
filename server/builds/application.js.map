@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../app/javascript/application.js"],
-  "sourcesContent": ["console.info('Loading: server/app/javascript/application.js (i.e. esbuild)')\n"],
-  "mappings": ";;;;;;;;;;;;AAAA,UAAQ,KAAK,8DAA8D;",
-  "names": []
-}
