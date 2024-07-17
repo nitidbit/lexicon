@@ -39,8 +39,8 @@ class ApiController < ApplicationController
   def self.cors_friendly_origin(origin_url)
     uri = URI(origin_url)
 
-    if (uri.host != 'localhost')
-      return "https://#{uri.host}"
+    if (uri.port == 80 || uri.port == 443)
+      return "#{uri.scheme}://#{uri.host}"
 
     else
       return "#{uri.scheme}://#{uri.host}:#{uri.port}"

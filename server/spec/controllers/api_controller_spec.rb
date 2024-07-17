@@ -108,7 +108,7 @@ RSpec.describe ApiController, type: :controller do
       it 'includes CORS header for allowed origin' do
         @client_app.update(app_url: 'http://blah.example.com:123/test?x=y')
         put(:update, params: @lexicon_changes)
-        expect(response.headers['Access-Control-Allow-Origin']).to eq('https://blah.example.com')
+        expect(response.headers['Access-Control-Allow-Origin']).to eq('http://blah.example.com:123')
       end
 
       it 'fails when user is not permitted to access repo'
@@ -155,12 +155,12 @@ RSpec.describe ApiController, type: :controller do
   end
 
   describe '.cors_friendly_origin' do
-    it 'returns URL including port when the server is localhost' do
+    it 'returns URL including port when the port is not the usual 80 or 443' do
       url = 'http://localhost:3000/mydir'
       expect(ApiController.cors_friendly_origin(url)).to eq('http://localhost:3000')
     end
 
-    it 'excludes port when the host is NOT localhost' do
+    it 'excludes port when its 443 so CORS doesnt get upset, i.e. the strings match exactly' do
       url = 'https://lexicon.nitid.co/mydir'
       expect(ApiController.cors_friendly_origin(url)).to eq('https://lexicon.nitid.co')
     end
