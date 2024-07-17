@@ -1,7 +1,7 @@
 import React from 'react'
 import '@testing-library/jest-dom'
-// import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import { Lexicon } from './Lexicon'
 import EditWrapper from './EditWrapper'
@@ -25,20 +25,53 @@ const renderScreen = (props={}) => {
 }
 
 describe('EditWrapper', () => {
+
   describe('saveChanges()', () => {
     it('renders <component>', () => {
       const screen = renderScreen()
       expect(screen.queryByText('Sample')).toBeInTheDocument()
     })
 
-    it('has the Edit Lexicon button', async () => {
+    it('has the Edit Lexicon button', () => {
       const screen = renderScreen()
       // screen.debug()
-      expect(await screen.findByText('Edit Lexicon')).toBeInTheDocument()
+      expect(screen.queryByText('Edit Lexicon')).toBeInTheDocument()
     })
 
-    it('shows useful error when server returns json formatted error response', () => {
-      // allowEditing={true} // opens the edit panel
+    const simulateEditAndSave = async () => {
+      const user = userEvent.setup()
+      const screen = renderScreen()
+
+      await user.click(screen.getByLabelText('blah'))
+      await user.keyboard('BLARGH')
+      await user.click(screen.getByText('Save changes'))
+
+      return screen
+    }
+
+    it('shows useful message when there is a network level problem (no wifi, cors)', async () => {
+      global.fetch = jest.fn(() => {
+          return Promise.reject(new TypeError('MOCK NETWORK ERROR'))
+        }
+      ) as any
+
+      const screen = await simulateEditAndSave()
+
+      expect(screen.getByText(/MOCK NETWORK ERROR/)).toBeInTheDocument()
+    })
+
+    it('shows useful error when server returns json formatted error response', async () => {
+      const RESPONSE = {
+        succcess: false,
+        error: "something went wrong",
+      }
+      global.fetch = jest.fn(() => Promise.resolve(
+        { json: () => Promise.resolve(RESPONSE) }
+      )) as any
+
+      const screen = await simulateEditAndSave()
+      expect(screen.getByText(/something went wrong/)).toBeInTheDocument()
     })
   })
+
 })

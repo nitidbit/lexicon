@@ -73,7 +73,6 @@ class ApiController < ApplicationController
       else "slack_alert for #{client_app.app_url}: error #{response.code}"
       end
 
-    puts result
     result
   end
 

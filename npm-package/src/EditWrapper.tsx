@@ -164,14 +164,14 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
       body: JSON.stringify(payload)
     })
       .then(response => response.json())
-      .catch(error => this.setState({ savingState: SavingState.Error, errorMessage: error.toString() }))
       .then((json: LexiconAPIResponse) => {
         if (json.successful) {
           this.setState({ savingState: SavingState.Done, unsavedChanges: new Map() });
         } else {
           this.setState({ savingState: SavingState.Error, errorMessage: json.error });
         }
-      });
+      })
+      .catch(error => this.setState({ savingState: SavingState.Error, errorMessage: error.toString() }))
   }
 
   changePosition = (e: React.MouseEvent<HTMLInputElement>) => {
