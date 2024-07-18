@@ -243,6 +243,7 @@ ActiveAdmin.setup do |config|
     admin.build_menu :default do |menu|
       menu.add label: "Apps to Edit", url: "/edit"
       menu.add label: "React Demo", url: "/demo"
+      menu.add label: "Test Plan", url: "https://airtable.com/appu13VcTqFLIsXGQ/tblGrzxt9QJXbqqdk/viwtbMfTYQX7pvrH1?blocks=hide"
     end
   end
 

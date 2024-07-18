@@ -1,12 +1,12 @@
 {
   "en": {
-    "title": "Demo page for #{appName}",
+    "title": "React Demo Component for #{appName}",
     "faq": [
       { "question": "Favorite color", "answer": "blue" },
       { "question": "Favorite food", "answer": "Ice Cream" }
     ]
   },
   "es": {
-    "title": "Spanish Demo page for Lexicon"
+    "title": "Spanish React Demo page for Lexicon"
   }
 }
