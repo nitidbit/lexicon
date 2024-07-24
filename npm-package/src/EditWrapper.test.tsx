@@ -24,7 +24,7 @@ describe('EditWrapper', () => {
     const SampleComponent = () => (<div className="SampleComponent"> Sample </div>)
     const sampleLexicon = new Lexicon({repoPath: "??", en: {blah: 'BLAH'}})
 
-    const renderScreen = (props={}) => {
+    const testSubject = (props={}) => {
     return render(
       <EditWrapper
         component={ SampleComponent }
@@ -35,19 +35,19 @@ describe('EditWrapper', () => {
     }
 
     it('renders <component>', () => {
-      const screen = renderScreen()
+      const screen = testSubject()
       expect(screen.queryByText('Sample')).toBeInTheDocument()
     })
 
     it('has the Edit Lexicon button', () => {
-      const screen = renderScreen()
+      const screen = testSubject()
       // screen.debug()
       expect(screen.queryByText('Edit Lexicon')).toBeInTheDocument()
     })
 
     const simulateEditAndSave = async () => {
       const user = userEvent.setup()
-      const screen = renderScreen()
+      const screen = testSubject()
 
       await user.click(screen.getByLabelText('blah'))
       await user.keyboard('BLARGH')
@@ -98,7 +98,7 @@ describe('EditWrapper', () => {
       </div>
     )
 
-    const renderScreen = (props={}) => {
+    const testSubject = (props={}) => {
       user = userEvent.setup()
       return render(
         <EditWrapper
@@ -118,13 +118,13 @@ describe('EditWrapper', () => {
     }
 
     it('opens the editing panel', async () => {
-      screen = renderScreen()
+      screen = testSubject()
       await clickToEdit()
       expect(isLexiconEditorVisible(screen)).toEqual(true)
     })
 
     test('the input for that element is in view', async () => {
-      screen = renderScreen()
+      screen = testSubject()
       const inputElement = screen.queryByLabelText('important_key')
       // inputElement.scrollIntoView = jest.fn()
 

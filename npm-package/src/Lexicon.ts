@@ -26,15 +26,22 @@ function isLocaleCode(locale:LocaleCode) {
   return isString(locale) && locale.length < 10;
 }
 
+// return the constructor for an instance of a JS class
+// from https://stackoverflow.com/questions/62010217/how-to-create-a-new-object-of-same-class-as-current-object-from-within-a-method
+const classConstructor = (someInstance) => {
+  return(someInstance.constructor[Symbol.species] ?? someInstance.constructor)
+}
 
 //
 //      Lexicon — A tree-like container for holding content. Lexicons can hold other Lexicons.
 //
+
 export class Lexicon {
-  private _contentByLocale: ContentByLocale;
   public currentLocaleCode: LocaleCode;
-  private _subsetRoot: KeyPathArray;
-  private _filename: string;
+  protected _contentByLocale: ContentByLocale;
+  protected _subsetRoot: KeyPathArray;
+  protected _filename: string;
+  public _id: number;
 
   constructor(contentByLocale: ContentByLocale,
               localeCode: LocaleCode = DEFAULT_LOCALE_CODE,
@@ -65,7 +72,8 @@ export class Lexicon {
     if (! isLocaleCode(localeCode)) throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`);
 
     if (!col.has(this._contentByLocale, localeCode)) return null;
-    return new Lexicon(this._contentByLocale, localeCode, this._subsetRoot);
+
+    return new (classConstructor(this))(this._contentByLocale, localeCode, this._subsetRoot)
   }
 
   /* Merge a second 'subLexicon' in under the key 'branchKey'. */
@@ -141,6 +149,10 @@ export class Lexicon {
   subset(keyPath: KeyPath): Lexicon | null {
     let rootPathExcludingLocale = this.fullKey(null, keyPath);
     return new Lexicon(this._contentByLocale, this.currentLocaleCode, rootPathExcludingLocale );
+  }
+
+  inspect() {
+    return `<${this.constructor.name} ${JSON.stringify(this, null, 2)}>`
   }
 
 

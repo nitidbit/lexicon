@@ -4,20 +4,14 @@
     "title": "React Demo Component for #{appName}",
     "faq": [
       { "question": "Favorite color", "answer": "blue" },
-      { "question": "Favorite food", "answer": "Ice Cream" },
-      { "question": "Favorite color1", "answer": "red" },
-      { "question": "Favorite food1", "answer": "fruit" },
-      { "question": "Favorite color2", "answer": "green" },
-      { "question": "Favorite food2", "answer": "salad" },
-      { "question": "Favorite color3", "answer": "pink" },
-      { "question": "Favorite food3", "answer": "tacos" },
-      { "question": "Favorite color4", "answer": "mauve" },
-      { "question": "Favorite food4", "answer": "chocolate" },
-      { "question": "Favorite color5", "answer": "scolor" },
-      { "question": "Favorite food5", "answer": "sfood" }
+      { "question": "Favorite food", "answer": "Ice Cream" }
     ]
   },
   "es": {
-    "title": "Spanish React Demo page for Lexicon"
+    "title": "Spanish React Demo page for Lexicon",
+    "faq": [
+      { "question": "Favorite color", "answer": "azul" },
+      { "question": "Favorite food", "answer": "helado" }
+    ]
   }
 }

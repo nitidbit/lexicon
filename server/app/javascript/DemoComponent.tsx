@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { createRoot } from "react-dom/client";
 import { Lexicon, EditWrapper } from '@nitidbit/lexicon';
+import { LxEditPanelExample } from "./LxEditPanelExample"
 import "./DemoComponent.scss";
 
 import demoStrings from "./DemoComponent.json";
@@ -51,4 +52,7 @@ function EditableDemoComponent(props) {
 document.addEventListener("DOMContentLoaded", () => {
   createRoot(document.querySelector(".placeholder-DemoComponent"))
     .render(EditableDemoComponent())
+
+  createRoot(document.querySelector(".placeholder-LxEditPanelExample"))
+    .render(LxEditPanelExample())
 })
