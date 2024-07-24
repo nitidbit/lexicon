@@ -1,9 +1,13 @@
+/*
+    LexiconEditor - Component that lists keys and values which you can edit
+    - plus the Locale radio buttons
+*/
 import React, { useState, useEffect, useRef } from 'react';
 
-import './LexiconEditorStyles.css';
 import { Lexicon } from './Lexicon';
 import { JSXElement } from '@babel/types';
 import {KeyPath, KeyPathString, keyPathAsString} from './collection';
+import './LexiconEditorStyles.css';
 
 const expandedStyle = (isExpanded=true, ref) => {
   let height = '1.5em'
@@ -59,14 +63,18 @@ const FormRow = (props: { label: string, children: any }) => (
   </div>
 );
 
-interface FieldProps {
+
+function Field({
+  localPath,
+  value,
+  onChange,
+  justClickedElement,
+}: {
   localPath: string;
   value: any;
   onChange: HtmlOnChangeCallback;
   justClickedElement: string;
-}
-
-function Field({ localPath, value, onChange, justClickedElement }: FieldProps) {
+}) {
   const [isExpanded, setIsExpanded] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 

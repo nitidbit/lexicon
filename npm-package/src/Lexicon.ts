@@ -19,8 +19,8 @@ export type ContentByLocale = {
 //
 //      LocaleCode & related functions
 //
-type LocaleCode = string; // e.g. 'en', 'es', 'en_GB', 'zh-Hant'
-const DEFAULT_LOCALE_CODE = 'en';
+export type LocaleCode = string; // e.g. 'en', 'es', 'en_GB', 'zh-Hant'
+export const DEFAULT_LOCALE_CODE = 'en';
 
 function isLocaleCode(locale:LocaleCode) {
   return isString(locale) && locale.length < 10;
@@ -80,9 +80,13 @@ export class Lexicon {
 
   /*
      Return a value from the Lexicon, in the current locale.
-     If you pass 'templateSubsitutions', and the value is a string, then they are inserted into your string or array,
-        e.g. "hello #{name}" -> "hello Winston"
-        "["hello #{name}"] -> ["hello Winston"]"
+     If you pass 'templateSubsitutions', and the value is a string or array, then they are inserted,
+        e.g.
+        // where mykey: "hello #{name}"
+        l.get("mykey", {name: "Winston"}) // -> "hello Winston"
+
+        // where mykey: ["Mr #{name}", "Mrs #{name}"]
+        l.get("mykey", {name: "Winston"}) // -> ["Mr Winston", "Mrs Winston"]
   */
   get(keyPath: KeyPath, templateSubstitutions?: object): any {
     if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
@@ -203,6 +207,7 @@ export class Lexicon {
   //    Methods for use by Lexicon Editor
   //
 
+
   /*
      Returns the filename and KeyPath of the item in question.
      The returned keyPath might be different from the input because you're looking
@@ -232,7 +237,7 @@ export class Lexicon {
   }
 
 
-  /* Used by LexiconEditor */
+  // filename and path of the JSON file that contains this data, e.g. 'path/to/content.json'
   filename(): string {
     return this._filename;
   }
@@ -265,6 +270,11 @@ export class Lexicon {
         }
       }
     }
+  }
+
+  /* return [array of [key, value]] pairs in the current locale */
+  entries(): Array<[KeyPathString, any]> {
+    return this.keys().map( key => [key, this.get(key)] )
   }
 
 

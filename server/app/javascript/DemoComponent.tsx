@@ -1,9 +1,9 @@
 import React, { Fragment } from "react";
 import { createRoot } from "react-dom/client";
-import { Lexicon, EditWrapper } from '@nitidbit/lexicon'
+import { Lexicon, EditWrapper } from '@nitidbit/lexicon';
 import "./DemoComponent.scss";
-import demoStrings from "./DemoComponent.json";
 
+import demoStrings from "./DemoComponent.json";
 const demoLexicon = new Lexicon(demoStrings)
 
 type FaqList = [ { question: String, answer: String } ]
@@ -43,7 +43,7 @@ function EditableDemoComponent(props) {
     <EditWrapper
       lexicon={ demoLexicon }
       apiUpdateUrl={ UPDATE_URL }
-      component={ DemoComponent }
+      component={DemoComponent}
     />
   )
 }

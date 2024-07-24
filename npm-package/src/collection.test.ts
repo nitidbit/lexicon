@@ -2,11 +2,8 @@ import * as col from "./collection"
 
 
 describe('Collection', () => {
-  let c
 
-  beforeEach( () => {})
   describe('get()', () => {
-
     it('fetches value from a Map', () => {
       const m = new Map()
       m.set('a', 'A')

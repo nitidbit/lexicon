@@ -1,14 +1,4 @@
-$gray_80: #ddd; // 80%
-$gray_75: #bfbfbf; // 75%
-$gray_50: #808080; // 50%
-$gray_25: #404040;
-$green: #acce19;
-$orange: #faac1d;
-$dark_orange: #f37928;
-
-$lexicon_editor_background: $gray_80;
-$input_background: white;
-$clickable: $green;
+@import './sharedStyles';
 
 /* global rule which will apply on user's app */
 [data-lexicon]:hover {

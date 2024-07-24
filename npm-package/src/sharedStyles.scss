@@ -1,0 +1,52 @@
+//
+//  Colors
+//
+$gray_80: #ddd; // 80%
+$gray_75: #bfbfbf; // 75%
+$gray_50: #808080; // 50%
+$gray_25: #404040;
+$green: #acce19;
+$orange: #faac1d;
+$dark_orange: #f37928;
+
+//
+//  Colors by Usage
+//
+$lexicon_editor_background: $gray_80;
+$input_background: white;
+$clickable: $green;
+
+// z-indices
+$z-resizer: 1000;
+
+@mixin lexicon-font {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+
+  body.windows & {
+    font-family: 'Lucida Sans Unicode', 'Lucida', Verdana, Arial, sans-serif;
+  }
+}
+
+@mixin button {
+  @include lexicon-font;
+
+  & {
+    font-style: normal;
+    text-decoration: none;
+    color: white;
+    background-color: $gray_75;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+  }
+
+  &:hover:not(:disabled) {
+    color: white;
+    background-color: $green;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}

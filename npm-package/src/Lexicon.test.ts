@@ -211,6 +211,26 @@ describe('Lexicon module', () => {
     });
   });
 
+  describe('entries()', () => {
+    test('returns [array of [key, value]] pairs in the current locale', () => {
+      expect(lex.entries()).toEqual([
+        ['foo', 'bar'],
+        ['nested.wom', 'bat'],
+        ['arrayOfObjects.0.text', 'one'],
+        ['arrayOfObjects.1.text', 'two'],
+        ['map.mapKey', 'MAP VALUE'],
+        ['arrayOfStrings.0', "ichi"],
+        ['arrayOfStrings.1', "ni"],
+        ['arrayOfStrings.2', "san"],
+        ['template', '\\#{escaped} \\\\ #{foo} #{bar.baz} #{{{manyBrackets}}}'],
+        ['onlyExistsInEnglish', 'EN only'],
+        ['subLex.subFoo', 'SUB FOO'],
+        ['string', 'this is a #{color} string'],
+        ['array.0', 'this is the first element in #{color}'],
+        ['array.1', 'this is the second element'],
+      ])
+    })
+  })
 
   describe('cloneDeep()', () => {
     test('returns a copy of the Lexicon', () => {

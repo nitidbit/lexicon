@@ -11,9 +11,13 @@ import lodash_keys from 'lodash/keys';
 import lodash_compact from 'lodash/compact';
 
 /*
- * Functions that can manipulate 'Collections' irrespective of the actual storage type.
- * Similar to `lodash.get(myObject, 'key1.key2')` but also supports the Map class.
- * A Collection is an array, object, or Map.
+    Functions that can manipulate 'Collections' irrespective of the actual storage type.
+    Similar to `lodash.get(myObject, 'key1.key2')` but also supports the Map class.
+    A Collection is an array, object, or Map.
+
+    Allows Lexicons to manipulate its data tree without worrying about what type each node is.
+    E.g.:
+      collection.set(Lexicon, 'en.blah', 'new blah')
  */
 
 

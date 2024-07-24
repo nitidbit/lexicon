@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "build": "node esbuild.mjs",
-    "build:watch": "node esbuild.mjs -- --watch"
+    "build:watch": "node esbuild.mjs -- --watch",
+    "clean": "rm -rf app/assets/builds"
   },
   "dependencies": {
     "@babel/core": "7",
