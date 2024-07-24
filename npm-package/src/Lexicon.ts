@@ -151,6 +151,10 @@ export class Lexicon {
     return `<${this.constructor.name} ${JSON.stringify(this, null, 2)}>`
   }
 
+  inspect() {
+    return `<${this.constructor.name} ${JSON.stringify(this, null, 2)}>`
+  }
+
 
   /* Determine the complete "key path" to retrieve our value */
   private fullKey(locale:LocaleCode, keyPath:KeyPath) {
