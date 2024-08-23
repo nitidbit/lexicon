@@ -5,6 +5,12 @@ import { Lexicon } from './Lexicon';
 import { JSXElement } from '@babel/types';
 import {KeyPath, KeyPathString, keyPathAsString} from './collection';
 
+const expandedStyle = (isExpanded=true) => {return {
+                        height: isExpanded ? 'auto' : '1.5em',
+        overflow: isExpanded ? 'auto' : 'hidden',
+        transition: 'height 0.1s',
+      }}
+
 export type OnChangeCallback = (change: {
   filename: string,
   localPath: KeyPathString,
@@ -85,14 +91,11 @@ function Field({ localPath, value, onChange }: FieldProps) {
     <textarea
       ref={textareaRef}
       name={localPath}
+      id={localPath}
       value={value}
       onChange={handleChange}
       onFocus={handleFocus}
-      style={{
-        height: isExpanded ? 'auto' : '1.5em',
-        overflow: isExpanded ? 'auto' : 'hidden',
-        transition: 'height 0.1s',
-      }}
+      style={expandedStyle(isExpanded)}
     />
   );
 }
@@ -102,10 +105,38 @@ export interface LexiconEditorProps {
   onChange: OnChangeCallback;
   selectedLocale: string;
   switchLocale: SwitchLocaleCallback;
+  toggleEditor: () => void;
 }
 
 export class LexiconEditor extends
   React.Component< LexiconEditorProps, {} > {
+
+  componentDidMount() {
+    const all = document.getElementsByTagName("*");
+    Array.from(all).forEach((element) => {
+      const htmlElement = element as HTMLElement
+      if (htmlElement.getAttribute("data-lexicon")) {
+        const editor = document.getElementsByClassName("wrapped-lexicon-editor")[0]
+        const oldBackground = htmlElement.style.background
+        htmlElement.addEventListener("click", (e) => {
+          const htmlTarget = e.target as HTMLElement
+          const lexiconAttribute = htmlTarget.getAttribute("data-lexicon")
+          const lexiconElement = document.getElementById(lexiconAttribute)
+          this.props.toggleEditor()
+          editor.classList.add("is-visible")
+          lexiconElement.scrollIntoView()
+          Object.assign(lexiconElement.style, expandedStyle())
+          htmlElement.style.background = oldBackground
+        })
+        htmlElement.addEventListener("mouseover", () => {
+          htmlElement.style.background = '#cccccc'
+        })
+        htmlElement.addEventListener("mouseout", () => {
+          htmlElement.style.background = oldBackground
+        })
+      }
+    })
+  }
 
   sendLexiconEditorChange = (event) => {
     const { name: localPath, value: newValue } = event.target;

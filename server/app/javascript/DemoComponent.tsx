@@ -12,12 +12,12 @@ function Faq({ faqList }) {
   return (
     <div className="Faq">
     {
-      faqList.map( ({question, answer}) => (
+      faqList.map( ({question, answer}, i) => (
         <Fragment key={ question }>
           <div className="question">
             { question }
           </div>
-          <div className="answer">
+          <div className="answer" data-lexicon={`faq.${i}.answer`}>
             { answer }
           </div>
         </Fragment>
@@ -26,7 +26,6 @@ function Faq({ faqList }) {
     </div>
   )
 }
-
 
 function DemoComponent() {
   return (
