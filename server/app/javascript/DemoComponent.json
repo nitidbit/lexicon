@@ -1,4 +1,5 @@
 {
+  "repoPath": "server/app/javascript/DemoComponent.json",
   "en": {
     "title": "React Demo Component for #{appName}",
     "faq": [

@@ -12,7 +12,7 @@ jest.mock('./util', () => ({
 }))
 
 const SampleComponent = () => (<div className="SampleComponent"> Sample </div>)
-const sampleLexicon = new Lexicon({en: {blah: 'BLAH'}}, 'en', '??')
+const sampleLexicon = new Lexicon({repoPath: "??", en: {blah: 'BLAH'}}, 'en')
 
 const renderScreen = (props={}) => {
   return render(

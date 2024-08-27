@@ -5,11 +5,12 @@ describe('Lexicon module', () => {
 
   beforeEach( ()=> {
     const subLex = new Lexicon({
-        en: { subFoo: 'SUB FOO' }}, 'en', 'subLex.json');
+        repoPath: 'subLex.json', en: { subFoo: 'SUB FOO' }}, 'en');
 
     let color:string = "";
 
     const lexObj = {
+      repoPath: 'blah.json',
       en: {
         foo: 'bar',
         nested: {
@@ -43,7 +44,7 @@ describe('Lexicon module', () => {
       },
     };
 
-    lex = new Lexicon(lexObj, 'en', 'blah.json');
+    lex = new Lexicon(lexObj, 'en');
   });
 
   describe('new Lexicon()', () => {
@@ -52,7 +53,7 @@ describe('Lexicon module', () => {
     });
 
     test('raises error when it doesn\'t have "en" locale', () => {
-      expect(() => new Lexicon({missing: {data: 'en locale'}}, 'en', 'missing.json')).toThrow(/must contain 'en/)
+      expect(() => new Lexicon({repoPath: 'missing.json', missing: {data: 'en locale'}}, 'en')).toThrow(/must contain 'en/)
     });
   });
 
@@ -287,8 +288,8 @@ describe('Lexicon module', () => {
       let A, BC;
 
       beforeAll( ()=>{
-        BC = new Lexicon({en: {b: {c: "CCC"}}}, 'en', 'BC.json');
-        A = new Lexicon({en: {a: BC.subset('b')}}, 'en', 'A.json');
+        BC = new Lexicon({repoPath: 'BC.json', en: {b: {c: "CCC"}}}, 'en');
+        A = new Lexicon({repoPath: 'A.json', en: {a: BC.subset('b')}}, 'en');
       });
 
       test('returns filename and key path', () => {
@@ -342,8 +343,8 @@ describe('Lexicon module', () => {
     let lex1, lex2;
 
     beforeEach( () => {
-      lex1 = new Lexicon({en: { one: 'ONE' }}, 'en', 'lex1.json');
-      lex2 = new Lexicon({en: { two: 'TWO' }}, 'en', 'lex2.json');
+      lex1 = new Lexicon({repoPath: 'lex1.json', en: { one: 'ONE' }}, 'en');
+      lex2 = new Lexicon({repoPath: 'lex2.json', en: { two: 'TWO' }}, 'en');
 
       lex1.addBranch(lex2, 'added');
     });
@@ -367,8 +368,8 @@ describe('Lexicon module', () => {
 
   describe('addSubLexicon()', () => {
     test('addSubLexicon is an alias for addBranch', () => {
-      let lex1 = new Lexicon({en: { one: 'ONE' }}, 'en', 'lex1.json');
-      let lex2 = new Lexicon({en: { two: 'TWO' }}, 'en', 'lex2.json');
+      let lex1 = new Lexicon({repoPath: 'lex1.json', en: { one: 'ONE' }}, 'en');
+      let lex2 = new Lexicon({repoPath: 'lex2.json', en: { two: 'TWO' }}, 'en');
 
       lex1.addSubLexicon(lex2, 'added');
 

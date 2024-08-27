@@ -4,7 +4,7 @@ import { Lexicon, EditWrapper } from '@nitidbit/lexicon'
 import "./DemoComponent.scss";
 import demoStrings from "./DemoComponent.json";
 
-const demoLexicon = new Lexicon(demoStrings, "en", "server/app/javascript/DemoComponent.json")
+const demoLexicon = new Lexicon(demoStrings, "en")
 
 type FaqList = [ { question: String, answer: String } ]
 

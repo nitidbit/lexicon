@@ -12,9 +12,9 @@ import { Collection, KeyPath, keyPathAsArray, KeyPathArray, KeyPathString } from
 import {evaluateTemplate } from './util';
 
 export type ContentByLocale = {
-  [localeCode: string]: Collection,
+  repoPath?: string;
+  [localeCode: string]: Collection | string | undefined;
 };
-
 
 //
 //      LocaleCode & related functions
@@ -33,18 +33,21 @@ function isLocaleCode(locale:LocaleCode) {
 export class Lexicon {
   private _contentByLocale: ContentByLocale;
   public currentLocaleCode: LocaleCode;
-  private _filename: string;
   private _subsetRoot: KeyPathArray;
+  private _filename: string;
 
   constructor(contentByLocale: ContentByLocale,
               localeCode: LocaleCode,
-              filename: string,
-              subset: KeyPath = '') {
+              subset: KeyPath = '',
+              filename: string = '') {
+    this.currentLocaleCode = localeCode;
+    const contentWithPath = contentByLocale as ContentByLocale & { repoPath: string };
+    this._filename = filename || contentWithPath.repoPath;
+    delete contentByLocale["repoPath"]
+
     if (! lodash_has(contentByLocale, DEFAULT_LOCALE_CODE)) {
       throw new Error("'contentByLocale' must contain 'en: {...}' locale");
     }
-    this.currentLocaleCode = localeCode;
-    this._filename = filename;
     this._contentByLocale = contentByLocale;
     this._subsetRoot = col.keyPathAsArray(subset);
   }
@@ -58,7 +61,7 @@ export class Lexicon {
     if (! isLocaleCode(localeCode)) throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`);
 
     if (!col.has(this._contentByLocale, localeCode)) return null;
-    return new Lexicon(this._contentByLocale, localeCode, this._filename, this._subsetRoot);
+    return new Lexicon(this._contentByLocale, localeCode, this._subsetRoot, this._filename);
   }
 
   /* Merge a second 'subLexicon' in under the key 'branchKey'. */
@@ -129,7 +132,7 @@ export class Lexicon {
   */
   subset(keyPath: KeyPath): Lexicon | null {
     let rootPathExcludingLocale = this.fullKey(null, keyPath);
-    return new Lexicon(this._contentByLocale, this.currentLocaleCode, this._filename, rootPathExcludingLocale);
+    return new Lexicon(this._contentByLocale, this.currentLocaleCode, rootPathExcludingLocale, this._filename, );
   }
 
 
@@ -274,7 +277,7 @@ export class Lexicon {
         return value.cloneDeep();
       }
     }
-    return new Lexicon(cloneDeepWith(this._contentByLocale, customizer), this.currentLocaleCode, this._filename, this._subsetRoot);
+    return new Lexicon(cloneDeepWith(this._contentByLocale, customizer), this.currentLocaleCode, this._subsetRoot, this._filename);
   }
 
   clone(): Lexicon {
