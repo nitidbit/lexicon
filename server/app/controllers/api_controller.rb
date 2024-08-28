@@ -49,9 +49,11 @@ class ApiController < ApplicationController
 
   # Return the token that 'authenticate_jwt_header' requires
   def self.lexicon_server_token(user, client_app)
+    jwt_expiration_time = ENV.fetch("JWT_TEST_DURATION_MINUTES", (12 * 60)).to_i.minutes.from_now.to_i
     payload = {
       userId: user.id,
       clientAppId: client_app.id,
+      exp: jwt_expiration_time
     }
     token = JWT.encode(payload, JWT_SECRET, JWT_ALGORITHM)
   end
@@ -101,7 +103,7 @@ class ApiController < ApplicationController
       @authenticated_client_app = ClientApp.find(payload['clientAppId'])
 
     rescue JWT::VerificationError, JWT::DecodeError, ActiveRecord::RecordNotFound => exc
-      return render_error('Lexicon Server: Invalid token from client app', :forbidden)
+      return render_error("Lexicon Server: Invalid token from client app: #{exc}", :forbidden)
     end
   end
 

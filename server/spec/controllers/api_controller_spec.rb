@@ -3,6 +3,7 @@ require 'factories/user'
 require 'rails_helper'
 require 'jwt'
 require "clearance/rspec"
+require "timecop"
 # require 'services/lexicon_saver'
 
 RSpec.describe ApiController, type: :controller do
@@ -133,6 +134,15 @@ RSpec.describe ApiController, type: :controller do
           ))
 
         @lexicon_changes[:changes][0][:filename] = 'sample-filename.json'
+      end
+
+      it "JWT token does not work if request is over 12 hours old" do
+        Timecop.freeze(13.hours.ago) do
+          @token = ApiController::lexicon_server_token(@user, @client_app)
+          request.headers['Authorization'] = "Bearer #{@token}"
+        end
+        put(:update, params: @lexicon_changes)
+        expect(response.parsed_body).to eq({"successful" => false, "error" => "Lexicon Server: Invalid token from client app: Signature has expired"})
       end
 
       it "uses that Clientapp's GitHub access key" do
