@@ -27,11 +27,11 @@ function Faq({ faqList }) {
   )
 }
 
-function DemoComponent() {
+function DemoComponent({lexicon}) {
   return (
     <div className="DemoComponent">
-      { demoLexicon.get('title', {appName: 'blah'} ) }
-      <Faq faqList={demoLexicon.get('faq')} />
+      { lexicon.get('title', {appName: 'blah'} ) }
+      <Faq faqList={lexicon.get('faq')} />
     </div>
   )
 }
