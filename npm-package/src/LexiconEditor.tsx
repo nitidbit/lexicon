@@ -79,6 +79,7 @@ function Field({ localPath, value, onChange, justClickedElement }: FieldProps) {
       textareaRef.current.style.height = 'auto';
       const scrollHeight = textareaRef.current.scrollHeight;
       const maxHeight = window.innerHeight * 0.8;
+      // TODO [ww] I think Mollly add this, but can we get rid of this direct DOM modification too?
       textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
     }
   };
@@ -136,9 +137,11 @@ export class LexiconEditor extends
             this.props.toggleEditor()
             lexiconElement.scrollIntoView()
             this.setJustClickedElement(lexiconAttribute)
+            // TODO [ww] can we get rid of this DOM modification?
             htmlElement.style.background = oldBackground
           }
         })
+        // TODO [ww] can we turn these into a CSS :hover rule?
         htmlElement.addEventListener("mouseover", () => {
           htmlElement.style.background = '#cccccc'
           htmlElement.focus()
