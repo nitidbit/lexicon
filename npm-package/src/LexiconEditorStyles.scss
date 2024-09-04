@@ -10,6 +10,21 @@ $lexicon_editor_background: $gray_80;
 $input_background: white;
 $clickable: $green;
 
+/* global rule which will apply on user's app */
+[data-lexicon]:hover {
+  background: $gray_80;
+
+  &::after {
+    content: " ( Lexicon: Shift-Click )";
+    color: red;
+    font-size: 14px;
+    font-family: helvetica;
+    font-style: normal;
+    font-weight: normal;
+  }
+}
+
+
 #LexiconEditor {
   font-family: 'helvetica neue';
   font-size: 14px;

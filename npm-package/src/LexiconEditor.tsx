@@ -5,15 +5,22 @@ import { Lexicon } from './Lexicon';
 import { JSXElement } from '@babel/types';
 import {KeyPath, KeyPathString, keyPathAsString} from './collection';
 
-const expandedStyle = (isExpanded=true) => {
-                        return {
-                                height: isExpanded ? 'auto' : '1.5em',
-                                overflow: isExpanded ? 'auto' : 'hidden',
-                                transition: 'height 0.1s',
-                                background : isExpanded ? '#ffffdd' : '',
-                                border: isExpanded ? '2px solid #0000ff' : 'none'
-                               }
-                      }
+const expandedStyle = (isExpanded=true, ref) => {
+  let height = '1.5em'
+  const maxHeight = `${window.innerHeight * 0.8}px`;
+  if (ref && isExpanded) {
+    const scrollHeight = ref.current.scrollHeight;
+    height = `${scrollHeight}px`
+  }
+  return {
+    height: height,
+    maxHeight: maxHeight,
+    overflow: isExpanded ? 'auto' : 'hidden',
+    transition: 'height 0.1s',
+    background : isExpanded ? '#ffffdd' : '',
+    border: isExpanded ? '2px solid #0000ff' : 'none'
+  }
+}
 
 export type OnChangeCallback = (change: {
   filename: string,
@@ -62,34 +69,15 @@ interface FieldProps {
 function Field({ localPath, value, onChange, justClickedElement }: FieldProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (justClickedElement === localPath) {
       setIsExpanded(true)
     }
-    if (textareaRef.current && isExpanded) {
-      adjustHeight();
-    }
   }, [value, isExpanded, justClickedElement]);
-
-
-  const adjustHeight = () => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = window.innerHeight * 0.8;
-      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
-    }
-  };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event);
-
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = window.setTimeout(adjustHeight, 10);
   };
 
   return (
@@ -99,7 +87,7 @@ function Field({ localPath, value, onChange, justClickedElement }: FieldProps) {
       id={localPath}
       value={value}
       onChange={handleChange}
-      style={expandedStyle(isExpanded)}
+      style={expandedStyle(isExpanded, textareaRef)}
     />
   );
 }
@@ -119,36 +107,41 @@ export class LexiconEditor extends
     super(props);
     this.state = { justClickedElement: '',}
   }
-  
+
   setJustClickedElement = (value: string) => this.setState({justClickedElement: value});
 
   componentDidMount() {
-    const all = document.getElementsByTagName("*");
-    Array.from(all).forEach((element) => {
+    this.makeElementsClickEditable()
+  }
+
+  makeElementsClickEditable() {
+    // attach listener to all elements in DOM with 'data-lexicon'
+    const allDataLexicon = document.querySelectorAll('[data-lexicon]');
+    Array.from(allDataLexicon).forEach((element) => {
       const htmlElement = element as HTMLElement
-      if (htmlElement.getAttribute("data-lexicon")) {
-        const oldBackground = htmlElement.style.background
-        htmlElement.addEventListener("click", (e) => {
-          if (e.altKey && e.shiftKey) {
-            const htmlTarget = e.target as HTMLElement
-            const lexiconAttribute = htmlTarget.getAttribute("data-lexicon")
-            const lexiconElement = document.getElementById(lexiconAttribute)
-            this.props.toggleEditor()
-            lexiconElement.scrollIntoView()
-            this.setJustClickedElement(lexiconAttribute)
-            htmlElement.style.background = oldBackground
-          }
-        })
-        htmlElement.addEventListener("mouseover", () => {
-          htmlElement.style.background = '#cccccc'
-          htmlElement.focus()
-        })
-        htmlElement.addEventListener("mouseout", () => {
-          htmlElement.style.background = oldBackground
-        })
-      }
+      htmlElement.addEventListener("click", this.clickEditHandler);
     })
   }
+
+  componentWillUnmount() {
+    const allDataLexicon = document.querySelectorAll('[data-lexicon]');
+    Array.from(allDataLexicon).forEach((element) => {
+      const htmlElement = element as HTMLElement;
+      htmlElement.removeEventListener("click", this.clickEditHandler);
+    });
+  }
+
+  clickEditHandler = (e: MouseEvent) => {
+    if (!e.shiftKey) return
+
+    const htmlTarget = e.target as HTMLElement
+    const lexiconAttribute = htmlTarget.getAttribute("data-lexicon")
+    const inputElement = document.getElementById(lexiconAttribute) // input that corresponds to clicked value
+    this.props.toggleEditor()
+    inputElement.scrollIntoView()
+    this.setJustClickedElement(lexiconAttribute)
+  }
+
 
   sendLexiconEditorChange = (event) => {
     const { name: localPath, value: newValue } = event.target;
