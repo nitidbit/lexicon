@@ -129,7 +129,7 @@ export class LexiconEditor extends
       const htmlElement = element as HTMLElement
       if (htmlElement.getAttribute("data-lexicon")) {
         const oldBackground = htmlElement.style.background
-        htmlElement.addEventListener("click", (e) => {
+        const handleClick = (e: MouseEvent) => {
           if (e.altKey && e.shiftKey) {
             const htmlTarget = e.target as HTMLElement
             const lexiconAttribute = htmlTarget.getAttribute("data-lexicon")
@@ -140,17 +140,46 @@ export class LexiconEditor extends
             // TODO [ww] can we get rid of this DOM modification?
             htmlElement.style.background = oldBackground
           }
-        })
-        // TODO [ww] can we turn these into a CSS :hover rule?
-        htmlElement.addEventListener("mouseover", () => {
+        }
+
+        const handleMouseOver = () => {
           htmlElement.style.background = '#cccccc'
           htmlElement.focus()
-        })
-        htmlElement.addEventListener("mouseout", () => {
+        }
+        // TODO [ww] can we turn these into a CSS :hover rule?
+
+        const handleMouseOut = () => {
           htmlElement.style.background = oldBackground
+        };
+
+        htmlElement.addEventListener("click", handleClick);
+        htmlElement.addEventListener("mouseover", handleMouseOver);
+        htmlElement.addEventListener("mouseout", handleMouseOut);
+
+        htmlElement.dataset.listeners = JSON.stringify({
+          handleClick,
+          handleMouseOver,
+          handleMouseOut
         })
       }
     })
+  }
+
+  componentWillUnmount() {
+    const all = document.getElementsByTagName("*");
+    Array.from(all).forEach((element) => {
+      const htmlElement = element as HTMLElement;
+      if (htmlElement.getAttribute("data-lexicon")) {
+        // Retrieve the event listeners to remove them
+        const { handleClick, handleMouseOver, handleMouseOut } = JSON.parse(htmlElement.dataset.listeners || "{}");
+
+        if (handleClick && handleMouseOver && handleMouseOut) {
+          htmlElement.removeEventListener("click", handleClick);
+          htmlElement.removeEventListener("mouseover", handleMouseOver);
+          htmlElement.removeEventListener("mouseout", handleMouseOut);
+        }
+      }
+    });
   }
 
   sendLexiconEditorChange = (event) => {
