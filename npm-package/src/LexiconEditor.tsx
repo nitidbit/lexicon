@@ -10,7 +10,6 @@ const expandedStyle = (isExpanded=true, ref) => {
   const maxHeight = `${window.innerHeight * 0.8}px`;
   if (ref && isExpanded) {
     const scrollHeight = ref.current.scrollHeight;
-    console.log("hegith is ", height)
     height = `${scrollHeight}px`
   }
   return {
@@ -108,7 +107,7 @@ export class LexiconEditor extends
     super(props);
     this.state = { justClickedElement: '',}
   }
-  
+
   setJustClickedElement = (value: string) => this.setState({justClickedElement: value});
 
   componentDidMount() {
@@ -117,18 +116,17 @@ export class LexiconEditor extends
 
   makeElementsClickEditable() {
     // attach listener to all elements in DOM with 'data-lexicon'
-    const allDataLexcion = document.querySelectorAll('[data-lexicon]');
-    Array.from(allDataLexcion).forEach((element) => {
+    const allDataLexicon = document.querySelectorAll('[data-lexicon]');
+    Array.from(allDataLexicon).forEach((element) => {
       const htmlElement = element as HTMLElement
       htmlElement.addEventListener("click", this.clickEditHandler);
     })
   }
 
   componentWillUnmount() {
-    const allDataLexcion = document.querySelectorAll('[data-lexicon]');
-    Array.from(allDataLexcion).forEach((element) => {
+    const allDataLexicon = document.querySelectorAll('[data-lexicon]');
+    Array.from(allDataLexicon).forEach((element) => {
       const htmlElement = element as HTMLElement;
-      console.log('removing', this.clickEditHandler)
       htmlElement.removeEventListener("click", this.clickEditHandler);
     });
   }
@@ -138,9 +136,9 @@ export class LexiconEditor extends
 
     const htmlTarget = e.target as HTMLElement
     const lexiconAttribute = htmlTarget.getAttribute("data-lexicon")
-    const lexiconElement = document.getElementById(lexiconAttribute)
+    const inputElement = document.getElementById(lexiconAttribute) // input that corresponds to clicked value
     this.props.toggleEditor()
-    lexiconElement.scrollIntoView()
+    inputElement.scrollIntoView()
     this.setJustClickedElement(lexiconAttribute)
   }
 
