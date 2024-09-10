@@ -22,7 +22,7 @@ describe('EditWrapper', () => {
 
   describe('saveChanges()', () => {
     const SampleComponent = () => (<div className="SampleComponent"> Sample </div>)
-    const sampleLexicon = new Lexicon({repoPath: "??", en: {blah: 'BLAH'}}, 'en')
+    const sampleLexicon = new Lexicon({repoPath: "??", en: {blah: 'BLAH'}})
 
     const renderScreen = (props={}) => {
     return render(
@@ -90,7 +90,7 @@ describe('EditWrapper', () => {
       x10: 'x', x11: 'x', x12: 'x', x13: 'x', x14: 'x', x15: 'x', x16: 'x', x17: 'x', x18: 'x', x19: 'x',
       x20: 'x', x21: 'x', x22: 'x', x23: 'x', x24: 'x', x25: 'x', x26: 'x', x27: 'x', x28: 'x', x29: 'x',
       x30: 'x', x31: 'x', x32: 'x', x33: 'x', x34: 'x', x35: 'x', x36: 'x', x37: 'x', x38: 'x', x39: 'x',
-    }}, 'en')
+    }})
 
     const SampleComponent = ({lexicon}) => (
       <div className="SampleComponent" data-lexicon='important_key'>

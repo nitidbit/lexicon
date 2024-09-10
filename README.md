@@ -42,8 +42,8 @@ es:
 ```
     import { Lexicon, EditWrapper } from 'lexicon';
 
-    const lex = new Lexicon(require('./MyStrings.yml'), 'en',  // the data, assuming you have a YAML loader
-            'app/javascript/components/MyStrings.yml');        // plus the filename for the editor
+    const lex = new Lexicon(require('./MyStrings.yml'))  // the data, assuming you have a YAML loader
+                                                         // plus the filename for the editor
 
 Get values using key paths as arrays or separated by "."
 
@@ -69,8 +69,8 @@ Arrays can be accessed using numeric keys
 
 One lexicons can added as a branch of another so that values from both are accessible
 
-      lex1 = new Lexicon({en: { one: 'ONE' }}, 'en', 'lex1.json');
-      lex2 = new Lexicon({en: { two: 'TWO' }}, 'en', 'lex2.json');
+      lex1 = new Lexicon({repoPath: 'lex1.json', en: { one: 'ONE' }});
+      lex2 = new Lexicon({repoPath: 'lex2.json', en: { two: 'TWO' }});
 
       lex1.addBranch(lex2, 'added');
       lex1.get('one')                                   // => 'ONE'

@@ -37,17 +37,21 @@ export class Lexicon {
   private _filename: string;
 
   constructor(contentByLocale: ContentByLocale,
-              localeCode: LocaleCode,
-              subset: KeyPath = '',
-              filename: string = '') {
-    this.currentLocaleCode = localeCode;
+              localeCode: LocaleCode = DEFAULT_LOCALE_CODE,
+              subset: KeyPath = '') {
+    // extract repoPath without causing TypeScript errors
     const contentWithPath = contentByLocale as ContentByLocale & { repoPath: string };
-    this._filename = filename || contentWithPath.repoPath;
-    delete contentByLocale["repoPath"]
+    if (isUndefined(contentWithPath.repoPath)) {
+      throw new Error(`'contentByLocale' must contain 'repoPath: 'path/to/content.json'. \ncontentByLocale=\n>>>${JSON.stringify(contentWithPath)}<<<`);
+    }
+    this._filename = contentWithPath.repoPath;
 
+    // ensure content at least has 'en' locale
     if (! lodash_has(contentByLocale, DEFAULT_LOCALE_CODE)) {
       throw new Error("'contentByLocale' must contain 'en: {...}' locale");
     }
+    this.currentLocaleCode = localeCode;
+    // delete contentByLocale["repoPath"]
     this._contentByLocale = contentByLocale;
     this._subsetRoot = col.keyPathAsArray(subset);
   }
@@ -61,12 +65,12 @@ export class Lexicon {
     if (! isLocaleCode(localeCode)) throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`);
 
     if (!col.has(this._contentByLocale, localeCode)) return null;
-    return new Lexicon(this._contentByLocale, localeCode, this._subsetRoot, this._filename);
+    return new Lexicon(this._contentByLocale, localeCode, this._subsetRoot);
   }
 
   /* Merge a second 'subLexicon' in under the key 'branchKey'. */
   addBranch(subLexicon: Lexicon, branchKey: string): void {
-    for (const locale of Object.keys(this._contentByLocale)) {
+    for (const locale of this.locales()) {
       this._contentByLocale[locale][branchKey] = subLexicon.locale(locale);
     }
   }
@@ -132,7 +136,7 @@ export class Lexicon {
   */
   subset(keyPath: KeyPath): Lexicon | null {
     let rootPathExcludingLocale = this.fullKey(null, keyPath);
-    return new Lexicon(this._contentByLocale, this.currentLocaleCode, rootPathExcludingLocale, this._filename, );
+    return new Lexicon(this._contentByLocale, this.currentLocaleCode, rootPathExcludingLocale );
   }
 
 
@@ -217,7 +221,14 @@ export class Lexicon {
 
   /* Return language codes for available locales */
   locales(): Array<LocaleCode> {
-    return col.keys(this._contentByLocale) as Array<LocaleCode>;
+    const result = col.keys(this._contentByLocale) as Array<LocaleCode>;
+
+    const index = result.indexOf('repoPath')
+    if (index > -1) { // only splice array when item is found
+      result.splice(index, 1) // 2nd parameter means remove one item only
+    }
+
+    return result
   }
 
 
@@ -277,7 +288,7 @@ export class Lexicon {
         return value.cloneDeep();
       }
     }
-    return new Lexicon(cloneDeepWith(this._contentByLocale, customizer), this.currentLocaleCode, this._subsetRoot, this._filename);
+    return new Lexicon(cloneDeepWith(this._contentByLocale, customizer), this.currentLocaleCode, this._subsetRoot);
   }
 
   clone(): Lexicon {
