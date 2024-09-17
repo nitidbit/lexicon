@@ -143,8 +143,12 @@ export class LexiconEditor extends
     if (!e.shiftKey) return
 
     const htmlTarget = e.target as HTMLElement
-    const lexiconAttribute = htmlTarget.getAttribute("data-lexicon")
-    const inputElement = document.getElementById(lexiconAttribute) // input that corresponds to clicked value
+    let lexiconAttribute = htmlTarget.getAttribute("data-lexicon")
+    let inputElement = document.getElementById(lexiconAttribute) // input that corresponds to clicked value
+    if (!inputElement) {
+      inputElement = document.querySelector(`[id$="${lexiconAttribute}"]`)
+      lexiconAttribute = inputElement.id
+    }
     this.props.toggleEditor()
     inputElement.scrollIntoView()
     this.setJustClickedElement(lexiconAttribute)

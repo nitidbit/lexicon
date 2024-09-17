@@ -84,6 +84,14 @@ export class Lexicon {
         // where mykey: ["Mr #{name}", "Mrs #{name}"]
         l.get("mykey", {name: "Winston"}) // -> ["Mr Winston", "Mrs Winston"]
   */
+
+  clicked(lexiPath: string, isInEditMode: boolean = true) {
+    if (isInEditMode) {
+      return {'data-lexicon': lexiPath}
+    }
+    return {}
+  }
+
   get(keyPath: KeyPath, templateSubstitutions?: object): any {
     if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
 

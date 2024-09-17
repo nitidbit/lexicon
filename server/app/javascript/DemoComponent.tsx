@@ -7,11 +7,11 @@ import "./DemoComponent.scss";
 import demoStrings from "./DemoComponent.json";
 const demoLexicon = new Lexicon(demoStrings)
 
-const isInEditMode = true
+const isInEditMode = false
 
 type FaqList = [ { question: String, answer: String } ]
 
-function Faq({ faqList }) {
+function Faq({ faqList, lexicon }) {
   if (isInEditMode) {
     return (
       <div className="Faq">
@@ -21,7 +21,7 @@ function Faq({ faqList }) {
             <div className="question">
               { question }
             </div>
-            <div className="answer" data-lexicon={`faq.${i}.answer`}> 
+            <div className="answer" {...lexicon.clicked(`faq.${i}.answer`, isInEditMode)}> 
               { answer }
             </div>
           </Fragment>
@@ -49,10 +49,13 @@ function Faq({ faqList }) {
 }
 
 function DemoComponent({lexicon}) {
+  const twainLexicon = lexicon.subset('quotes.twain')
   return (
     <div className="DemoComponent">
       { lexicon.get('title', {appName: 'blah'} ) }
-      <Faq faqList={lexicon.get('faq')} />
+      <Faq faqList={lexicon.get('faq')} lexicon={lexicon} />
+      <div><p {...twainLexicon.clicked('san_francisco_summer')}>{ twainLexicon.get('san_francisco_summer') }</p></div>
+      <br />
     </div>
   )
 }

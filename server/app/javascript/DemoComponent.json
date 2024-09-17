@@ -2,6 +2,14 @@
   "repoPath": "server/app/javascript/DemoComponent.json",
   "en": {
     "title": "React Demo Component for #{appName}",
+    "quotes": {
+      "shakespeare": {
+        "to_be": "to be or not to be, that is the question"
+      },
+      "twain": {
+        "san_francisco_summer": "the coldest winter I ever spent was a summer in san francisco"
+      }
+    },
     "faq": [
       { "question": "Favorite color", "answer": "blue" },
       { "question": "Favorite food", "answer": "Ice Cream" }
