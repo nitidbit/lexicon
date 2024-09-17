@@ -6,9 +6,11 @@ import { LxEditPanel } from './editor/LxEditPanel'
 // import './LxProviderStyles.scss'
 // import './LxProviderStyles'
 
-const EMPTY_LEXICON_HUB = new LexiconHub({repoPath: 'SHARED LEXICON', en: {}, es: {}})
+const empty_lexicon_hub = (localeCode: string = '') => { 
+  return new LexiconHub({repoPath: 'SHARED LEXICON', en: {}, es: {}}, localeCode)
+}
 
-const LxContext = createContext(EMPTY_LEXICON_HUB)
+const LxContext = createContext(empty_lexicon_hub())
 
 // Finds or creates a lexicon for your content. Also registers it with LexiconHub so it will appear
 // in editor.
@@ -22,10 +24,10 @@ export const useLexicon = (
 
 // Place this ContextProvider around your app to allow inner components to access
 // the shared root lexicon, and also the editor
-export const LxProvider = ({apiUpdateUrl, children}) => {
+export const LxProvider = ({apiUpdateUrl, children, localeCode=DEFAULT_LOCALE_CODE}) => {
 
   //    STATE
-  const [lexiconHub, setLexiconHub] = useState(EMPTY_LEXICON_HUB)
+  const [lexiconHub, setLexiconHub] = useState(empty_lexicon_hub(localeCode))
 
   grabLexiconServerTokenAndReload()
 

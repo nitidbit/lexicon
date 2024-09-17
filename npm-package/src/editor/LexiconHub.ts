@@ -39,11 +39,6 @@ export class LexiconHub extends Lexicon {
   //    Private methods
   //
 
-  // Return key that is unique for a particular Lexion.
-  private rootKey(lexicon) {
-    return lexicon.filename().replace('.', '_') // dots would be confused with key paths
-  }
-
   /* Merge a second 'subLexicon' in under the key 'branchKey'. */
   addBranch(subLexicon: Lexicon, branchKey: string): void {
     for (const locale of this.locales()) {

@@ -51,11 +51,18 @@ export class Lexicon {
     }
     this._filename = contentWithPath.repoPath;
 
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
+    if (!this.currentLocaleCode && !localeCode) {
+      this.currentLocaleCode = urlParams.get('locale') ? urlParams.get('locale') : DEFAULT_LOCALE_CODE 
+    } else {
+      this.currentLocaleCode = localeCode;
+    }
     // ensure content at least has 'en' locale
     if (! lodash_fp.has(DEFAULT_LOCALE_CODE, contentByLocale)) {
       throw new Error("'contentByLocale' must contain 'en: {...}' locale");
     }
-    this.currentLocaleCode = localeCode;
+
     // delete contentByLocale["repoPath"]
     this._data = contentByLocale;
     this._subsetRoot = col.keyPathAsArray(subset);
@@ -85,9 +92,9 @@ export class Lexicon {
         l.get("mykey", {name: "Winston"}) // -> ["Mr Winston", "Mrs Winston"]
   */
 
-  clicked(lexiPath: string, isInEditMode: boolean = true) {
-    if (isInEditMode) {
-      return {'data-lexicon': lexiPath}
+  clicked(lexiPath: string) {
+    if (sessionStorage.lexiconServerToken) {
+      return {'data-lexicon': this.rootKey(this) + '.' + this.fullKey(null, lexiPath)}
     }
     return {}
   }
@@ -151,10 +158,10 @@ export class Lexicon {
     return `<${this.constructor.name} ${JSON.stringify(this, null, 2)}>`
   }
 
-  inspect() {
-    return `<${this.constructor.name} ${JSON.stringify(this, null, 2)}>`
+  // rootKey(lexicon) {
+  rootKey(lexicon) {
+    return lexicon.filename().replace('.', '_') // dots would be confused with key paths
   }
-
 
   /* Determine the complete "key path" to retrieve our value */
   private fullKey(locale:LocaleCode, keyPath:KeyPath) {

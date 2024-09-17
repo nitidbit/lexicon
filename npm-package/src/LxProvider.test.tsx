@@ -12,12 +12,48 @@ jest.mock('./util')
 describe('<LxProvider>', () => {
   let lexicon: Lexicon
 
-  const SampleApp = () => {
-    lexicon = useLexicon({ repoPath: 'blah.json', en: {banner: "I <3 CATS" } })
+  const bigLexicon = {
+    repoPath: 'foo.json',
+    en: {
+      "title": "English Title",
+      "quotes": {
+        "shakespeare": {
+          "to_be": "to be or not to be, that is the question"
+        },
+        "twain": {
+          "san_francisco_summer": "the coldest winter I ever spent was a summer in san francisco"
+        }
+      },
+    },
+    es: {
+      "title": "Spanish Title",
+      "quotes": {
+      "shakespeare": {
+        "to_be": "ser o no ser, esa es la cuestión"
+      },
+      "twain": {
+        "san_francisco_summer": "El invierno más frío que he pasado fue un verano en San Francisco."
+      }
+    }
+  }
+}
+
+  const SampleApp = ({localeCode='en'}) => {
+    lexicon = useLexicon({ repoPath: 'blah.json', en: {banner: "I <3 CATS" }, es: {banner: 'YO <3 LOS GATOS'}, localeCode: localeCode })
 
     return (
       <div className="SampleApp">
         { lexicon.get('banner') }
+      </div>
+    )
+  }
+
+  const SampleSubsetApp = () => {
+    lexicon = useLexicon(bigLexicon)
+
+    return (
+      <div className="SubsetSampleApp">
+        { lexicon.subset("quotes.twain").get("san_francisco_summer")}
       </div>
     )
   }
@@ -30,6 +66,30 @@ describe('<LxProvider>', () => {
     return render(
       <LxProvider apiUpdateUrl="SAMPLE_URL">
         <SampleApp/>
+      </LxProvider>
+    )
+  }
+
+  const testSubsetSubject = (token = 'SAMPLE SERVER TOKEN') => {
+    if (token) {
+      sessionStorage.setItem('lexiconServerToken', token)
+    }
+
+    return render(
+      <LxProvider apiUpdateUrl="SAMPLE_URL">
+        <SampleSubsetApp/>
+      </LxProvider>
+    )
+  }
+
+  const testSpanishSubject = (token = 'SAMPLE SERVER TOKEN', localeCode = 'es') => {
+    if (token) {
+      sessionStorage.setItem('lexiconServerToken', token)
+    }
+
+    return render(
+      <LxProvider apiUpdateUrl="SAMPLE_URL" localeCode={localeCode}>
+        <SampleApp localeCode={localeCode} />
       </LxProvider>
     )
   }
@@ -79,6 +139,24 @@ describe('<LxProvider>', () => {
 
     it('does not render Edit Lexicon button', () => {
       expect(screen.queryByRole('button', { name: 'Nothing to Save'})).not.toBeInTheDocument()
+    })
+  })
+
+  describe('when editor opened in spanish', () => {
+    test('it renders spanish', async () => {
+      const screen = testSpanishSubject()
+
+      const sampleAppEditPanel = screen.container.querySelector('.LxEditPanel') as HTMLElement
+      expect(within(sampleAppEditPanel).queryByText('YO <3 LOS GATOS')).toBeInTheDocument()
+    })
+  })
+
+  describe('when using a subset of a lexicon', () => {
+    test('it renders lexicon content correctly', async () => {
+      const screen = testSubsetSubject()
+
+      const subsetSampleApp = screen.container.querySelector('.SubsetSampleApp') as HTMLElement
+      expect(within(subsetSampleApp).queryByText('the coldest winter I ever spent was a summer in san francisco')).toBeInTheDocument()
     })
   })
 })

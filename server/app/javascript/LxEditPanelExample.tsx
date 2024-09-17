@@ -4,9 +4,9 @@ import "./DemoComponent.scss";
 
 import demoStrings from "./DemoComponent.json";
 
-type FaqList = [ { question: String, answer: String } ]
+type FaqList = [ { question: String, answer: String, lexicon: object } ]
 
-function Faq({ faqList }) {
+function Faq({ faqList, lexicon }) {
   return (
     <div className="Faq">
     {
@@ -15,7 +15,7 @@ function Faq({ faqList }) {
           <div className="question">
             { question }
           </div>
-          <div className="answer" data-lexicon={`faq.${i}.answer`}>
+          <div className="answer" {...lexicon.clicked(`faq.${i}.answer`) }> 
             { answer }
           </div>
         </Fragment>
@@ -25,12 +25,17 @@ function Faq({ faqList }) {
   )
 }
 
-function ExampleComponent({}) {
-  const demoLexicon = useLexicon(demoStrings)
+function ExampleComponent({localeCode}) {
+  let demoLexicon = useLexicon(demoStrings, localeCode)
+  let twainLexicon = demoLexicon.subset('quotes.twain')
   return (
     <div className="ExampleComponent">
+      <a href="?locale=en">English</a> | <a href="?locale=es">Spanish</a>
+      <br />
+      <br />
       { demoLexicon.get('title', {appName: 'blah'} ) }
-      <Faq faqList={demoLexicon.get('faq')} />
+      <Faq faqList={demoLexicon.get('faq')} lexicon={demoLexicon} />
+      <div><p {...twainLexicon.clicked('san_francisco_summer')}>{ twainLexicon.get('san_francisco_summer') }</p></div>
     </div>
   )
 }
@@ -38,10 +43,13 @@ function ExampleComponent({}) {
 const UPDATE_URL = "update"
 
 export function LxEditPanelExample() {
+  const queryString = window.location.search
+  const urlParams = new URLSearchParams(queryString)
+  const localeCode = urlParams.get('locale') === 'es' ? 'es' : 'en'
   return (
     <div>
-      <LxProvider apiUpdateUrl={ UPDATE_URL }>
-        <ExampleComponent/>
+      <LxProvider apiUpdateUrl={ UPDATE_URL } localeCode={localeCode}>
+        <ExampleComponent localeCode={localeCode}/>
       </LxProvider>
     </div>
   )

@@ -7,29 +7,9 @@ import "./DemoComponent.scss";
 import demoStrings from "./DemoComponent.json";
 const demoLexicon = new Lexicon(demoStrings)
 
-const isInEditMode = false
-
 type FaqList = [ { question: String, answer: String } ]
 
 function Faq({ faqList, lexicon }) {
-  if (isInEditMode) {
-    return (
-      <div className="Faq">
-      {
-        faqList.map( ({question, answer}, i) => (
-          <Fragment key={ question }>
-            <div className="question">
-              { question }
-            </div>
-            <div className="answer" {...lexicon.clicked(`faq.${i}.answer`, isInEditMode)}> 
-              { answer }
-            </div>
-          </Fragment>
-        ))
-      }
-      </div>
-    )
-  }
   return (
     <div className="Faq">
     {
@@ -38,7 +18,7 @@ function Faq({ faqList, lexicon }) {
           <div className="question">
             { question }
           </div>
-          <div className="answer"> 
+          <div className="answer" {...lexicon.clicked(`faq.${i}.answer`)}> 
             { answer }
           </div>
         </Fragment>
@@ -49,9 +29,16 @@ function Faq({ faqList, lexicon }) {
 }
 
 function DemoComponent({lexicon}) {
+
+  const queryString = window.location.search
+  const urlParams = new URLSearchParams(queryString)
+  lexicon.currentLocaleCode = urlParams.get('locale') === 'es' ? 'es' : 'en'
   const twainLexicon = lexicon.subset('quotes.twain')
   return (
     <div className="DemoComponent">
+      <a href="?locale=en">English</a> | <a href="?locale=es">Spanish</a>
+      <br />
+      <br />
       { lexicon.get('title', {appName: 'blah'} ) }
       <Faq faqList={lexicon.get('faq')} lexicon={lexicon} />
       <div><p {...twainLexicon.clicked('san_francisco_summer')}>{ twainLexicon.get('san_francisco_summer') }</p></div>
@@ -62,7 +49,7 @@ function DemoComponent({lexicon}) {
 
 const UPDATE_URL = "update"
 
-function EditableDemoComponent(props) {
+function EditableDemoComponent() {
   return (
     <EditWrapper
       lexicon={ demoLexicon }
@@ -73,9 +60,8 @@ function EditableDemoComponent(props) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  createRoot(document.querySelector(".placeholder-DemoComponent"))
-    .render(EditableDemoComponent())
-
+  // createRoot(document.querySelector(".placeholder-DemoComponent"))
+  //   .render(EditableDemoComponent())
   createRoot(document.querySelector(".placeholder-LxEditPanelExample"))
-    .render(LxEditPanelExample())
+  .render(LxEditPanelExample())
 })
