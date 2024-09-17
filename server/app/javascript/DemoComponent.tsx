@@ -7,9 +7,29 @@ import "./DemoComponent.scss";
 import demoStrings from "./DemoComponent.json";
 const demoLexicon = new Lexicon(demoStrings)
 
+const isInEditMode = true
+
 type FaqList = [ { question: String, answer: String } ]
 
 function Faq({ faqList }) {
+  if (isInEditMode) {
+    return (
+      <div className="Faq">
+      {
+        faqList.map( ({question, answer}, i) => (
+          <Fragment key={ question }>
+            <div className="question">
+              { question }
+            </div>
+            <div className="answer" data-lexicon={`faq.${i}.answer`}> 
+              { answer }
+            </div>
+          </Fragment>
+        ))
+      }
+      </div>
+    )
+  }
   return (
     <div className="Faq">
     {
@@ -18,7 +38,7 @@ function Faq({ faqList }) {
           <div className="question">
             { question }
           </div>
-          <div className="answer" data-lexicon={`faq.${i}.answer`}>
+          <div className="answer"> 
             { answer }
           </div>
         </Fragment>
