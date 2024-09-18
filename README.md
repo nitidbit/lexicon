@@ -29,12 +29,11 @@ Add Lexicon to your project, e.g.
 
 import React from "react"
 import { useLexicon, LxProvider } from '@nitidbit/lexicon'
-
-import demoStrings from "./DemoComponent.json"
+import demoStrings from "./DemoComponent.json" // Your text content
 
 const UPDATE_URL = "https://lexicon.nitid.co/update"
 
-// LxProvider provides storage and the editor for Lexicon data
+// <LxProvider> provides storage and the editor for Lexicon data
 export function ExampleApp() {
   return (
     <div className="ExampleApp">
@@ -45,8 +44,8 @@ export function ExampleApp() {
   )
 }
 
-// useLexicon returns a Lexicon instance for fetching your text content. See next section for what a
-// Lexicon can do.
+// useLexicon() returns a Lexicon instance for fetching your text content. See next section for what
+// a Lexicon can do.
 function ExampleComponent({}) {
   const demoLexicon = useLexicon(demoStrings) // instantiate a Lexicon with our strings
   return (
@@ -57,7 +56,6 @@ function ExampleComponent({}) {
 }
 ```
 ``` json
-// DemoComponent.json
 {
   "repoPath": "server/app/javascript/DemoComponent.json",
   "en": {
@@ -75,17 +73,20 @@ Lexicon
 A Lexicon is a container for translated strings and data.
 
 ```json
-# MyStrings.yml
-en:
-    message: 'Hello, world!'
-    subComponent:
-      template: 'There are #{count} widgets.'
-    faq:
-      - question: 'What is the meaning of life, the universe, and everything?'
-        answer: '42'
-es:
-    message: '¡Hola, mundo!',
-    ...
+{
+  "en": {
+    "message": "Hello, world!"
+    "subComponent": {
+      "template": "There are #{count} widgets."
+    }
+    "faq": {
+       "question": "What is the meaning of life, the universe, and everything?"
+       "answer": "42"
+    },
+  "es": {
+    "message": "¡Hola, mundo!"
+  }
+}
 ```
     import { Lexicon, EditWrapper } from 'lexicon';
 
