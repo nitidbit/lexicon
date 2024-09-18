@@ -49,6 +49,9 @@ interface LexiconAPIResponse {
   error: string | null;
 };
 
+/*
+    Deprecated -- use <LxProvider> instead. See README.md for how to use it.
+ */
 export default class EditWrapper extends React.Component<EditWrapperProps, EditWrapperState> {
   constructor(props: EditWrapperProps) {
     super(props);
