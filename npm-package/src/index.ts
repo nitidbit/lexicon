@@ -1,8 +1,6 @@
 export { Lexicon } from "./Lexicon"
-export { default as EditWrapper } from "./EditWrapper"
-export { LxEditPanel } from "./LxEditPanel"
+export { default as EditWrapper } from "./editor/EditWrapper"
 export { LxProvider, useLexicon } from "./LxProvider"
-export { LexiconHub } from "./LexiconHub"
 
 export const VERSION = "2.12.3";
 

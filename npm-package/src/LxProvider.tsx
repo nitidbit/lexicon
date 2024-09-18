@@ -1,8 +1,8 @@
 import React, { useState, createContext, useContext } from 'react';
 import { getURLParameter } from './util';
 import { Lexicon, ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
-import { LexiconHub } from './LexiconHub'
-import { LxEditPanel } from './LxEditPanel'
+import { LexiconHub } from './editor/LexiconHub'
+import { LxEditPanel } from './editor/LxEditPanel'
 
 const EMPTY_LEXICON_HUB = new LexiconHub({repoPath: 'SHARED LEXICON', en: {}, es: {}})
 

@@ -3,7 +3,9 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { Lexicon, LexiconHub, LxEditPanel } from "./index"
+import { Lexicon } from "../index"
+import { LexiconHub } from "./LexiconHub"
+import { LxEditPanel } from "./LxEditPanel"
 
 describe('<LxEditPanel>', () => {
   let lexiconHub: LexiconHub

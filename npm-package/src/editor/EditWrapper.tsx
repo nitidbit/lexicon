@@ -1,11 +1,11 @@
 import React, { ChangeEvent } from 'react';
 
-import { Lexicon } from './Lexicon';
-import { VERSION } from './index';
+import { Lexicon } from '../Lexicon';
+import { VERSION } from '../index';
 import {LexiconEditor, OnChangeCallback} from './LexiconEditor';
 import './EditWrapperStyles.css';
-import { getURLParameter } from './util';
-import {KeyPath, KeyPathString} from './collection';
+import { getURLParameter } from '../util';
+import {KeyPath, KeyPathString} from '../collection';
 
 interface EditWrapperProps {
   component:                                                    // This is the React component rendered inside the wrapper.
