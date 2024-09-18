@@ -79,10 +79,10 @@ A Lexicon is a container for translated strings and data.
     "subComponent": {
       "template": "There are #{count} widgets."
     }
-    "faq": {
+    "faq": [
        "question": "What is the meaning of life, the universe, and everything?"
        "answer": "42"
-    },
+    ],
   "es": {
     "message": "¡Hola, mundo!"
   }
