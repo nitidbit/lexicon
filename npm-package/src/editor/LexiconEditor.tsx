@@ -4,9 +4,9 @@
 */
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Lexicon } from './Lexicon';
+import { Lexicon } from '../Lexicon';
 import { JSXElement } from '@babel/types';
-import {KeyPath, KeyPathString, keyPathAsString} from './collection';
+import {KeyPath, KeyPathString, keyPathAsString} from '../collection';
 import './LexiconEditorStyles.css';
 
 const expandedStyle = (isExpanded=true, ref) => {

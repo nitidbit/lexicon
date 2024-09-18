@@ -3,11 +3,11 @@ import '@testing-library/jest-dom'
 import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { Lexicon } from './Lexicon'
+import { Lexicon } from '../Lexicon'
 import EditWrapper from './EditWrapper'
-import { getURLParameter } from './util'
+import { getURLParameter } from '../util'
 
-jest.mock('./util', () => ({
+jest.mock('../util', () => ({
   getURLParameter: () => ("SAMPLE_LEXICON_SERVER_TOKEN")
 }))
 

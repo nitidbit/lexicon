@@ -28,7 +28,7 @@ function Faq({ faqList }) {
 function ExampleComponent({}) {
   const demoLexicon = useLexicon(demoStrings)
   return (
-    <div className="DemoComponent">
+    <div className="ExampleComponent">
       { demoLexicon.get('title', {appName: 'blah'} ) }
       <Faq faqList={demoLexicon.get('faq')} />
     </div>

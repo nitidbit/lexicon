@@ -1,15 +1,13 @@
 export { Lexicon } from "./Lexicon"
-export { default as EditWrapper } from "./EditWrapper"
-export { LxEditControl } from "./LxEditControl"
-export { LxEditPanel } from "./LxEditPanel"
+export { default as EditWrapper } from "./editor/EditWrapper"
 export { LxProvider, useLexicon } from "./LxProvider"
-export { LexiconHub } from "./LexiconHub"
 
 export const VERSION = "2.12.3";
 
 /*
   Change History - API changes since last version
 
+  v2.?.?  - <LxProvider> is a better way to add editing and manager Lexicons through code. <EditWrapper> still exists for a while.
   v2.12.3 - fix CORS issue; fix error reporting when server returns error JSON; Lots of work on JS tooling/building
   v2.12.2 - Updates to editor for better editing experience
     https://app.shortcut.com/lexicon/story/2350/drag-lexicon-editor-to-expand

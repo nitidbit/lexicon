@@ -1,7 +1,7 @@
 import cloneDeepWith from 'lodash/cloneDeepWith';
-import { KeyPath } from './collection';
-import * as col from './collection';
-import { Lexicon, ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
+import { KeyPath } from '../collection';
+import * as col from '../collection';
+import { Lexicon, ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from '../Lexicon'
 
 
 export class LexiconHub extends Lexicon {

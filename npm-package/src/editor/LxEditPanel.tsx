@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { VERSION } from './index'
+import { VERSION } from '../index'
 import {LexiconEditor, OnChangeCallback, SwitchLocaleCallback} from './LexiconEditor'
-import {Lexicon, LocaleCode, DEFAULT_LOCALE_CODE} from './Lexicon'
+import {Lexicon, LocaleCode, DEFAULT_LOCALE_CODE} from '../Lexicon'
 import {LexiconHub} from './LexiconHub'
 import './LxEditPanelStyles.css'
 
