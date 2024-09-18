@@ -3,8 +3,11 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import { within } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
+import { getURLParameter } from './util'
 
 import { LxProvider, Lexicon, useLexicon } from './index'
+
+jest.mock('./util')
 
 describe('<LxProvider>', () => {
   let lexicon: Lexicon
@@ -19,8 +22,11 @@ describe('<LxProvider>', () => {
     )
   }
 
-  const testSubject = () => {
-    sessionStorage.setItem('lexiconServerToken', 'SAMPLE SERVER TOKEN')
+  const testSubject = (token = 'SAMPLE SERVER TOKEN') => {
+    if (token) {
+      sessionStorage.setItem('lexiconServerToken', token)
+    }
+
     return render(
       <LxProvider apiUpdateUrl="SAMPLE_URL">
         <SampleApp/>
@@ -46,9 +52,33 @@ describe('<LxProvider>', () => {
     })
   })
 
-  // when lexiconServerToken is in URL:
-    // stores token for later
-    // reloads the browser
-  // when there is no token: does not render Edit Lexicon button
-  // when token was passed: renders Edit Lexicon button
+  describe('when lexiconServerToken is in URL', () => {
+    beforeEach(() => {
+      (getURLParameter as jest.Mock).mockImplementationOnce((name) => 'SAMPLE_TOKEN' )
+
+      testSubject(/*dont set sessionStorage:*/null)
+    })
+
+    it('stores token for later', () => {
+      expect(sessionStorage.getItem('lexiconServerToken')).toEqual('SAMPLE_TOKEN')
+    })
+
+    xit('reloads the browser so token is no longer in URL', () => {})
+
+    it('renders the Lexicon Edit button', () => {
+      expect(screen.queryByRole('button', { name: 'Nothing to Save'})).toBeInTheDocument()
+    })
+  })
+
+  describe('when there is no token', () => {
+    beforeEach(() => {
+      sessionStorage.clear()
+      expect(sessionStorage.getItem('lexiconServerToken')).toEqual(null)
+      testSubject(/*dont set sessionStorage:*/null)
+    })
+
+    it('does not render Edit Lexicon button', () => {
+      expect(screen.queryByRole('button', { name: 'Nothing to Save'})).not.toBeInTheDocument()
+    })
+  })
 })
