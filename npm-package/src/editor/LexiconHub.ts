@@ -14,7 +14,6 @@ export class LexiconHub extends Lexicon {
     super(contentByLocale, localeCode, subset)
   }
 
-
   register(
     contentByLocale: ContentByLocale,
     localeCode: LocaleCode = DEFAULT_LOCALE_CODE
