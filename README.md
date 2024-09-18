@@ -4,7 +4,7 @@ lexicon
 Client-side code and React components for interacting with a Lexicon.
 
 - `Lexicon` — a container for your translated strings and data.
-- `EditWrapper` — a React component that adds an "Edit Content" button which allows users to edit strings and data.
+- `LxProvider` — a React component that adds an "Edit Content" button which allows users to edit strings and data.
 - `Lexicon Server` — a Rails app that will accept changes from the editor, and write them to GitHub
 
 [DEVELOPERS.md is documentation for people modifying the Lexicon JS client](DEVELOPERS.md).
@@ -22,6 +22,53 @@ Point NPM to use Nitid's registry: create this file:
 ```
 
     npm i --save @nitidbit/lexicon
+
+Add Lexicon to your project, e.g.
+``` typescript
+// LxEditPanelExample.tsx
+
+import React from "react"
+import { useLexicon, LxProvider } from '@nitidbit/lexicon'
+
+import demoStrings from "./DemoComponent.json"
+
+const UPDATE_URL = "https://lexicon.nitid.co/update"
+
+// LxProvider provides storage and the editor for Lexicon data
+export function ExampleApp() {
+  return (
+    <div className="ExampleApp">
+      <LxProvider apiUpdateUrl={ UPDATE_URL }>
+        <ExampleComponent/>
+      </LxProvider>
+    </div>
+  )
+}
+
+// useLexicon returns a Lexicon instance for fetching your text content. See next section for what a
+// Lexicon can do.
+function ExampleComponent({}) {
+  const demoLexicon = useLexicon(demoStrings) // instantiate a Lexicon with our strings
+  return (
+    <div className="ExampleComponent">
+      { demoLexicon.get('title', {appName: 'blah'} ) } // retrieve the localized 'title', and insert 'appName'
+    </div>
+  )
+}
+```
+``` json
+// DemoComponent.json
+{
+  "repoPath": "server/app/javascript/DemoComponent.json",
+  "en": {
+    "title": "React Demo Component for #{appName}",
+  },
+  "es": {
+    "title": "Spanish React Demo page for #{appName}",
+  }
+}
+```
+
 
 Lexicon
 -------
@@ -76,24 +123,6 @@ One lexicons can added as a branch of another so that values from both are acces
       lex1.get('one')                                   // => 'ONE'
       lex1.get('added.two')                             // => 'TWO'
 
-
-EditWrapper
------------
-EditWrapper is a React component that takes your component, and a Lexicon and adds an Edit Contents button. Admins can then edit a Lexicon, see changes live, and then save them to a Lexicon-Server.
-
-When you create an `EditWrapper`, you now need to tell it where to send changes. There are several configurations:
-
-- An **endpoint on your own Rails app** that will call [LexServe::Saver](https://github.com/nitidbit/lexicon/blob/main/SERVER.md) Take a look at how Bedsider does it. Generally you'll add an endpoint which forwards params to LexServe::Saver.
-
-- Use the endpoint on **[ Nitid's Lexicon Server ](https://lexicon.nitid.co/)**.  — See the [Lexicon Server README](https://github.com/nitidbit/lexicon/blob/main/SERVER.md) about how to add your app.
-
-```jsx
-<EditWrapper
-  // other props...
-  apiUpdateUrl="https://lexicon.nitid.co/update" // or whatever the correct URL is
-/>
-```
-
 [Here is a diagram of how all the pieces of Lexicon fit together](LexiconComponents.png)
 
 
@@ -125,14 +154,9 @@ Where are we using Lexicon and Lexicon-Server?
 - https://lexicon.nitid.co/admin
     Several static sites uses this server for making Lexicon changes.
 
+- MyBC and MyPath
+
 
 Change History
 --------------
 See: [src/index.ts](src/index.ts)
-
-
-TO DO
------
-- Better error message if you accidentally pass the wrong path for the JSON file.
-- When Lexicon Server fails talking to github, it returns a 500 and the app says "syntax error".
-

@@ -5,20 +5,20 @@ Lexicon Server
 - staging: https://lexicon-staging.onrender.com/sign_in -- for testing Lexicon itself
 
 Pages:
-- /demo — See Lexicon in action. Also a testbed for making sure it's working.
 - /sign_in — for configuring and editing other websites that use Lexicon
+- /demo — See Lexicon in action. Also a testbed for making sure it's working.
 
 
 What is Lexicon-Server For?
 ---------------------------
 Let's say you have a JS app that has textual content and you want clients to be able to update that
-content without involving engineers. Lexicon's EditWrapper allows editing, but it must save the
-changes somewhere. That's what Lexicon-Server is for. EditWrapper sends it to Lexicon-Server, and it
-will then save the changes into your github repo, ready for the next build.
+content without involving engineers. <Lexicon> & <LxProvider> allows editing, but it must save the
+changes somewhere.  That's what Lexicon-Server is for. LxProvider sends it to Lexicon-Server, and
+it will then save the changes into your github repo, ready for the next build.
 
 Using Lexicon-Server with Clients for Content Editing
 -----------------------------------------------------
-Create your React app, with EditWrappers. For the <EditWrapper apiUpdateUrl={}> prop, use
+Create your React app, with <LxProvider>. For the `apiUpdateUrl` prop, use
 $SERVER/update, e.g. http://lexicon-server-staging.onrender.com/update
 
 Create a Client App on Lexicon which represents your instance of MyApp.
@@ -38,7 +38,7 @@ Create Lexicon Users linked to MyApp
 Test that all the access keys work
 - on Apps to Edit,
 - Click on MyApp. You should see MyApp in your browser, but you are authenticated through Lexicon
-  Server so you see Edit Content buttons wherever you had an EditWrapper in your code.
+  Server so you see Edit Content buttons wherever you had <LxProvider> in your code.
 - Click Edit Content, change some stuff, then click Save.
 - Verify that there is a new GitHub commit with your changes.
 

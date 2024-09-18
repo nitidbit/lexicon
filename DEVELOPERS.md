@@ -1,41 +1,27 @@
 Read-Me for Developers working on Lexicon itself
 ================================================
 
-Github package registry:
-- https://github.com/nitidbit/lexicon/pkgs/npm/lexicon
+- [Github package registry]( https://github.com/nitidbit/lexicon/pkgs/npm/lexicon )
+
+- [Story and bug tracker]( https://app.shortcut.com/lexicon/stories/space/2272?team_scope_id=v2%3At%3A66284048-8323-4dd5-bbaa-91068f5b1cea%3A66284048-78ff-4daf-ab41-b7f66ad3455d )
 
 
 Developing the Lexicon NPM Package
 ----------------------------------
-
 If you are just using Lexicon in your project, you can ignore this file.
 
-### Editing Lexicon and your project at the same time
-Create a symbolic link from your projects folder to your lexicon folder
-
-    cd myproject
-    rm -rf node_modules/@nitidbit/lexicon
-    ln -s /Users/my-home/path/to/lexicon node_modules/@nitidbit/lexicon
-
-Check it worked:
-
-    ls -l node_modules |grep lexicon
-
-should output this which shows it's a symbolic link:
-
-    lrwxr-xr-x    1 winstonw  staff     44 Dec 11 11:40 lexicon@ -> /Users/winstonw/clients/nitidbit/git/lexicon
 
 ### Compilation
 
 While developing, run tsc in the background, watching your changes and recompiling
+    cd npm-package
     npm i
     npm run build:watch
 
 You should also make sure that all tests pass:
 
-    npm test
+    npm run test (or npm run test:watch)
 
-Tests are in `src/Lexicon.test.ts`.
 
 ### Deploying new versions
 
@@ -88,16 +74,6 @@ Developers can:
 
 
 ### Later
-
-- Don't require localeCode in new Lexicon(), i.e. change the signature so it's:
-      constructor(contentByLocale: ContentByLocale,
-                  filename: string,
-                  subset: KeyPath = '',
-                  localeCode: LocaleCode = DEFAULT_LOCALE_CODE
-                  )
-
-- I wish I could define the Lexicon I need in each module so I wasn't passing them all around. Yet I
-  still want the editor to access them all.
 
 - Editor can check types of content, e.g. must be a number, date, or list has elements of a
   particular shape {question: ___, answer: ___}
