@@ -1,4 +1,5 @@
 import { LexiconHub } from './LexiconHub';
+import { Lexicon } from '../Lexicon';
 
 describe('LexiconHub', () => {
   describe('register()', () => {
@@ -12,7 +13,7 @@ describe('LexiconHub', () => {
   })
 
   describe('set()', () => {
-    it('returns new Lexicon with the changed value, leaving originl unchanged', () => {
+    it('returns new Lexicon with the changed value, leaving original unchanged', () => {
       const hub = new LexiconHub()
       const lexOrig = hub.register({repoPath: 'orig.json', en: { favColor: 'PINK' } })
 
@@ -47,5 +48,26 @@ describe('LexiconHub', () => {
       const hubES = hubEN.locale('es')
       expect(hubES).toBeInstanceOf(LexiconHub)
     })
+  })
+
+  describe('addBranch()', () => {
+    let hub, lex2;
+
+    beforeEach( () => {
+      hub = new LexiconHub({repoPath: 'hub.json', en: { one: 'ONE' }});
+      lex2 = new Lexicon({repoPath: 'lex2.json', en: { two: 'TWO' }});
+
+      hub.addBranch(lex2, 'added');
+    });
+
+    test('returns a Lexicon containing keys from both underlying Lexicons', () => {
+      expect(hub.get('one')).toEqual('ONE');
+      expect(hub.get('added.two')).toEqual('TWO');
+    });
+
+    test('subsets work with added subLexicons', () => {
+      let addedLex = hub.subset('added');
+      expect(addedLex.get('two')).toEqual('TWO');
+    });
   })
 })

@@ -39,10 +39,9 @@ const classConstructor = (someInstance) => {
 
 export class Lexicon {
   public currentLocaleCode: LocaleCode;
-  protected _contentByLocale: ContentByLocale;
+  protected _data: ContentByLocale;
   protected _subsetRoot: KeyPathArray;
   protected _filename: string;
-  public _id: number;
 
   constructor(contentByLocale: ContentByLocale,
               localeCode: LocaleCode = DEFAULT_LOCALE_CODE,
@@ -60,7 +59,7 @@ export class Lexicon {
     }
     this.currentLocaleCode = localeCode;
     // delete contentByLocale["repoPath"]
-    this._contentByLocale = contentByLocale;
+    this._data = contentByLocale;
     this._subsetRoot = col.keyPathAsArray(subset);
   }
 
@@ -72,20 +71,10 @@ export class Lexicon {
   locale(localeCode: LocaleCode): Lexicon | null {
     if (! isLocaleCode(localeCode)) throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`);
 
-    if (!col.has(this._contentByLocale, localeCode)) return null;
+    if (!col.has(this._data, localeCode)) return null;
 
-    return new (classConstructor(this))(this._contentByLocale, localeCode, this._subsetRoot)
+    return new (classConstructor(this))(this._data, localeCode, this._subsetRoot)
   }
-
-  /* Merge a second 'subLexicon' in under the key 'branchKey'. */
-  addBranch(subLexicon: Lexicon, branchKey: string): void {
-    for (const locale of this.locales()) {
-      this._contentByLocale[locale][branchKey] = subLexicon.locale(locale);
-    }
-  }
-
-  /* DEPRECATED. an alias for addBranch() */
-  addSubLexicon(subLexicon: Lexicon, branchKey: string) { this.addBranch(subLexicon, branchKey); }
 
   /*
      Return a value from the Lexicon, in the current locale.
@@ -149,7 +138,7 @@ export class Lexicon {
   */
   subset(keyPath: KeyPath): Lexicon | null {
     let rootPathExcludingLocale = this.fullKey(null, keyPath);
-    return new Lexicon(this._contentByLocale, this.currentLocaleCode, rootPathExcludingLocale );
+    return new Lexicon(this._data, this.currentLocaleCode, rootPathExcludingLocale );
   }
 
   inspect() {
@@ -201,9 +190,9 @@ export class Lexicon {
       if (node instanceof Lexicon) {
         lexicon = node;
         localPrefix = []
-        rootPrefix = rootPrefix.concat(['_contentByLocale', locale])
+        rootPrefix = rootPrefix.concat(['_data', locale])
         keyPath = lodash_concat(col.keyPathAsArray(lexicon._subsetRoot), keyPath);
-        nextNode = col.get(lexicon._contentByLocale, [locale]);
+        nextNode = col.get(lexicon._data, [locale]);
       } else {
         const firstKey = keyPath[0];
         keyPath = keyPath.slice(1);
@@ -239,7 +228,7 @@ export class Lexicon {
 
   /* Return language codes for available locales */
   locales(): Array<LocaleCode> {
-    const result = col.keys(this._contentByLocale) as Array<LocaleCode>;
+    const result = col.keys(this._data) as Array<LocaleCode>;
 
     const index = result.indexOf('repoPath')
     if (index > -1) { // only splice array when item is found
@@ -290,39 +279,13 @@ export class Lexicon {
     return this.keys().map( key => [key, this.get(key)] )
   }
 
-  // Returns new instance, with a value changed.
+  /* Returns new instance, with a value changed.
+   * Note that updatePath is interepreted from the root of this Lexicon, and ignores current
+   * locale and subset settings
+   */
   set(updatePath: KeyPath, newValue: any): Lexicon {
     if (!lodash_fp.has(updatePath, this)) throw new Error(`node ${updatePath} does not exist`)
 
     return lodash_fp.set(updatePath, newValue, this)
-  }
-
-
-  /*
-   * Change value in a lexicon.
-   * Note that updatePath is interepreted from the root of this Lexicon, and ignores current
-   * locale and subset settings
-   */
-  update(updatePath: KeyPath, newValue: any): boolean {
-    if (!col.has(this, updatePath)) return false; // node does not exist
-
-    col.set(this, updatePath, newValue);
-    return true; // success
-  }
-
-
-  /* Used by LexiconEditor */
-  cloneDeep(): Lexicon {
-    function customizer(value) {
-      if (value instanceof Lexicon) {
-        return value.cloneDeep();
-      }
-    }
-    return new Lexicon(cloneDeepWith(this._contentByLocale, customizer), this.currentLocaleCode, this._subsetRoot);
-  }
-
-  clone(): Lexicon {
-    console.warn('Lexicon.ts: clone() is deprecated. Use cloneDeep() instead.');
-    return this.cloneDeep();
   }
 }

@@ -232,37 +232,11 @@ describe('Lexicon module', () => {
     })
   })
 
-  describe('cloneDeep()', () => {
-    test('returns a copy of the Lexicon', () => {
-      const cloned = lex.cloneDeep();
-      for (const k of cloned.keys()) {
-        expect(cloned.get(k)).toEqual(lex.get(k));
-      }
-
-      for (const k of cloned.locale('es').keys()) {
-        expect(cloned.locale('es').get(k)).toEqual(lex.locale('es').get(k));
-      }
-    });
-
-    test('returns an independent copy', () => {
-      const clone1 = lex.cloneDeep();
-      const clone2 = lex.cloneDeep();
-
-      clone1.update(clone1.source('foo').updatePath, 'FOO 1');
-
-      expect(clone1.get('foo')).toEqual('FOO 1');
-      expect(clone2.get('foo')).toEqual('bar');
-      expect(lex.get('foo')).toEqual('bar');
-    });
-  });
-
-
   describe('locales()', () => {
     test('returns a list of defined locales', () => {
       expect(lex.locales()).toEqual(['en', 'es']);
     });
   });
-
 
   describe('source()', () => {
     test('returns keyPath and filename for editing the file', () => {
@@ -271,8 +245,8 @@ describe('Lexicon module', () => {
       expect(info.filename).toEqual('blah.json')
       expect(info.localPath).toEqual(['en', 'foo'])
 
-      lex.update(info.updatePath, 'NEW VALUE');
-      expect(lex.get('foo')).toEqual('NEW VALUE');
+      const lex2 = lex.set(info.updatePath, 'NEW VALUE');
+      expect(lex2.get('foo')).toEqual('NEW VALUE');
     });
 
     test('raises exception when node is not found', () => {
@@ -285,8 +259,8 @@ describe('Lexicon module', () => {
       expect(info.filename).toEqual('blah.json');
       expect(info.localPath).toEqual(['es', 'foo']);
 
-      lex.update(info.updatePath, 'NEW VALUE');
-      expect(lex.locale("es").get('foo')).toEqual('NEW VALUE');
+      const lex2 = lex.set(info.updatePath, 'NEW VALUE');
+      expect(lex2.locale("es").get('foo')).toEqual('NEW VALUE');
 
     });
 
@@ -296,8 +270,8 @@ describe('Lexicon module', () => {
       expect(info.filename).toEqual('blah.json');
       expect(info.localPath).toEqual(['en', 'nested', 'wom']);
 
-      lex.update(info.updatePath, 'NEW VALUE');
-      expect(lex.subset('nested').get('wom')).toEqual('NEW VALUE');
+      const lex2 = lex.set(info.updatePath, 'NEW VALUE');
+      expect(lex2.subset('nested').get('wom')).toEqual('NEW VALUE');
     });
 
     test('works with Lexicons inside Lexicons', () => {
@@ -306,8 +280,8 @@ describe('Lexicon module', () => {
       expect(info.filename).toEqual('subLex.json');
       expect(info.localPath).toEqual(['en', 'subFoo']);
 
-      lex.update(info.updatePath, 'NEW VALUE');
-      expect(lex.get('subLex.subFoo')).toEqual('NEW VALUE');
+      const lex2 = lex.set(info.updatePath, 'NEW VALUE');
+      expect(lex2.get('subLex.subFoo')).toEqual('NEW VALUE');
     });
 
     describe('with Lexicon.subset() inside Lexicons', () => {
@@ -325,8 +299,8 @@ describe('Lexicon module', () => {
 
       test('returns updatePath that works with .update()', () => {
         const updatePath = A.source('a.c').updatePath;
-        A.update(updatePath, 'NEW VALUE');
-        expect(A.get('a.c')).toEqual('NEW VALUE')
+        const A2 = A.set(updatePath, 'NEW VALUE');
+        expect(A2.get('a.c')).toEqual('NEW VALUE')
       });
     });
   });
@@ -335,7 +309,7 @@ describe('Lexicon module', () => {
     let lex2 = null;
 
     test('returns new Lexicon with the key changed but the rest of thes structure the same', () => {
-      const updatePath = [ '_contentByLocale', 'en', 'nested', 'wom' ]
+      const updatePath = [ '_data', 'en', 'nested', 'wom' ]
       const lex2 = lex.set(updatePath, 'NEW BAT')
       expect(lex2.get('nested.wom')).toEqual('NEW BAT');
     });
@@ -361,76 +335,4 @@ describe('Lexicon module', () => {
       expect(() => lex.set('blah.123', 'foobar')).toThrow()
     });
   })
-
-  describe('update()', () => {
-    let lex2 = null;
-
-    beforeEach( ()=> {
-      lex2 = lex.cloneDeep();
-    });
-
-    test('updates the key and returns true', () => {
-      expect(lex2.update(lex2.source('nested.wom').updatePath, 'NEW BAT')).toEqual(true);
-      expect(lex2.get('nested.wom')).toEqual('NEW BAT');
-    });
-
-
-    test('output of source() can be used to update()', () => {
-      let info = lex.source('nested.wom');
-      lex2.update(info.updatePath, 'NEW BAT')
-
-      expect(lex2.get('nested.wom')).toEqual('NEW BAT')
-      expect(lex.get('nested.wom')).toEqual('bat')
-    });
-
-    test('works for nested Lexicons', () => {
-      let info = lex.source('subLex.subFoo');
-      lex2.update(info.updatePath, 'NEW-sub-foo')
-
-      expect(lex.get('subLex.subFoo')).toEqual('SUB FOO')
-      expect(lex2.get('subLex.subFoo')).toEqual('NEW-sub-foo')
-    });
-
-    test('returns false if path or locale does not exist', () => {
-      expect(lex.update('blah.123', 'foobar')).toEqual(false);
-    });
-  });
-
-  describe('addBranch()', () => {
-    let lex1, lex2;
-
-    beforeEach( () => {
-      lex1 = new Lexicon({repoPath: 'lex1.json', en: { one: 'ONE' }});
-      lex2 = new Lexicon({repoPath: 'lex2.json', en: { two: 'TWO' }});
-
-      lex1.addBranch(lex2, 'added');
-    });
-
-    test('returns a Lexicon containing keys from both underlying Lexicons', () => {
-      expect(lex1.get('one')).toEqual('ONE');
-      expect(lex1.get('added.two')).toEqual('TWO');
-    });
-
-    test('subsets work with added subLexicons', () => {
-      let addedLex = lex1.subset('added');
-      expect(addedLex.get('two')).toEqual('TWO');
-    });
-
-    test('saving/updating subsets of a sub-lexicon work', () => {
-      let addedLex = lex1.subset('added');
-      lex.update(addedLex.source('two').updatePath, 'NEW VALUE');
-      expect(addedLex.get('two')).toEqual('TWO');
-    })
-  })
-
-  describe('addSubLexicon()', () => {
-    test('addSubLexicon is an alias for addBranch', () => {
-      let lex1 = new Lexicon({repoPath: 'lex1.json', en: { one: 'ONE' }});
-      let lex2 = new Lexicon({repoPath: 'lex2.json', en: { two: 'TWO' }});
-
-      lex1.addSubLexicon(lex2, 'added');
-
-      expect(lex1.get('added.two')).toEqual('TWO');
-    });
-  });
 });
