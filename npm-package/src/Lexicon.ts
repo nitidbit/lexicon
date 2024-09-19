@@ -1,3 +1,4 @@
+import lodash_fp from 'lodash/fp'
 import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 import isUndefined from 'lodash/isUndefined';
@@ -287,6 +288,13 @@ export class Lexicon {
   /* return [array of [key, value]] pairs in the current locale */
   entries(): Array<[KeyPathString, any]> {
     return this.keys().map( key => [key, this.get(key)] )
+  }
+
+  // Returns new instance, with a value changed.
+  set(updatePath: KeyPath, newValue: any): Lexicon {
+    if (!lodash_fp.has(updatePath, this)) throw new Error(`node ${updatePath} does not exist`)
+
+    return lodash_fp.set(updatePath, newValue, this)
   }
 
 

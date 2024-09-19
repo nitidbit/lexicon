@@ -11,9 +11,11 @@ import lodash_keys from 'lodash/keys';
 import lodash_compact from 'lodash/compact';
 
 /*
+    TODO: Replace with lodash/fp (immutable versions)
+
     Functions that can manipulate 'Collections' irrespective of the actual storage type.
-    Similar to `lodash.get(myObject, 'key1.key2')` but also supports the Map class.
-    A Collection is an array, object, or Map.
+    Similar to `lodash.get(myObject, 'key1.key2')`
+    A Collection is an array, object
 
     Allows Lexicons to manipulate its data tree without worrying about what type each node is.
     E.g.:
@@ -46,8 +48,7 @@ export function keyPathAsString(keyPath: KeyPath): string {
 }
 
 export function isCollection(maybeCollection: any): boolean {
-  return isMap(maybeCollection)
-    || isArray(maybeCollection)
+  return isArray(maybeCollection)
     || isObject(maybeCollection)
 }
 

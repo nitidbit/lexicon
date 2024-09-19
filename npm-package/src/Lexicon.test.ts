@@ -331,6 +331,37 @@ describe('Lexicon module', () => {
     });
   });
 
+  describe('set()', () => {
+    let lex2 = null;
+
+    test('returns new Lexicon with the key changed but the rest of thes structure the same', () => {
+      const updatePath = [ '_contentByLocale', 'en', 'nested', 'wom' ]
+      const lex2 = lex.set(updatePath, 'NEW BAT')
+      expect(lex2.get('nested.wom')).toEqual('NEW BAT');
+    });
+
+
+    test('output of source().updatePath can be used for set()', () => {
+      let info = lex.source('nested.wom');
+      const lex2 = lex.set(info.updatePath, 'NEW BAT')
+
+      expect(lex2.get('nested.wom')).toEqual('NEW BAT')
+      expect(lex.get('nested.wom')).toEqual('bat')
+    });
+
+    test('works for nested Lexicons', () => {
+      let info = lex.source('subLex.subFoo');
+      const lex2 = lex.set(info.updatePath, 'NEW-sub-foo')
+
+      expect(lex.get('subLex.subFoo')).toEqual('SUB FOO')
+      expect(lex2.get('subLex.subFoo')).toEqual('NEW-sub-foo')
+    });
+
+    test('raises Error if path or locale does not exist', () => {
+      expect(() => lex.set('blah.123', 'foobar')).toThrow()
+    });
+  })
+
   describe('update()', () => {
     let lex2 = null;
 
