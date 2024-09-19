@@ -1,0 +1,7 @@
+@import './editor/sharedStyles';
+
+.LxProvider {
+  .edit-lexicon-btn {
+    @include button;
+  }
+}
