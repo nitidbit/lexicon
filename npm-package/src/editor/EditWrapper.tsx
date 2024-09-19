@@ -1,11 +1,12 @@
 import React, { ChangeEvent } from 'react';
-
+import lodash_fp from 'lodash/fp'
 import { Lexicon } from '../Lexicon';
 import { VERSION } from '../index';
-import {LexiconEditor, OnChangeCallback} from './LexiconEditor';
-import './EditWrapperStyles.css';
+import { LexiconEditor, OnChangeCallback } from './LexiconEditor';
 import { getURLParameter } from '../util';
-import {KeyPath, KeyPathString} from '../collection';
+import { KeyPath, KeyPathString } from '../collection';
+
+import './EditWrapperStyles.css';
 
 interface EditWrapperProps {
   component:                                                    // This is the React component rendered inside the wrapper.
@@ -111,14 +112,13 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
 
   updateTextFromEditor:OnChangeCallback = (change) => {
     this.setState(oldState => {
-      const newLexicon = oldState.lexicon.cloneDeep();
-      newLexicon.update(change.updatePath, change.newValue);
+      const newLexicon = lodash_fp.set(change.updatePath, change.newValue, oldState.lexicon)
 
       const fileKey = JSON.stringify({
         filename: change.filename,
         localPath: change.localPath
       }); // we stringify here because Javascript never treats multiple objects as the same one even if the keys and values are all identical
-      
+
       const existingChange = oldState.unsavedChanges.get(fileKey)
       let originalValue = existingChange && existingChange.originalValue;
 
