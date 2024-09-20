@@ -3,11 +3,9 @@ import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 import isUndefined from 'lodash/isUndefined';
 import isNil from 'lodash/isNil';
-import cloneDeepWith from 'lodash/cloneDeepWith';
-import lodash_has from 'lodash/has';
-import lodash_compact from 'lodash/compact';
 import lodash_concat from 'lodash/concat';
 import lodash_map from 'lodash/map';
+import lodash_get from 'lodash/get';
 import * as col from './collection';
 import { Collection, KeyPath, keyPathAsArray, KeyPathArray, KeyPathString } from './collection';
 import {evaluateTemplate } from './util';
@@ -54,7 +52,7 @@ export class Lexicon {
     this._filename = contentWithPath.repoPath;
 
     // ensure content at least has 'en' locale
-    if (! lodash_has(contentByLocale, DEFAULT_LOCALE_CODE)) {
+    if (! lodash_fp.has(DEFAULT_LOCALE_CODE, contentByLocale)) {
       throw new Error("'contentByLocale' must contain 'en: {...}' locale");
     }
     this.currentLocaleCode = localeCode;
@@ -71,7 +69,7 @@ export class Lexicon {
   locale(localeCode: LocaleCode): Lexicon | null {
     if (! isLocaleCode(localeCode)) throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`);
 
-    if (!col.has(this._data, localeCode)) return null;
+    if (!lodash_fp.has(localeCode, this._data)) return null;
 
     return new (classConstructor(this))(this._data, localeCode, this._subsetRoot)
   }
@@ -148,7 +146,7 @@ export class Lexicon {
 
   /* Determine the complete "key path" to retrieve our value */
   private fullKey(locale:LocaleCode, keyPath:KeyPath) {
-    var parts = lodash_compact([locale, col.keyPathAsString(this._subsetRoot), col.keyPathAsString(keyPath)]);
+    var parts = lodash_fp.compact([locale, col.keyPathAsString(this._subsetRoot), col.keyPathAsString(keyPath)]);
     return parts.join('.');
   }
 
@@ -192,13 +190,13 @@ export class Lexicon {
         localPrefix = []
         rootPrefix = rootPrefix.concat(['_data', locale])
         keyPath = lodash_concat(col.keyPathAsArray(lexicon._subsetRoot), keyPath);
-        nextNode = col.get(lexicon._data, [locale]);
+        nextNode = lodash_fp.get([locale], lexicon._data);
       } else {
         const firstKey = keyPath[0];
         keyPath = keyPath.slice(1);
         rootPrefix = rootPrefix.concat([firstKey]); // use concat to not modify old value
         localPrefix = localPrefix.concat([firstKey]);
-        nextNode = col.get(node, firstKey);
+        nextNode = lodash_get(node, firstKey);
       }
 
       return recursiveFind(nextNode, keyPath, lexicon, rootPrefix, localPrefix);
@@ -228,7 +226,7 @@ export class Lexicon {
 
   /* Return language codes for available locales */
   locales(): Array<LocaleCode> {
-    const result = col.keys(this._data) as Array<LocaleCode>;
+    const result = lodash_fp.keys(this._data) as Array<LocaleCode>;
 
     const index = result.indexOf('repoPath')
     if (index > -1) { // only splice array when item is found
@@ -257,7 +255,7 @@ export class Lexicon {
     return flatKeys;
 
     function recurse(c: Collection | Lexicon, prefix: string) {
-      for (const [key, node] of col.entries(c)) {
+      for (const [key, node] of lodash_fp.entries(c)) {
 
         if (node instanceof Lexicon) {
           const subKeys = node.keys();

@@ -3,19 +3,11 @@ import isMap from 'lodash/isMap';
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 import isNil from 'lodash/isNil';
-import lodash_size from 'lodash/size';
-import lodash_set from 'lodash/set';
-import lodash_has from 'lodash/has';
-import lodash_entries from 'lodash/entries';
-import lodash_keys from 'lodash/keys';
 import lodash_compact from 'lodash/compact';
 
 /*
-    TODO: Replace with lodash/fp (immutable versions)
-
-    Functions that can manipulate 'Collections' irrespective of the actual storage type.
-    Similar to `lodash.get(myObject, 'key1.key2')`
-    A Collection is an array, object
+    Functions that can manipulate the '_data' part of a Lexicon, which is mix of:
+      Objects, Arrays, and other Lexicons.
 
     Allows Lexicons to manipulate its data tree without worrying about what type each node is.
     E.g.:
@@ -52,7 +44,7 @@ export function isCollection(maybeCollection: any): boolean {
     || isObject(maybeCollection)
 }
 
-// Like lodash.get(data, 'my.keys.0') but works with Maps too.
+// Like lodash.get(data, 'my.keys.0') but works with nested Lexicons too.
 export function get(data: Collection, keyPath: KeyPath): any {
   if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
   if (isNil(data)) throw new Error("'data' is null/undefined")
@@ -71,50 +63,3 @@ export function get(data: Collection, keyPath: KeyPath): any {
 
   return get(subData, rest);
 }
-
-
-// Equivalent to lodash.keys(), but works with Maps
-export function keys(c: Collection): Array<string> {
-  if (isMap(c)) return [...c.keys()];
-  return lodash_keys(c);
-}
-
-// Equivalent to lodash.entries(), but works with Maps
-export function entries(c: Collection): Array<[any, any]> {
-  if (isMap(c)) return [...c.entries()];
-  return lodash_entries(c);
-}
-
-// Equivalent to lodash.has(), but works with Maps
-export function has(c: Collection, key: KeyPath): boolean {
-  if (isMap(c)) {
-    if (keyPathAsArray(key).length > 1) throw new Error('Not implemented yet.');
-    return c.has(keyPathAsString(key));
-  }
-  return lodash_has(c, key);
-}
-
-// Equivalent to lodash.set(), but works with Maps
-export function set(c: Collection, key:KeyPath, value:any): Collection {
-  if (isMap(c)) {
-    throw new Error('set with keyPath not implemented yet');
-//     c.set(key, value);
-  } else {
-    lodash_set(c, key, value);
-  }
-  return c;
-}
-
-// Equivalent to lodash.size(), but works with Maps
-export function size(c: Collection): Number {
-  if (isMap(c)) return c.size;
-  return lodash_size(c);
-}
-
-// Returns an iterator for the collection
-// export function iterator(c: Collection): Iterator<any> {
-//   if (isObject(c)) return lodash_entries(c)[Symbol.iterator]();
-//   if (isArray(c)) return (c as Array<any>)[Symbol.iterator]();
-//   else return (c as Map<any, any>)[Symbol.iterator]();
-// }
-

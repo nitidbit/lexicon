@@ -1,6 +1,5 @@
 import * as col from "./collection"
 
-
 describe('Collection', () => {
 
   describe('get()', () => {
@@ -25,27 +24,4 @@ describe('Collection', () => {
       expect(col.get(data, 'alpha.2.c')).toEqual('C')
     })
   })
-
-  describe('keys()', () => {
-    it('returns list of keys from an Object', () => {
-      const data = { a: 'A', b: 'B' }
-      expect(col.keys(data)).toEqual(['a', 'b'])
-    })
-
-    it('returns list of indices from an Array', () => {
-      const data = [ 3.14, 2.70 ]
-      expect(col.keys(data)).toEqual(['0', '1'])
-    })
-    it('returns list of keys from a Map', () => {
-      const data = new Map()
-      data.set('a', 'A')
-      data.set('b', 'B')
-      expect(col.keys(data)).toEqual(['a', 'b'])
-    })
-  })
-
-  // entries()
-  // has()
-  // set()
-  // size()
 })

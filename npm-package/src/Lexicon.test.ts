@@ -20,7 +20,6 @@ describe('Lexicon module', () => {
           { text: 'one' },
           { text: 'two' },
         ],
-        map: new Map([['mapKey', 'MAP VALUE']]),
         arrayOfStrings: [ "ichi", "ni", "san" ],
         template: '\\#{escaped} \\\\ #{foo} #{bar.baz} #{{{manyBrackets}}}',
         onlyExistsInEnglish: 'EN only',
@@ -84,10 +83,6 @@ describe('Lexicon module', () => {
     test('works for arrays of objects', () => {
       expect(lex.get('arrayOfObjects.0.text')).toEqual('one');
       expect(lex.get('arrayOfObjects.1.text')).toEqual('two');
-    });
-
-    test('works for Maps', () => {
-      expect(lex.get('map.mapKey')).toEqual('MAP VALUE');
     });
 
     test('works for arrays of strings', () => {
@@ -187,7 +182,6 @@ describe('Lexicon module', () => {
         'nested.wom',
         'arrayOfObjects.0.text',
         'arrayOfObjects.1.text',
-        'map.mapKey',
         'arrayOfStrings.0',
         'arrayOfStrings.1',
         'arrayOfStrings.2',
@@ -218,7 +212,6 @@ describe('Lexicon module', () => {
         ['nested.wom', 'bat'],
         ['arrayOfObjects.0.text', 'one'],
         ['arrayOfObjects.1.text', 'two'],
-        ['map.mapKey', 'MAP VALUE'],
         ['arrayOfStrings.0', "ichi"],
         ['arrayOfStrings.1', "ni"],
         ['arrayOfStrings.2', "san"],
