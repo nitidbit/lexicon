@@ -55,7 +55,7 @@ Developer Setup
     bundle
     npm i
     rails db:create db:schema:load db:test:prepare db:seed
-    rspec
+    bundle exec rspec
 
     cd ..
     ./runit.sh
