@@ -56,6 +56,8 @@ Developer Setup
     npm i
     rails db:create db:schema:load db:test:prepare db:seed
     rspec
+
+    cd ..
     ./runit.sh
     browse http://localhost:3000/sign_in
 
