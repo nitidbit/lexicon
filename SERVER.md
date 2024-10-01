@@ -50,7 +50,9 @@ Developer Information
 
 Developer Setup
 ---------------
-
+    cd npm-package
+    npm i
+    
     cd (lexicon proj folder)/server
     bundle
     npm i
@@ -60,6 +62,8 @@ Developer Setup
     cd ..
     ./runit.sh
     browse http://localhost:3000/sign_in
+
+
 
 If you have an error saying '../builds' must be a folder, you may have to run refresh.sh.
 On first installation you may have to cancel and restart once.
