@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   #
-  # for Clearance gem
+  # For Clearance gem
   #
   resources :passwords, controller: "clearance/passwords", only: [:create, :new]
   resource :session, controller: "clearance/sessions", only: [:create]
@@ -20,14 +20,13 @@ Rails.application.routes.draw do
   #
   # Lexicon routes
   #
-
   root 'welcome#index'
-  get '/edit' => 'welcome#edit'
-  get '/demo' => 'welcome#demo'
-  get '/testing' => 'welcome#testing'
+  get '/edit', to: 'welcome#edit'
+  get '/demo', to: 'welcome#demo'
+  get '/testing', to: 'welcome#testing'
+  get '/contact', to: 'welcome#contact'
 
   # API routes
-  put '/update' => 'api#update'
-  put '/cookie_auth_update' => 'api#cookie_auth_update'
-
+  put '/update', to: 'api#update'
+  put '/cookie_auth_update', to: 'api#cookie_auth_update'
 end
