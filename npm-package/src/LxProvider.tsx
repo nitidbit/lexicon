@@ -3,7 +3,8 @@ import { getURLParameter } from './util';
 import { Lexicon, ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
 import { LexiconHub } from './editor/LexiconHub'
 import { LxEditPanel } from './editor/LxEditPanel'
-import './LxProviderStyles.scss'
+// import './LxProviderStyles.scss'
+// import './LxProviderStyles'
 
 const EMPTY_LEXICON_HUB = new LexiconHub({repoPath: 'SHARED LEXICON', en: {}, es: {}})
 
