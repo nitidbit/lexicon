@@ -21,10 +21,13 @@ Rails.application.routes.draw do
   # Lexicon routes
   #
   root 'welcome#index'
-  get '/edit', to: 'welcome#edit'
   get '/demo', to: 'welcome#demo'
+  get '/edit', to: 'welcome#edit'
   get '/testing', to: 'welcome#testing'
+
   get '/contact', to: 'welcome#contact'
+  get '/features', to: 'welcome#features'
+  get '/pricing', to: 'welcome#pricing'
 
   # API routes
   put '/update', to: 'api#update'

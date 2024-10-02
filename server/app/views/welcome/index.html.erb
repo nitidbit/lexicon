@@ -1,16 +1,4 @@
-<%#= TODO: add header links %>
-
-<div class="menu" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #6A5ACD;">
-  <h1 style="font-size: 24px; color: #87CEEB; margin: 0; letter-spacing: 6px; text-shadow: 1px 1px 2px rgba(211, 211, 211, 0.7);">
-    LEXICON
-  </h1>
-  <div style="display: flex; gap: 20px;">
-    <%= link_to "Home", "", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
-    <%= link_to "Features", "#", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
-    <%= link_to "Pricing", "#", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
-    <%= link_to "Contact", "contact", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
-  </div>
-</div>
+<%= render 'menu' %>
 
 <div style="text-align: center; margin: 30px;">
   <h1 style="font-size: 48px; color: #6A5ACD; margin: 0; letter-spacing: 6px; text-shadow: 1px 1px 2px #87CEEB;">
@@ -69,13 +57,4 @@
   Install Lexicon today and reclaim the joy of a CMS that actually works for developers.
 </p>
 
-<br><br>
-
-<footer style="margin-top: 40px;">
-  <div class="menu" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #6A5ACD;">
-    <h1 style="font-size: 24px; color: #87CEEB; margin: 0; letter-spacing: 6px; text-shadow: 1px 1px 2px #D3D3D3;">
-      LEXICON
-    </h1>
-    <p style="color: #e0e0e0; margin: 0;">&copy; 2024 Nitidbit. All rights reserved.</p>
-  </div>
-</footer>
+<%= render 'footer' %>
