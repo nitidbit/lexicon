@@ -4,7 +4,7 @@ import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
 import { LexiconHub } from './editor/LexiconHub'
 import { LxEditPanel } from './editor/LxEditPanel'
 // import './LxProviderStyles.scss'
-// import './LxProviderStyles'
+import './LxProviderStyles'
 
 const empty_lexicon_hub = (localeCode: string = '') => { 
   return new LexiconHub({repoPath: 'SHARED LEXICON', en: {}, es: {}}, localeCode)
