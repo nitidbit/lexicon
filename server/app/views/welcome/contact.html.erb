@@ -1,7 +1,45 @@
 <%= render 'menu' %>
 
-<div style="padding: 20px;">
-  <p>Exciting things are coming...</p>
+<div style="max-width: 1200px; margin: auto; padding: 40px; display: flex; flex-wrap: wrap; gap: 40px;">
+  <div style="flex: 1; min-width: 300px;">
+    <h2 style="font-size: 28px; margin-bottom: 20px;">Contact Us</h2>
+    <form action="/contact" method="post" style="display: flex; flex-direction: column;">
+      <label for="name" style="margin-bottom: 5px;">
+        Name
+      </label>
+      <input type="text" id="name" name="name" required style="padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px;"/>
+
+      <label for="email" style="margin-bottom: 5px;">
+        Email
+      </label>
+      <input type="email" id="email" name="email" required style="padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px;"/>
+
+      <label for="message" style="margin-bottom: 5px;">
+        Message
+      </label>
+      <textarea id="message" name="message" rows="5" required style="padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+
+      <button type="submit" style="padding: 10px; background-color: #6A5ACD; color: white; border: none; border-radius: 5px; cursor: pointer;">Send Message</button>
+    </form>
+  </div>
+
+  <div style="flex: 1; min-width: 300px">
+    <h2 style="font-size: 28px; margin-bottom: 20px;">Get in Touch</h2>
+    <p style="margin-bottom: 10px;">
+      <a href="mailto:info@nitidbit.com" style="text-decoration: none; color: #6A5ACD;">info@nitidbit.com</a>
+    </p>
+    <p style="margin-bottom: 10px;">
+      <a href="tel:+141532NITID" style="text-decoration: none; color: #6A5ACD;">+1 415 32 NITID</a>
+    </p>
+    <p style="margin-bottom: 10px;">149 New Montgomery St, Suite 506<br>San Francisco, CA 94105<br>USA</p>
+
+    <h3 style="margin-top: 40px;">Follow Us</h3>
+    <div style="display: flex; gap: 10px;">
+      <a href="https://www.linkedin.com/company/nitid-bit-llc/" style="text-decoration: none; color: #6A5ACD;">LinkedIn</a>
+      <a href="https://twitter.com/nitidbit" style="text-decoration: none; color: #6A5ACD;">Twitter</a>
+      <a href="https://www.facebook.com/nitidbit" style="text-decoration: none; color: #6A5ACD;">Facebook</a>
+    </div>
+  </div>
 </div>
 
 <%= render 'footer' %>
