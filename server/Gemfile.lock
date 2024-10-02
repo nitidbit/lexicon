@@ -83,7 +83,7 @@ GEM
     argon2 (2.2.0)
       ffi (~> 1.15)
       ffi-compiler (~> 1.0)
-    bcrypt (3.1.18)
+    bcrypt (3.1.20)
     builder (3.3.0)
     clearance (2.6.1)
       actionmailer (>= 5.0)
