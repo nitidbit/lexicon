@@ -1,27 +1,84 @@
-<div style="display: flex; align-items: center; justify-content: center; gap: 10px">
-  <%= image_tag 'lexicon_icon.png', alt: 'lexicon content management system icon', style: "max-width: 90px; " %>
-  <h1>Lexicon: The CMS Built for Developers Who Love Git</h1>
+<%#= TODO: add header links %>
+
+<div class="menu" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #6A5ACD;">
+  <h1 style="font-size: 24px; color: #87CEEB; margin: 0; letter-spacing: 6px; text-shadow: 1px 1px 2px rgba(211, 211, 211, 0.7);">
+    LEXICON
+  </h1>
+
+  <div style="display: flex; gap: 20px;">
+    <%= link_to "Home", "#", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
+    <%= link_to "Features", "#", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
+    <%= link_to "Pricing", "#", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
+    <%= link_to "Contact", "#", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
+  </div>
 </div>
 
-<p style="line-height: 16px;">
-Tired of clunky CMS systems that don’t fit your workflow? Meet Lexicon — the content management solution that stores your content right alongside your code, directly in Git.
+<div style="text-align: center; margin: 30px;">
+  <h1 style="font-size: 48px; color: #6A5ACD; margin: 0; letter-spacing: 6px; text-shadow: 1px 1px 2px #87CEEB;">
+    LEXICON
+  </h1>
+  <h2 style="font-size: 24px; color: #D3D3D3; margin-top: 8px;">The CMS Built for Developers Who Love Git</h2>
+</div>
 
-<br>
-<br>
-No more juggling databases or syncing environments. With Lexicon, you’ll get:
-<br>
+<div style="text-align: center; margin: 20px 0;">
+  <%= link_to image_tag('lexicon_icon.png', alt: 'lexicon content management system icon', style: "max-width: 180px;"), "https://github.com/nitidbit/lexicon", style: "display: inline-block;" %>
+</div>
 
-<ul>
-<li><b>Seamless Integration</b>: Manage content with the same tools you use to write code.
-<li><b>Instant Version Control</b>: Track every change with Git—just like you would with code.
-<li><b>Easy Setup & Usage</b>: Simple to install, even easier to use. Edit content directly in your app and push changes in minutes.
+<p style="padding: 0 150px; font-size: 18pt; text-align: center;">
+  Tired of clunky CMS systems that don’t fit your workflow?<br><br>Meet Lexicon — the content management solution that stores your content right alongside your code, directly in Git.
+</p>
+
+<p style="padding: 0 25px; font-size: 18pt; text-align: center;">
+  No more juggling databases or syncing environments. With Lexicon, you’ll get:
+</p>
+
+<div style="display: flex; align-items: center; justify-content: center; gap: 180px; line-height: 22px;">
+  <div style="text-align: center;">
+    <%= image_tag 'integration.jpg', alt: 'seamless integration', style: "width: 180px; display: inline;" %>
+    <p style="font-size: 18px; color: #6A5ACD; letter-spacing: 3px; text-shadow: 1px 1px 2px #87CEEB; font-weight: 575;">
+      SEAMLESS<br>INTEGRATION
+    </p>
+  </div>
+
+  <div style="text-align: center;">
+    <%= image_tag 'version_control.jpg', alt: 'version control', style: "width: 180px; display: inline;" %>
+    <p style="font-size: 18px; color: #6A5ACD; letter-spacing: 3px; text-shadow: 1px 1px 2px #87CEEB; font-weight: 575;">
+      INSTANT VERSION<br>CONTROL
+    </p>
+  </div>
+
+  <div style="text-align: center;">
+    <%= image_tag 'easy_setup.jpg', alt: 'easy setup', style: "width: 180px; display: inline;" %>
+    <p style="font-size: 18px; color: #6A5ACD; letter-spacing: 3px; text-shadow: 1px 1px 2px #87CEEB; font-weight: 575;">
+      EASY SETUP<br>& USAGE
+    </p>
+  </div>
+</div>
+
+<ul style="padding: 0 150px; font-size: 18pt; line-height: 28pt;">
+  <li><b>Seamless Integration</b>: Manage content with the same tools you use to write code.</li>
+  <li><b>Instant Version Control</b>: Track every change with Git — just like you would with code.</li>
+  <li><b>Easy Setup & Usage</b>: Simple to install, even easier to use. Edit content directly in your app and push changes in minutes.</li>
 </ul>
 
-Install Lexicon today and reclaim the joy of a CMS that actually works for developers.
-<br>
-<br>
 
-<div style="text-align: center">
-  <%= image_tag 'lexicon_diagram.jpg', alt: 'lexicon content management system diagram with seamless integration, instant version control, and easy setup and usage', style: "width: 400px; display: inline" %>
+<div class="button-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin: 40px 150px; font-size: 18pt;">
+  <%= link_to "Download Lexicon Now <i class='fas fa-arrow-down'></i>".html_safe, "https://github.com/nitidbit/lexicon", class: "btn btn-download", style: "text-decoration: none; padding: 20px 20px; background-color: #6A5ACD; color: #e0e0e0; border-radius: 12px; margin-bottom: 20px; width: 275px;" %>
+
+  <%= link_to "Schedule a Demo", "mailto:nitidbit@nitidbit.com", class: "btn btn-demo", style: "text-decoration: none; padding: 20px 20px; background-color: #6A5ACD; color: #e0e0e0; border-radius: 12px; width: 275px;" %>
 </div>
+
+<p style="text-align: center; font-size: 18pt;">
+  Install Lexicon today and reclaim the joy of a CMS that actually works for developers.
 </p>
+<br><br>
+
+<footer style="margin-top: 40px;">
+  <div class="menu" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #6A5ACD;">
+    <h1 style="font-size: 24px; color: #87CEEB; margin: 0; letter-spacing: 6px; text-shadow: 1px 1px 2px #D3D3D3;">
+      LEXICON
+    </h1>
+
+    <p style="color: #e0e0e0; margin: 0;">&copy; 2024 Nitidbit. All rights reserved.</p>
+  </div>
+</footer>
