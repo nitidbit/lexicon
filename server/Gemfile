@@ -43,6 +43,7 @@ group :gpush do
   gem 'bundler-audit'
   gem 'bundler-leak'
   gem 'rubocop-rails'
+  gem 'rubocop-rails-accessibility'
   gem 'rubocop-rspec'
 
   # for prettier

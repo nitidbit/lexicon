@@ -309,6 +309,8 @@ GEM
       rack (>= 1.1)
       rubocop (>= 1.52.0, < 2.0)
       rubocop-ast (>= 1.31.1, < 2.0)
+    rubocop-rails-accessibility (1.0.1)
+      rubocop (>= 1.0.0)
     rubocop-rspec (3.1.0)
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
@@ -395,6 +397,7 @@ DEPENDENCIES
   rodash
   rspec-rails
   rubocop-rails
+  rubocop-rails-accessibility
   rubocop-rspec
   sass-rails (~> 5.0)
   sendgrid-actionmailer
