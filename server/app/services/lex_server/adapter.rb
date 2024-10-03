@@ -6,8 +6,7 @@ module LexServer
 
     # Allow a config file to describe which adapter to use.
     def self.configure(configuration_hash)
-      lexicon_adapter =
-        case configuration_hash[:class].to_sym
+      case configuration_hash[:class].to_sym
         when :file
           File.new
         when :github
@@ -15,7 +14,7 @@ module LexServer
                      repo:         configuration_hash[:repo],
                      branch:       configuration_hash[:branch])
         end
-      lexicon_adapter
+
     end
 
 
@@ -33,9 +32,9 @@ module LexServer
         JSON.parse f
       end
 
-      def write_changed_files(commit_message, filename_content_hash)
+      def write_changed_files(_commit_message, filename_content_hash)
         filename_content_hash.each do |filename, contents|
-          ::File.open(filename, 'w') { |f| f.write contents }
+          ::File.write(filename, contents)
         end
       end
     end
@@ -43,8 +42,6 @@ module LexServer
 
     # Save changes to a github repo
     class GitHub
-      attr_accessor :github
-
       def initialize(access_token:, repo:, branch:)
         @access_token = access_token
         @shas = {}
@@ -66,21 +63,21 @@ module LexServer
         begin
           login_name = github.user.login
           msgs << "User '#{login_name}' authenticated successfully so access_token is good."
-        rescue Octokit::Unauthorized => exc
+        rescue Octokit::Unauthorized => e
           succeeded = false
-          msgs << exc.to_s # an error occurred. Here's a clue why.
+          msgs << e.to_s # an error occurred. Here's a clue why.
         end
 
         # Test that we have read permissions at least in the repo.
         begin
-          root_dir = github.contents(@repo)
+          github.contents(@repo)
           msgs << "Able to read from repo so at least READ permissions are good."
-        rescue Octokit::NotFound => exc
+        rescue Octokit::NotFound => e
           succeeded = false
-          msgs << "Unable to access repo: #{exc.to_s}" # an error occurred. Here's a clue why.
+          msgs << "Unable to access repo: #{e}" # an error occurred. Here's a clue why.
         end
 
-        {succeeded: succeeded, msgs: msgs}
+        {succeeded:, msgs:}
       end
 
       # Returns a Hash of the JSON contents of 'filename'
@@ -126,13 +123,13 @@ module LexServer
         end
         sha_new_tree = github.create_tree(@repo,
                                    added_files,
-                                   {:base_tree => sha_base_tree }).sha
+                                   {base_tree: sha_base_tree }).sha
 
         # new commit containing the tree object that we just created
         sha_new_commit = github.create_commit(@repo, commit_message, sha_new_tree, sha_latest_commit).sha
 
         # move the reference heads/(branch) to point to our new commit object
-        updated_ref = github.update_ref(@repo, ref, sha_new_commit)
+        github.update_ref(@repo, ref, sha_new_commit)
       end
     end
   end

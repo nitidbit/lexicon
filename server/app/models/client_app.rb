@@ -14,7 +14,7 @@ class ClientApp < ApplicationRecord
       repo: github_repo,
       branch: git_branch,
     }
-    adapter = LexServer::Adapter::configure(config_hash)
+    LexServer::Adapter.configure(config_hash)
   end
 end
 

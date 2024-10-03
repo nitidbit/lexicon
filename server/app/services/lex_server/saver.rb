@@ -43,7 +43,7 @@ module LexServer
       if keys.length == 1
         object[current_key] = value
       else
-        set(object: object[current_key], keys: keys[1..-1], value: value)
+        set(object: object[current_key], keys: keys[1..-1], value:)
       end
     end
 

@@ -7,7 +7,7 @@ def permitted_changes(params)
 end
 
 class ApiController < ApplicationController
-  JWT_ALGORITHM = 'HS256'
+  JWT_ALGORITHM = 'HS256'.freeze
 
   before_action :authenticate_jwt_header, except: [:cookie_auth_update]
   skip_before_action :verify_authenticity_token, except: [:cookie_auth_update] # check CSRF
@@ -29,8 +29,8 @@ class ApiController < ApplicationController
       # our authenticated users.
       lexicon_saver.update_changes(@authenticated_user.email, changes)
       response = { successful: true, error: nil }
-    rescue => exc
-      response = { successful: false, error: exc.inspect }
+    rescue StandardError => e
+      response = { successful: false, error: e.inspect }
     end
 
     render json: response
@@ -39,12 +39,12 @@ class ApiController < ApplicationController
   def self.cors_friendly_origin(origin_url)
     uri = URI(origin_url)
 
-    if (uri.port == 80 || uri.port == 443)
-      return "#{uri.scheme}://#{uri.host}"
+    return "#{uri.scheme}://#{uri.host}" if uri.port == 80 || uri.port == 443
 
-    else
-      return "#{uri.scheme}://#{uri.host}:#{uri.port}"
-    end
+
+
+      "#{uri.scheme}://#{uri.host}:#{uri.port}"
+
   end
 
   # Return the token that 'authenticate_jwt_header' requires
@@ -55,7 +55,7 @@ class ApiController < ApplicationController
       clientAppId: client_app.id,
       exp: jwt_expiration_time
     }
-    token = JWT.encode(payload, JWT_SECRET, JWT_ALGORITHM)
+    JWT.encode(payload, JWT_SECRET, JWT_ALGORITHM)
   end
 
   def self.slack_alert(client_app, whodunnit, changes)
@@ -65,17 +65,17 @@ class ApiController < ApplicationController
       message += "\n"
     end
     response = HTTParty.post(client_app.slack_workflow_url,
-      :body => ({ "message" => message }).to_json,
-      :headers => { 'Content-Type' => 'application/json' }
+      body: { "message" => message }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
       )
 
-    result = case response.code
+    case response.code
       when 200 then "slack_alert for #{client_app.app_url}: lexicon message sent to slack"
       when 404 then "slack_alert for #{client_app.app_url}: slack not found"
       else "slack_alert for #{client_app.app_url}: error #{response.code}"
       end
 
-    result
+
   end
 
   private
@@ -92,7 +92,7 @@ class ApiController < ApplicationController
     pattern = /^Bearer /
     header = request.headers['Authorization']
 
-    if ! header&.match(pattern)
+    unless header&.match(pattern)
       return render_error('Lexicon Server: Missing token from client app via HTTP authorization header.', :forbidden)
     end
 
@@ -102,17 +102,17 @@ class ApiController < ApplicationController
       @authenticated_user = User.find(payload['userId'])
       @authenticated_client_app = ClientApp.find(payload['clientAppId'])
 
-    rescue JWT::VerificationError, JWT::DecodeError, ActiveRecord::RecordNotFound => exc
-      return render_error("Lexicon Server: Invalid token from client app: #{exc}", :forbidden)
+    rescue JWT::VerificationError, JWT::DecodeError, ActiveRecord::RecordNotFound => e
+      render_error("Lexicon Server: Invalid token from client app: #{e}", :forbidden)
     end
   end
 
   # Standard format for API responses
   def api_response(successful:, error: nil)
-    { successful: successful, error: error }
+    { successful:, error: }
   end
 
   def render_error(message, status)
-    render json: api_response(successful: false, error: message), status: status
+    render json: api_response(successful: false, error: message), status:
   end
 end

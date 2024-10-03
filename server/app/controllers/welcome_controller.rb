@@ -10,7 +10,7 @@ class WelcomeController < ApplicationController
     @client_app_links = current_user.client_apps
       .order(:github_repo, :name)
       .map do |client_app|
-        lexicon_server_token = ApiController::lexicon_server_token(current_user, client_app)
+        lexicon_server_token = ApiController.lexicon_server_token(current_user, client_app)
         url_with_token = "#{client_app.app_url}?lexiconServerToken=#{lexicon_server_token}"
 
         {
