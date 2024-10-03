@@ -8,7 +8,7 @@ class Lexicon
     @strings =
       case extension
       when ".json"
-        File.open(filename) { |f| JSON.parse(f) }
+        JSON.parse(File.read(filename))
       when /\.(yml|yaml)/
         YAML.load_file(filename)
       else
