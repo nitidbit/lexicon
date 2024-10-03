@@ -1,22 +1,21 @@
-@import 'regular';
+@import "regular";
 
 body.welcome_controller.edit_action {
   @include regular;
 
-   .message-of-the-day {
-     padding: 20px 20px 20px 30px;
-     margin: 0 -8px 0 -8px;
-     background-color: #dbecfc;
-   }
+  .message-of-the-day {
+    padding: 20px 20px 20px 30px;
+    margin: 0 -8px 0 -8px;
+    background-color: #dbecfc;
+  }
 
-   main {
+  main {
     padding-left: 20px;
     padding-right: 20px;
-
   }
 
   table.app_links {
-    line-height: 2.0;
+    line-height: 2;
     width: 80%;
 
     tr {

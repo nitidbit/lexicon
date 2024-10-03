@@ -8,9 +8,9 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
-  logger           = ActiveSupport::Logger.new($stdout)
+  logger = ActiveSupport::Logger.new($stdout)
   logger.formatter = config.log_formatter
-  config.logger    = ActiveSupport::TaggedLogging.new(logger)
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -29,7 +29,7 @@ Rails.application.configure do
 
     config.cache_store = :memory_store
     config.public_file_server.headers = {
-      "Cache-Control" => "public, max-age=#{2.days.to_i}"
+      "Cache-Control" => "public, max-age=#{2.days.to_i}",
     }
   else
     config.action_controller.perform_caching = false
@@ -52,18 +52,17 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
-  JWT_SECRET = 'e132af279585ca5a7390a35004dbde4558f092bc2a3d63f7700b188296b4ee2098eb2831900b26a919141bf3d087d00d94e4dd31322c255c5d2ad7a8727a2c20'.freeze
+  JWT_SECRET =
+    "e132af279585ca5a7390a35004dbde4558f092bc2a3d63f7700b188296b4ee2098eb2831900b26a919141bf3d087d00d94e4dd31322c255c5d2ad7a8727a2c20".freeze
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
-
 
   config.hosts << "cors.test" # for testing CORS!
 end

@@ -1,31 +1,27 @@
-import React, { Fragment } from "react";
-import { useLexicon, LxProvider } from '@nitidbit/lexicon';
-import "./DemoComponent.scss";
+import React, { Fragment } from 'react'
+import { useLexicon, LxProvider } from '@nitidbit/lexicon'
+import './DemoComponent.scss'
 
-import demoStrings from "./DemoComponent.json";
+import demoStrings from './DemoComponent.json'
 
-type FaqList = [ { question: String, answer: String, lexicon: object } ]
+type FaqList = [{ question: String; answer: String; lexicon: object }]
 
 function Faq({ faqList, lexicon }) {
   return (
     <div className="Faq">
-    {
-      faqList.map( ({question, answer}, i) => (
-        <Fragment key={ question }>
-          <div className="question">
-            { question }
-          </div>
-          <div className="answer" {...lexicon.clicked(`faq.${i}.answer`) }> 
-            { answer }
+      {faqList.map(({ question, answer }, i) => (
+        <Fragment key={question}>
+          <div className="question">{question}</div>
+          <div className="answer" {...lexicon.clicked(`faq.${i}.answer`)}>
+            {answer}
           </div>
         </Fragment>
-      ))
-    }
+      ))}
     </div>
   )
 }
 
-function ExampleComponent({localeCode}) {
+function ExampleComponent({ localeCode }) {
   let demoLexicon = useLexicon(demoStrings, localeCode)
   let twainLexicon = demoLexicon.subset('quotes.twain')
   return (
@@ -33,14 +29,18 @@ function ExampleComponent({localeCode}) {
       <a href="?locale=en">English</a> | <a href="?locale=es">Spanish</a>
       <br />
       <br />
-      { demoLexicon.get('title', {appName: 'blah'} ) }
+      {demoLexicon.get('title', { appName: 'blah' })}
       <Faq faqList={demoLexicon.get('faq')} lexicon={demoLexicon} />
-      <div><p {...twainLexicon.clicked('san_francisco_summer')}>{ twainLexicon.get('san_francisco_summer') }</p></div>
+      <div>
+        <p {...twainLexicon.clicked('san_francisco_summer')}>
+          {twainLexicon.get('san_francisco_summer')}
+        </p>
+      </div>
     </div>
   )
 }
 
-const UPDATE_URL = "update"
+const UPDATE_URL = 'update'
 
 export function LxEditPanelExample() {
   const queryString = window.location.search
@@ -48,8 +48,8 @@ export function LxEditPanelExample() {
   const localeCode = urlParams.get('locale') === 'es' ? 'es' : 'en'
   return (
     <div>
-      <LxProvider apiUpdateUrl={ UPDATE_URL } localeCode={localeCode}>
-        <ExampleComponent localeCode={localeCode}/>
+      <LxProvider apiUpdateUrl={UPDATE_URL} localeCode={localeCode}>
+        <ExampleComponent localeCode={localeCode} />
       </LxProvider>
     </div>
   )

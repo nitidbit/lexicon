@@ -157,7 +157,11 @@ ActiveAdmin.setup do |config|
   # You can exclude possibly sensitive model attributes from being displayed,
   # added to forms, or exported by default by ActiveAdmin
   #
-  config.filter_attributes = [:encrypted_password, :password, :password_confirmation]
+  config.filter_attributes = %i[
+    encrypted_password
+    password
+    password_confirmation
+  ]
 
   # == Localize Date/Time Format
   #
@@ -243,7 +247,9 @@ ActiveAdmin.setup do |config|
     admin.build_menu :default do |menu|
       menu.add label: "Apps to Edit", url: "/edit"
       menu.add label: "React Demo", url: "/demo"
-      menu.add label: "Test Plan", url: "https://airtable.com/appu13VcTqFLIsXGQ/tblGrzxt9QJXbqqdk/viwtbMfTYQX7pvrH1?blocks=hide"
+      menu.add label: "Test Plan",
+               url:
+                 "https://airtable.com/appu13VcTqFLIsXGQ/tblGrzxt9QJXbqqdk/viwtbMfTYQX7pvrH1?blocks=hide"
     end
   end
 
@@ -327,5 +333,4 @@ ActiveAdmin.setup do |config|
   # You can inherit it with own class and inject it for all resources
   #
   # config.order_clause = MyOrderClause
-
 end

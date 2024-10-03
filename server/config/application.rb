@@ -32,11 +32,9 @@ module LexiconServer
 
     # Don't generate system test files.
     config.generators.system_tests = nil
-
   end
 end
 
-require Rails.root.join('app/services/settings')
+require Rails.root.join("app/services/settings")
 
 APP_URL = URI(Settings.fetch(:APP_URL))
-

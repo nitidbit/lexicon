@@ -11,7 +11,7 @@
 # AllowedMethods: enums
 Lint/ConstantDefinitionInBlock:
   Exclude:
-    - 'config/environments/development.rb'
+    - "config/environments/development.rb"
 
 # Offense count: 2
 # Configuration parameters: Include.
@@ -24,4 +24,4 @@ Rails/HasAndBelongsToMany:
 # Include: app/controllers/**/*.rb, app/mailers/**/*.rb
 Rails/LexicallyScopedActionFilter:
   Exclude:
-    - 'app/controllers/api_controller.rb'
+    - "app/controllers/api_controller.rb"

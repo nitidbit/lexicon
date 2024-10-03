@@ -5,10 +5,7 @@
     "JwtAuthenticatedDemo": {
       "title": "JwtAuthenticatedDemo",
       "description": "This is the <BlurbAndList> demo component. You may enjoy some of these excellent, locally produced cheeses:",
-      "array_of_strings": [
-        "Red Hawk",
-        "Mt. Tam"
-      ]
+      "array_of_strings": ["Red Hawk", "Mt. Tam"]
     },
     "CorsTester": {
       "title": "CORS Tester",

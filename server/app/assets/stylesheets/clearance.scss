@@ -1,12 +1,11 @@
 // Sign-up form
 body.clearance\/sessions_controller {
-
   form {
     div {
-      line-height: 2.0;
+      line-height: 2;
       input {
         height: 20px;
-        width: 200px
+        width: 200px;
       }
     }
   }
@@ -36,13 +35,12 @@ body.clearance\/sessions_controller {
 
 // Forgot password form
 body.clearance\/passwords_controller {
-
   form {
     div {
-      line-height: 2.0;
+      line-height: 2;
       input {
         height: 20px;
-        width: 200px
+        width: 200px;
       }
     }
   }
@@ -65,4 +63,3 @@ body.clearance\/passwords_controller {
     }
   }
 }
-

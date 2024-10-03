@@ -1,42 +1,41 @@
-require 'rails_helper'
+require "rails_helper"
 
-RSpec.describe 'Ruby Lexicon' do
-  describe 'loading' do
-
-    it 'loads `.json` files' do
-      strings_file = Tempfile.open(['lexicon', '.json'])
+RSpec.describe "Ruby Lexicon" do
+  describe "loading" do
+    it "loads `.json` files" do
+      strings_file = Tempfile.open(%w[lexicon .json])
       strings_file.write '{ "en": { "foo": "FOO" } }'
       strings_file.close
 
-      expect(Lexicon.new(strings_file.path).get('foo')).to eq('FOO')
+      expect(Lexicon.new(strings_file.path).get("foo")).to eq("FOO")
     end
 
-    it 'loads `.yml` files' do
-      strings_file = Tempfile.open(['lexicon', '.yml'])
+    it "loads `.yml` files" do
+      strings_file = Tempfile.open(%w[lexicon .yml])
       strings_file.write <<~QUOTE
         en:
           foo: FOO
       QUOTE
       strings_file.close
 
-      expect(Lexicon.new(strings_file.path).get('foo')).to eq('FOO')
+      expect(Lexicon.new(strings_file.path).get("foo")).to eq("FOO")
     end
 
-    it 'loads `.yaml` files' do
-      strings_file = Tempfile.open(['lexicon', '.yaml'])
+    it "loads `.yaml` files" do
+      strings_file = Tempfile.open(%w[lexicon .yaml])
       strings_file.write <<~QUOTE
         en:
           foo: FOO
       QUOTE
       strings_file.close
 
-      expect(Lexicon.new(strings_file.path).get('foo')).to eq('FOO')
+      expect(Lexicon.new(strings_file.path).get("foo")).to eq("FOO")
     end
   end
 
-  describe '#get' do
+  describe "#get" do
     before do
-      strings_file = Tempfile.open(['lexicon', '.yml'])
+      strings_file = Tempfile.open(%w[lexicon .yml])
       strings_file.write <<~QUOTE
         en:
           title: The Title
@@ -48,12 +47,12 @@ RSpec.describe 'Ruby Lexicon' do
       @lexicon = Lexicon.new(strings_file.path)
     end
 
-    it 'returns strings with simple key' do
-      expect(@lexicon.get('title')).to eq('The Title')
+    it "returns strings with simple key" do
+      expect(@lexicon.get("title")).to eq("The Title")
     end
 
-    it 'returns strings with dotted key' do
-      expect(@lexicon.get('foo.bar')).to eq('This is a bar')
+    it "returns strings with dotted key" do
+      expect(@lexicon.get("foo.bar")).to eq("This is a bar")
     end
   end
 end

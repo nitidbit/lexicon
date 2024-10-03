@@ -1,15 +1,14 @@
 class Settings
-
   def self.singleton
-    settings_section = if Rails.env.production?
-                         ENV.fetch('SETTINGS_SECTION') # differentiate staging from prod
-                       else
-                         Rails.env
-                       end
+    settings_section =
+      if Rails.env.production?
+        ENV.fetch("SETTINGS_SECTION") # differentiate staging from prod
+      else
+        Rails.env
+      end
 
-    @singleton ||= Settings.new(
-      Rails.root.join('config/settings.yml'),
-      settings_section)
+    @singleton ||=
+      Settings.new(Rails.root.join("config/settings.yml"), settings_section)
   end
 
   def self.fetch(key, fallback = :raise_error)
@@ -41,9 +40,8 @@ class Settings
   # Return a hash of credentials, but with some of the secret hidden, in case you want to log it.
   # handy command line: `rails r "pp Credentials.list"`
   def list
-    env_credentials
-      .transform_values { |value| "#{value[0..3]}..#{value[-4..]}" }
+    env_credentials.transform_values do |value|
+      "#{value[0..3]}..#{value[-4..]}"
+    end
   end
-
 end
-

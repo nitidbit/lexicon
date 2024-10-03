@@ -2,9 +2,8 @@
 # Action Mailer
 #
 
-
 Rails.application.configure do
-  sendgrid_api_key = ENV.fetch('SENDGRID_API_KEY', nil)
+  sendgrid_api_key = ENV.fetch("SENDGRID_API_KEY", nil)
 
   if sendgrid_api_key
     config.action_mailer.default_url_options = { host: APP_URL.host }

@@ -1,14 +1,13 @@
 # Ruby version of a Lexicon
 class Lexicon
-
-  VERSION = '2.12.3'.freeze
+  VERSION = "2.12.3".freeze
 
   def initialize(filename)
     extension = File.extname(filename)
-    @locale = 'en'
+    @locale = "en"
     @strings =
       case extension
-      when '.json'
+      when ".json"
         File.open(filename) { |f| JSON.parse(f) }
       when /\.(yml|yaml)/
         YAML.load_file(filename)
@@ -18,7 +17,7 @@ class Lexicon
   end
 
   def get(dotted_key)
-    Rodash.get(@strings, [@locale, dotted_key].join('.'))
+    Rodash.get(@strings, [@locale, dotted_key].join("."))
   end
 
   def inspect

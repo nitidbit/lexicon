@@ -5,7 +5,9 @@ module LexServer
 
     def initialize(lexicon_adapter)
       # debugger
-      raise ArgumentError, 'Must be a LexiconAdapter' unless lexicon_adapter.methods.include?(:read)
+      unless lexicon_adapter.methods.include?(:read)
+        raise ArgumentError, "Must be a LexiconAdapter"
+      end
 
       @adapter = lexicon_adapter
     end
@@ -14,20 +16,25 @@ module LexServer
       files_with_changes = changes.group_by { |row| row["filename"] }
 
       # For each file modified:
-      filenames_and_contents = files_with_changes.to_h do |filename, file_changes|
-        hash = adapter.read(filename) # Read old version
-        file_changes.each do |change| # Add all the changes for this file
-          set(object: hash, keys: change["key"].split('.'), value: change["newValue"])
+      filenames_and_contents =
+        files_with_changes.to_h do |filename, file_changes|
+          hash = adapter.read(filename) # Read old version
+          file_changes.each do |change| # Add all the changes for this file
+            set(
+              object: hash,
+              keys: change["key"].split("."),
+              value: change["newValue"],
+            )
+          end
+          [filename, JSON.pretty_generate(hash)]
         end
-        [filename, JSON.pretty_generate(hash)]
-      end
 
       # Push a commit with all the change files.
       commit_msg = "#{editor_name} via Lexicon Editor"
       adapter.write_changed_files(commit_msg, filenames_and_contents)
     end
 
-  private
+    private
 
     def entries
       entries = {}
@@ -62,7 +69,7 @@ module LexServer
             flatten({ i.to_s => v }, result, keys)
           end
         else
-          path = keys.join '.'
+          path = keys.join "."
 
           if value
             result[path] = value

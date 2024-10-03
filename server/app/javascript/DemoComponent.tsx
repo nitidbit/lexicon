@@ -1,35 +1,30 @@
-import React, { Fragment } from "react";
-import { createRoot } from "react-dom/client";
-import { Lexicon, EditWrapper } from '@nitidbit/lexicon';
-import { LxEditPanelExample } from "./LxEditPanelExample"
-import "./DemoComponent.scss";
+import React, { Fragment } from 'react'
+import { createRoot } from 'react-dom/client'
+import { Lexicon, EditWrapper } from '@nitidbit/lexicon'
+import { LxEditPanelExample } from './LxEditPanelExample'
+import './DemoComponent.scss'
 
-import demoStrings from "./DemoComponent.json";
+import demoStrings from './DemoComponent.json'
 const demoLexicon = new Lexicon(demoStrings)
 
-type FaqList = [ { question: String, answer: String } ]
+type FaqList = [{ question: String; answer: String }]
 
 function Faq({ faqList, lexicon }) {
   return (
     <div className="Faq">
-    {
-      faqList.map( ({question, answer}, i) => (
-        <Fragment key={ question }>
-          <div className="question">
-            { question }
-          </div>
-          <div className="answer" {...lexicon.clicked(`faq.${i}.answer`)}> 
-            { answer }
+      {faqList.map(({ question, answer }, i) => (
+        <Fragment key={question}>
+          <div className="question">{question}</div>
+          <div className="answer" {...lexicon.clicked(`faq.${i}.answer`)}>
+            {answer}
           </div>
         </Fragment>
-      ))
-    }
+      ))}
     </div>
   )
 }
 
-function DemoComponent({lexicon}) {
-
+function DemoComponent({ lexicon }) {
   const queryString = window.location.search
   const urlParams = new URLSearchParams(queryString)
   lexicon.currentLocaleCode = urlParams.get('locale') === 'es' ? 'es' : 'en'
@@ -39,29 +34,34 @@ function DemoComponent({lexicon}) {
       <a href="?locale=en">English</a> | <a href="?locale=es">Spanish</a>
       <br />
       <br />
-      { lexicon.get('title', {appName: 'blah'} ) }
+      {lexicon.get('title', { appName: 'blah' })}
       <Faq faqList={lexicon.get('faq')} lexicon={lexicon} />
-      <div><p {...twainLexicon.clicked('san_francisco_summer')}>{ twainLexicon.get('san_francisco_summer') }</p></div>
+      <div>
+        <p {...twainLexicon.clicked('san_francisco_summer')}>
+          {twainLexicon.get('san_francisco_summer')}
+        </p>
+      </div>
       <br />
     </div>
   )
 }
 
-const UPDATE_URL = "update"
+const UPDATE_URL = 'update'
 
 function EditableDemoComponent() {
   return (
     <EditWrapper
-      lexicon={ demoLexicon }
-      apiUpdateUrl={ UPDATE_URL }
+      lexicon={demoLexicon}
+      apiUpdateUrl={UPDATE_URL}
       component={DemoComponent}
     />
   )
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   // createRoot(document.querySelector(".placeholder-DemoComponent"))
   //   .render(EditableDemoComponent())
-  createRoot(document.querySelector(".placeholder-LxEditPanelExample"))
-  .render(LxEditPanelExample())
+  createRoot(document.querySelector('.placeholder-LxEditPanelExample')).render(
+    LxEditPanelExample()
+  )
 })

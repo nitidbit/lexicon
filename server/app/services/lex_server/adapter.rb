@@ -1,33 +1,33 @@
-require 'octokit'
+require "octokit"
 
 # Adapters to write Lexicon changes to either a local file, or to GitHub.
 module LexServer
   module Adapter
-
     # Allow a config file to describe which adapter to use.
     def self.configure(configuration_hash)
       case configuration_hash[:class].to_sym
-        when :file
-          File.new
-        when :github
-          GitHub.new(access_token: configuration_hash[:access_token],
-                     repo:         configuration_hash[:repo],
-                     branch:       configuration_hash[:branch])
-        end
-
+      when :file
+        File.new
+      when :github
+        GitHub.new(
+          access_token: configuration_hash[:access_token],
+          repo: configuration_hash[:repo],
+          branch: configuration_hash[:branch],
+        )
+      end
     end
-
 
     # Save changes to a local file
     class File
-
       # Returns true if we are able to access the repo, otherwise false.
       def test_access
-        {succeeded: true, msgs: ['Filesystem access is always available.']}
+        { succeeded: true, msgs: ["Filesystem access is always available."] }
       end
 
       def read(filename)
-        Rails.logger.info("Lexicon: Reading from local file system '#{filename}'")
+        Rails.logger.info(
+          "Lexicon: Reading from local file system '#{filename}'",
+        )
         f = ::File.read(filename)
         JSON.parse f
       end
@@ -38,7 +38,6 @@ module LexServer
         end
       end
     end
-
 
     # Save changes to a github repo
     class GitHub
@@ -77,18 +76,13 @@ module LexServer
           msgs << "Unable to access repo: #{e}" # an error occurred. Here's a clue why.
         end
 
-        {succeeded:, msgs:}
+        { succeeded:, msgs: }
       end
 
       # Returns a Hash of the JSON contents of 'filename'
       def read(filename)
         Rails.logger.info("Lexicon: Reading from github '#{filename}'")
-        resource =
-          github.contents(
-            @repo,
-            ref: @branch,
-            path: filename
-          )
+        resource = github.contents(@repo, ref: @branch, path: filename)
 
         @shas[filename] = resource.sha
         JSON.parse(Base64.decode64(resource.content))
@@ -113,20 +107,27 @@ module LexServer
         # SHA of the tree at head of 'branch'
         sha_base_tree = github.commit(@repo, sha_latest_commit).commit.tree.sha
 
-        added_files = filename_content_hash.map do |filename, contents|
-          blob_sha = github.create_blob(@repo, Base64.encode64(contents), "base64")
-          { path: filename,
-            sha: blob_sha,
-            mode: "100644",
-            type: "blob",
-          }
-        end
-        sha_new_tree = github.create_tree(@repo,
-                                   added_files,
-                                   {base_tree: sha_base_tree }).sha
+        added_files =
+          filename_content_hash.map do |filename, contents|
+            blob_sha =
+              github.create_blob(@repo, Base64.encode64(contents), "base64")
+            { path: filename, sha: blob_sha, mode: "100644", type: "blob" }
+          end
+        sha_new_tree =
+          github.create_tree(
+            @repo,
+            added_files,
+            { base_tree: sha_base_tree },
+          ).sha
 
         # new commit containing the tree object that we just created
-        sha_new_commit = github.create_commit(@repo, commit_message, sha_new_tree, sha_latest_commit).sha
+        sha_new_commit =
+          github.create_commit(
+            @repo,
+            commit_message,
+            sha_new_tree,
+            sha_latest_commit,
+          ).sha
 
         # move the reference heads/(branch) to point to our new commit object
         github.update_ref(@repo, ref, sha_new_commit)

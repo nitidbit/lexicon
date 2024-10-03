@@ -1,6 +1,5 @@
 ActiveAdmin.register User do
-
-  menu if: proc{ current_user.is_admin } # Show in ActiveAdmin menu?
+  menu if: proc { current_user.is_admin } # Show in ActiveAdmin menu?
 
   # See permitted parameters documentation:
   # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
@@ -28,8 +27,8 @@ ActiveAdmin.register User do
   end
 
   permit_params do
-    permitted = [:email, :password, :is_admin, {client_app_ids: []}]
-    permitted << :other if params[:action] == 'create' && current_user.is_admin
+    permitted = [:email, :password, :is_admin, { client_app_ids: [] }]
+    permitted << :other if params[:action] == "create" && current_user.is_admin
     permitted
   end
 
@@ -37,11 +36,14 @@ ActiveAdmin.register User do
     f.inputs do
       input :email
       input :password
-      input :is_admin, hint: 'Admins can configure Lexicon. Clients who want to edit content should not be admins'
-      input :client_apps, as: :select, multiple: true,
-        collection: ClientApp.all.map{|ca| [ca.title, ca.id]}
+      input :is_admin,
+            hint:
+              "Admins can configure Lexicon. Clients who want to edit content should not be admins"
+      input :client_apps,
+            as: :select,
+            multiple: true,
+            collection: ClientApp.all.map { |ca| [ca.title, ca.id] }
     end
     actions
   end
-
 end

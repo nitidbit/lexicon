@@ -17,4 +17,3 @@ class ClientApp < ApplicationRecord
     LexServer::Adapter.configure(config_hash)
   end
 end
-
