@@ -11,18 +11,16 @@ module LexServer
     end
 
     def update_changes(editor_name, changes)
-
       files_with_changes = changes.group_by { |row| row["filename"] }
 
       # For each file modified:
-      filenames_and_contents = files_with_changes.map do |filename, changes|
+      filenames_and_contents = files_with_changes.to_h do |filename, file_changes|
         hash = adapter.read(filename) # Read old version
-        changes.each do |change| # Add all the changes for this file
+        file_changes.each do |change| # Add all the changes for this file
           set(object: hash, keys: change["key"].split('.'), value: change["newValue"])
         end
         [filename, JSON.pretty_generate(hash)]
       end
-        .to_h
 
       # Push a commit with all the change files.
       commit_msg = "#{editor_name} via Lexicon Editor"
@@ -43,7 +41,7 @@ module LexServer
       if keys.length == 1
         object[current_key] = value
       else
-        set(object: object[current_key], keys: keys[1..-1], value:)
+        set(object: object[current_key], keys: keys[1..], value:)
       end
     end
 

@@ -1,7 +1,7 @@
 # Ruby version of a Lexicon
 class Lexicon
 
-  VERSION = '2.12.3'
+  VERSION = '2.12.3'.freeze
 
   def initialize(filename)
     extension = File.extname(filename)
@@ -9,7 +9,7 @@ class Lexicon
     @strings =
       case extension
       when '.json'
-        File.open(filename) { |f| JSON.load(f) }
+        File.open(filename) { |f| JSON.parse(f) }
       when /\.(yml|yaml)/
         YAML.load_file(filename)
       else
