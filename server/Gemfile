@@ -37,3 +37,17 @@ group :test do
   gem 'factory_bot_rails'
   gem 'timecop'
 end
+
+group :gpush do
+  gem 'brakeman'
+  gem 'bundler-audit'
+  gem 'bundler-leak'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
+
+  # for prettier
+  gem 'prettier_print', require: false
+  gem 'syntax_tree', require: false
+  gem 'syntax_tree-haml', require: false
+  gem 'syntax_tree-rbs', require: false
+end

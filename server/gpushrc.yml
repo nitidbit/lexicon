@@ -3,14 +3,11 @@ success_emoji: "🌺"
 
 pre_run:
   - shell: bundle check
-  - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/.prettierrc.json' -O
-  - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/nitid-lint-plugins/.stylelintrc.js' -O
-  - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/nitid-lint-plugins/.eslintrc_typescript.json' -o '.eslintrc.json'
-  - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/lint.py' -O
-
-  # new /nitid_linter_configs/ folder
+  - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/nitid_linter_configs/.prettierrc.json' -O
+  - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/nitid_linter_configs/.stylelintrc.js' -O
+  - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/nitid_linter_configs/.eslintrc.json' -O
+  - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/nitid_linter_configs/lint.py' -O
   - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/nitid_linter_configs/rubocop.yml' -o .rubocop.yml
-
 
 parallel_run:
   - name: brakeman
@@ -29,17 +26,14 @@ parallel_run:
     shell: npx eslint $(gpush_changed_files --pattern "**/*.{js,jsx,ts,tsx}")
     if: gpush_changed_files --pattern "**/*.{js,jsx,ts,tsx}"
 
-  - name: jest
-    shell: CI=true npm run test
-
   - name: npm audit
     shell: "npm audit --audit-level=high"
 
   - name: prettier
-    shell: npm run prettier
+    shell: npx prettier . --check --ignore-unknown
 
   - name: "Rspec"
-    shell: bundle exec rspec
+    shell: bundle exec rspec --format documentation
 
   - name: rubocop
     shell: bundle exec rubocop

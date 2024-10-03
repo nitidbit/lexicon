@@ -1,0 +1,5 @@
+.prettierrc.json
+.stylelintrc.js
+.eslintrc.json
+lint.py
+.rubocop.yml
