@@ -76,6 +76,18 @@ describe('<LxEditPanel>', () => {
       expect((global.fetch as jest.Mock).mock.calls).toHaveLength(1)
     })
 
+    it('when selecting an input element in the editor it resizes if needed', async () => {
+      // jest cannot get the actual height which depends on scrollHeight and is only 
+      // available in the browser, so just test that the expandedStyle method
+      // gets called with the right parameters
+      const spy = jest.spyOn(require('./LexiconEditor'), 'expandedStyle');
+      const screen = testSubject()
+      const selectedInputField = screen.queryAllByText('hello')[0]
+      await userEvent.click(selectedInputField)
+      expect(spy).toHaveBeenCalledWith(true, {current: selectedInputField})
+      spy.mockRestore()
+    })
+
     it('shows saving status', async () => {
       const screen = await editGreeting()
 

@@ -9,7 +9,7 @@ import { JSXElement } from '@babel/types';
 import {KeyPath, KeyPathString, keyPathAsString} from '../collection';
 import './LexiconEditorStyles.css';
 
-const expandedStyle = (isExpanded=true, ref) => {
+export const expandedStyle = (isExpanded=true, ref) => {
   let height = '1.5em'
   const maxHeight = `${window.innerHeight * 0.8}px`;
   if (ref && isExpanded) {
@@ -88,12 +88,19 @@ function Field({
     onChange(event);
   };
 
+  const clickit = (e) => {
+    // need to set isExpanded to true
+    setIsExpanded(true)
+    e.target.style.height = '4em'
+  }
+
   return (
     <textarea
       ref={textareaRef}
       name={localPath}
       id={localPath}
       value={value}
+      onClick={clickit}
       onChange={handleChange}
       style={expandedStyle(isExpanded, textareaRef)}
     />
