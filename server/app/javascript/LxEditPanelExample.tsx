@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
 import { useLexicon, LxProvider } from '@nitidbit/lexicon'
 import './DemoComponent.scss'
-
 import demoStrings from './DemoComponent.json'
 
 type FaqList = [{ question: String; answer: String; lexicon: object }]
@@ -24,16 +23,21 @@ function Faq({ faqList, lexicon }) {
 function ExampleComponent({ localeCode }) {
   let demoLexicon = useLexicon(demoStrings, localeCode)
   let twainLexicon = demoLexicon.subset('quotes.twain')
+  let shakespeareLexicon = demoLexicon.subset('quotes.shakespeare')
+
   return (
     <div className="ExampleComponent">
       <a href="?locale=en">English</a> | <a href="?locale=es">Spanish</a>
       <br />
       <br />
-      {demoLexicon.get('title', { appName: 'blah' })}
+      {demoLexicon.get('title', { appName: 'My Favorite Things' })}
       <Faq faqList={demoLexicon.get('faq')} lexicon={demoLexicon} />
       <div>
-        <p {...twainLexicon.clicked('san_francisco_summer')}>
-          {twainLexicon.get('san_francisco_summer')}
+        <p {...twainLexicon?.clicked('san_francisco_summer')}>
+          {twainLexicon?.get('san_francisco_summer')}
+        </p>
+        <p {...shakespeareLexicon?.clicked('to_be')}>
+          {shakespeareLexicon?.get('to_be')}
         </p>
       </div>
     </div>
