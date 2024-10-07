@@ -3,6 +3,7 @@ success_emoji: "🌺"
 
 pre_run:
   - shell: bundle check
+  - shell: npm install --dry-run
   - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/nitid_linter_configs/.prettierrc.json' -O
   - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/nitid_linter_configs/.stylelintrc.js' -O
   - shell: curl 'https://raw.githubusercontent.com/nitidbit/gpush/main/nitid_linter_configs/.eslintrc.json' -O
