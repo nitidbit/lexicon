@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { within } from '@testing-library/dom'
 import userEvent from '@testing-library/user-event'
 import { getURLParameter } from './util'
@@ -53,7 +53,9 @@ describe('<LxProvider>', () => {
 
     return (
       <div className="SubsetSampleApp">
-        { lexicon.subset("quotes.twain").get("san_francisco_summer")}
+        <p {...lexicon.subset("quotes.twain").clicked("san_francisco_summer")} >
+          { lexicon.subset("quotes.twain").get("san_francisco_summer")}
+        </p>
       </div>
     )
   }
@@ -139,6 +141,53 @@ describe('<LxProvider>', () => {
 
     it('does not render Edit Lexicon button', () => {
       expect(screen.queryByRole('button', { name: 'Nothing to Save'})).not.toBeInTheDocument()
+    })
+  })
+
+  describe('when editor is opened with shift-click on a field', () => {
+    beforeAll(() => {
+      Element.prototype.scrollIntoView = jest.fn();
+    })
+
+    it('opens the editor', async () => {
+      const screen = testSubsetSubject();
+      const subsetSampleApp = screen.container.querySelector('.SubsetSampleApp') as HTMLElement
+      expect(screen.container.querySelector('.LxEditPanel.is-visible')).not.toBeInTheDocument()
+      const fieldToEdit = within(subsetSampleApp).queryByText('the coldest winter I ever spent was a summer in san francisco')
+      const sampleAppEditPanel = screen.container.querySelector('.LxEditPanel') as HTMLElement
+      await waitFor(() => {
+        expect(sampleAppEditPanel).not.toHaveClass('is-visible');
+      });
+
+      const shiftClickEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        shiftKey: true, // This simulates holding down Shift during the click
+      });
+  
+      // Dispatch the click event on the field
+      fieldToEdit?.dispatchEvent(shiftClickEvent);
+      await waitFor(() => {
+        expect(sampleAppEditPanel).toHaveClass('is-visible');
+      });
+    })
+
+    it('expands the correct field in the editor', async () => {
+      const spy = jest.spyOn(require('./editor/LexiconEditor'), 'expandedStyle')
+      const screen = testSubsetSubject();
+      const editor = screen.container.querySelector('.LxEditPanel') as HTMLElement
+      const fieldToEdit = within(editor).queryByText('the coldest winter I ever spent was a summer in san francisco')
+      const shiftClickEvent = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        shiftKey: true, // This simulates holding down Shift during the click
+      });
+  
+      // Dispatch the click event on the field
+      fieldToEdit?.dispatchEvent(shiftClickEvent);
+      await waitFor(() => {
+        expect(spy).toHaveBeenCalledWith(true, {current: fieldToEdit});
+      });
     })
   })
 
