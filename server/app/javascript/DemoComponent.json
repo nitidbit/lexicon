@@ -4,22 +4,49 @@
     "title": "React Demo Component for #{appName}",
     "quotes": {
       "shakespeare": {
-        "to_be": "To be or not to be, that is the question."
+        "to_be": "To be or not to be, that is the question. bkiasdjfasdjf asl;dfjals;jfd a;laksjdlfkjasd f"
       },
       "twain": {
         "san_francisco_summer": "The coldest winter I ever spent was a summer in San Francisco."
       }
     },
     "faq": [
-      { "question": "Favorite color", "answer": "Blue" },
-      { "question": "Favorite food", "answer": "Ice Cream" },
-      { "question": "Favorite animal", "answer": "Dog" },
-      { "question": "Favorite car", "answer": "Porsche" },
-      { "question": "Favorite fish", "answer": "Salmon" },
-      { "question": "Favorite tree", "answer": "Chestnut" },
-      { "question": "Favorite exercise", "answer": "Running" },
-      { "question": "Favorite city", "answer": "Barcelona" },
-      { "question": "Favorite number", "answer": "Seven" }
+      {
+        "question": "Favorite color",
+        "answer": "RED"
+      },
+      {
+        "question": "Favorite food",
+        "answer": "Ice Cream"
+      },
+      {
+        "question": "Favorite animal",
+        "answer": "CAT"
+      },
+      {
+        "question": "Favorite car",
+        "answer": "Porsche"
+      },
+      {
+        "question": "Favorite fish",
+        "answer": "Salmon"
+      },
+      {
+        "question": "Favorite tree",
+        "answer": "Chestnut"
+      },
+      {
+        "question": "Favorite exercise",
+        "answer": "Running"
+      },
+      {
+        "question": "Favorite city",
+        "answer": "Barcelona"
+      },
+      {
+        "question": "Favorite number",
+        "answer": "Seven"
+      }
     ]
   },
   "es": {
@@ -33,15 +60,42 @@
       }
     },
     "faq": [
-      { "question": "Color favorito", "answer": "Azul" },
-      { "question": "Comida favorita", "answer": "Helado" },
-      { "question": "Animal favorito", "answer": "Perro" },
-      { "question": "Coche favorito", "answer": "Porsche" },
-      { "question": "Pez favorito", "answer": "Salmón" },
-      { "question": "Árbol favorito", "answer": "Castaño" },
-      { "question": "Ejercicio favorito", "answer": "Correr" },
-      { "question": "Ciudad favorita", "answer": "Barcelona" },
-      { "question": "Número favorito", "answer": "Siete" }
+      {
+        "question": "Color favorito",
+        "answer": "Azul"
+      },
+      {
+        "question": "Comida favorita",
+        "answer": "Helado"
+      },
+      {
+        "question": "Animal favorito",
+        "answer": "Perro"
+      },
+      {
+        "question": "Coche favorito",
+        "answer": "Porsche"
+      },
+      {
+        "question": "Pez favorito",
+        "answer": "Salmón"
+      },
+      {
+        "question": "Árbol favorito",
+        "answer": "Castaño"
+      },
+      {
+        "question": "Ejercicio favorito",
+        "answer": "Correr"
+      },
+      {
+        "question": "Ciudad favorita",
+        "answer": "Barcelona"
+      },
+      {
+        "question": "Número favorito",
+        "answer": "Siete"
+      }
     ]
   }
 }
