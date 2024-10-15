@@ -13,13 +13,7 @@
     "faq": [
       { "question": "Favorite color", "answer": "Blue" },
       { "question": "Favorite food", "answer": "Ice Cream" },
-      { "question": "Favorite animal", "answer": "Dog" },
-      { "question": "Favorite car", "answer": "Porsche" },
-      { "question": "Favorite fish", "answer": "Salmon" },
-      { "question": "Favorite tree", "answer": "Chestnut" },
-      { "question": "Favorite exercise", "answer": "Running" },
-      { "question": "Favorite city", "answer": "Barcelona" },
-      { "question": "Favorite number", "answer": "Seven" }
+      { "question": "Favorite animal", "answer": "Dog" }
     ]
   },
   "es": {
@@ -35,13 +29,7 @@
     "faq": [
       { "question": "Color favorito", "answer": "Azul" },
       { "question": "Comida favorita", "answer": "Helado" },
-      { "question": "Animal favorito", "answer": "Perro" },
-      { "question": "Coche favorito", "answer": "Porsche" },
-      { "question": "Pez favorito", "answer": "Salmón" },
-      { "question": "Árbol favorito", "answer": "Castaño" },
-      { "question": "Ejercicio favorito", "answer": "Correr" },
-      { "question": "Ciudad favorita", "answer": "Barcelona" },
-      { "question": "Número favorito", "answer": "Siete" }
+      { "question": "Animal favorito", "answer": "Perro" }
     ]
   }
 }

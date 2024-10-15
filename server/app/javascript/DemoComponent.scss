@@ -1,16 +1,15 @@
 .DemoComponent {
-  border: 1px solid salmon;
-}
 
-.Faq {
-  padding-left: 20px;
+  .Faq {
+    padding-left: 20px;
 
-  .question {
-    padding-top: 10px;
-    font-weight: bold;
-  }
+    .question {
+      padding-top: 10px;
+      font-weight: bold;
+    }
 
-  .answer {
-    font-weight: normal;
+    .answer {
+      font-weight: normal;
+    }
   }
 }

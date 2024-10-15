@@ -1,13 +1,10 @@
 import React, { Fragment } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Lexicon, EditWrapper } from '@nitidbit/lexicon'
-import { LxEditPanelExample } from './LxEditPanelExample'
+import { useLexicon, LxProvider } from '@nitidbit/lexicon'
 import './DemoComponent.scss'
-
 import demoStrings from './DemoComponent.json'
-const demoLexicon = new Lexicon(demoStrings)
 
-type FaqList = [{ question: String; answer: String }]
+type FaqList = [{ question: String; answer: String; lexicon: object }]
 
 function Faq({ faqList, lexicon }) {
   return (
@@ -24,44 +21,46 @@ function Faq({ faqList, lexicon }) {
   )
 }
 
-function DemoComponent({ lexicon }) {
-  const queryString = window.location.search
-  const urlParams = new URLSearchParams(queryString)
-  lexicon.currentLocaleCode = urlParams.get('locale') === 'es' ? 'es' : 'en'
-  const twainLexicon = lexicon.subset('quotes.twain')
+function DemoComponent({ localeCode }) {
+  let demoLexicon = useLexicon(demoStrings, localeCode)
+  let twainLexicon = demoLexicon.subset('quotes.twain')
+  let shakespeareLexicon = demoLexicon.subset('quotes.shakespeare')
+
   return (
     <div className="DemoComponent">
       <a href="?locale=en">English</a> | <a href="?locale=es">Spanish</a>
       <br />
       <br />
-      {lexicon.get('title', { appName: 'blah' })}
-      <Faq faqList={lexicon.get('faq')} lexicon={lexicon} />
+      {demoLexicon.get('title', { appName: 'My Favorite Things' })}
+      <Faq faqList={demoLexicon.get('faq')} lexicon={demoLexicon} />
       <div>
-        <p {...twainLexicon.clicked('san_francisco_summer')}>
-          {twainLexicon.get('san_francisco_summer')}
+        <p {...twainLexicon?.clicked('san_francisco_summer')}>
+          {twainLexicon?.get('san_francisco_summer')}
+        </p>
+        <p {...shakespeareLexicon?.clicked('to_be')}>
+          {shakespeareLexicon?.get('to_be')}
         </p>
       </div>
-      <br />
     </div>
   )
 }
 
 const UPDATE_URL = 'update'
 
-function EditableDemoComponent() {
+export function DemoApp() {
+  const queryString = window.location.search
+  const urlParams = new URLSearchParams(queryString)
+  const localeCode = urlParams.get('locale') === 'es' ? 'es' : 'en'
   return (
-    <EditWrapper
-      lexicon={demoLexicon}
-      apiUpdateUrl={UPDATE_URL}
-      component={DemoComponent}
-    />
+    <div>
+      <LxProvider apiUpdateUrl={UPDATE_URL} localeCode={localeCode}>
+        <DemoComponent localeCode={localeCode} />
+      </LxProvider>
+    </div>
   )
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // createRoot(document.querySelector(".placeholder-DemoComponent"))
-  //   .render(EditableDemoComponent())
-  createRoot(document.querySelector('.placeholder-LxEditPanelExample')).render(
-    LxEditPanelExample()
-  )
+  createRoot(document.querySelector(".placeholder-DemoComponent"))
+    .render(DemoApp())
 })
