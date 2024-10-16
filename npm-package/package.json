@@ -2,9 +2,11 @@
   "name": "@nitidbit/lexicon",
   "version": "3.0.0-alpha",
   "description": "Nitid Lexicon Library for text-based content management via web UI",
+  "author": "Nitid Bit LLC <info@nitidbit.com> (nitidbit.com)",
   "license": "AGPL-3.0-or-later",
   "main": "build/src/index.js",
   "typings": "build/src/index",
+  "homepage": "https://github.com/nitidbit/lexicon",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
@@ -42,8 +44,6 @@
       "<rootDir>/node_modules/(?!(identity-obj-proxy)/)"
     ]
   },
-  "author": "Nitid Bit LLC",
-  "license": "CC-BY-SA-4.0",
   "dependencies": {
     "lodash": "^4.17.21"
   },
