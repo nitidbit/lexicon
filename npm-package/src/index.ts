@@ -2,7 +2,7 @@ export { Lexicon } from "./Lexicon"
 export { default as EditWrapper } from "./editor/EditWrapper"
 export { LxProvider, useLexicon } from "./LxProvider"
 
-export const VERSION = "3.0.0-alpha";
+export const VERSION = "3.0.0-alpha2";
 
 /*
   Change History - API changes since last version
