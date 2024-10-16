@@ -1,6 +1,7 @@
 node_modules
 latest.dump
 .envrc
+master.key
 
 npm-package/build
 
@@ -11,3 +12,11 @@ server/app/assets/builds
 server/spec/examples.txt
 server/public/assets
 server/yarn-error.log
+
+.prettierrc.json
+.stylelintrc.js
+.eslintrc.json
+lint.py
+.rubocop.yml
+
+server/config/master.key
