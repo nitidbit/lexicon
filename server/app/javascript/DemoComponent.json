@@ -11,9 +11,18 @@
       }
     },
     "faq": [
-      { "question": "Favorite color", "answer": "Blue" },
-      { "question": "Favorite food", "answer": "Ice Cream" },
-      { "question": "Favorite animal", "answer": "Dog" }
+      {
+        "question": "Favorite color",
+        "answer": "Blue"
+      },
+      {
+        "question": "Favorite food",
+        "answer": "ICE CREAM"
+      },
+      {
+        "question": "Favorite animal",
+        "answer": "Dog"
+      }
     ]
   },
   "es": {
@@ -27,9 +36,18 @@
       }
     },
     "faq": [
-      { "question": "Color favorito", "answer": "Azul" },
-      { "question": "Comida favorita", "answer": "Helado" },
-      { "question": "Animal favorito", "answer": "Perro" }
+      {
+        "question": "Color favorito",
+        "answer": "Azul"
+      },
+      {
+        "question": "Comida favorita",
+        "answer": "Helado"
+      },
+      {
+        "question": "Animal favorito",
+        "answer": "Perro"
+      }
     ]
   }
 }
