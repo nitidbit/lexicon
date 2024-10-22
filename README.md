@@ -160,4 +160,4 @@ Where are we using Lexicon and Lexicon-Server?
 
 Change History
 --------------
-See: [src/index.ts](src/index.ts)
+See: [npm-package/src/index.ts](npm-package/src/index.ts)
