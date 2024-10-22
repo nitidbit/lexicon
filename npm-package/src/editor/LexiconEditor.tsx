@@ -69,20 +69,30 @@ function Field({
   value,
   onChange,
   justClickedElement,
+  setJustClickedElement,
+  visible
 }: {
   localPath: string;
   value: any;
   onChange: HtmlOnChangeCallback;
   justClickedElement: string;
+  setJustClickedElement: (value: string) => void;
+  visible: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (justClickedElement === localPath) {
+    if (justClickedElement === localPath && visible) {
       setIsExpanded(true)
+    } else {
+      setIsExpanded(false)
     }
-  }, [value, isExpanded, justClickedElement]);
+    if (visible === false) {
+      setIsExpanded(false)
+      setJustClickedElement(null)
+    }
+  }, [value, isExpanded, justClickedElement, visible]);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event);
@@ -91,6 +101,7 @@ function Field({
   const clickit = (e) => {
     // need to set isExpanded to true
     setIsExpanded(true)
+    setJustClickedElement(e.target.id)
     e.target.style.height = '4em'
   }
 
@@ -113,6 +124,7 @@ export interface LexiconEditorProps {
   selectedLocale: string;
   switchLocale: SwitchLocaleCallback;
   toggleEditor: () => void;
+  visible: boolean;
 }
 
 export class LexiconEditor extends
@@ -128,6 +140,7 @@ export class LexiconEditor extends
   componentDidMount() {
     this.makeElementsClickEditable()
   }
+  
 
   makeElementsClickEditable() {
     // attach listener to all elements in DOM with 'data-lexicon'
@@ -147,7 +160,8 @@ export class LexiconEditor extends
   }
 
   clickEditHandler = (e: MouseEvent) => {
-    if (!e.shiftKey) return
+    console.log("does this happen")
+    if (!e.shiftKey && !e.metaKey) return
 
     const htmlTarget = e.target as HTMLElement
     let lexiconAttribute = htmlTarget.getAttribute("data-lexicon")
@@ -177,6 +191,8 @@ export class LexiconEditor extends
         value={this.props.lexicon.get(key)}
         onChange={this.sendLexiconEditorChange}
         justClickedElement={this.state.justClickedElement}
+        setJustClickedElement={this.setJustClickedElement}
+        visible={this.props.visible}
       />
     ))
 

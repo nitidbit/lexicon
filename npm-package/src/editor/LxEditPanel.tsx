@@ -243,6 +243,7 @@ export const LxEditPanel = ({
         selectedLocale={lexiconHub.currentLocaleCode}
         switchLocale={setLocale}
         toggleEditor={toggleEditPanel}
+        visible={visible}
       />
       <div className="save-box">
         <span> v{VERSION} </span>
