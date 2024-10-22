@@ -1,10 +1,21 @@
 import React, { Fragment } from 'react'
 import { createRoot } from 'react-dom/client'
-import { useLexicon, LxProvider } from '@nitidbit/lexicon'
 import './DemoComponent.scss'
+
+import { useLexicon, LxProvider } from '@nitidbit/lexicon'
 import demoStrings from './DemoComponent.json'
 
 type FaqList = [{ question: String; answer: String; lexicon: object }]
+
+function LxSpan({ lexicon, keyPath, vars={}, ...otherProps }) {
+  const text = lexicon.get(keyPath, vars)
+  const clickToEdit = lexicon.clicked(keyPath)
+  return (
+    <span {...clickToEdit} {...otherProps} >
+      { text }
+    </span>
+  )
+}
 
 function Faq({ faqList, lexicon }) {
   return (
@@ -31,14 +42,14 @@ function DemoComponent({ localeCode }) {
       <a href="?locale=en">English</a> | <a href="?locale=es">Spanish</a>
       <br />
       <br />
-      {demoLexicon.get('title', { appName: 'My Favorite Things' })}
+      <LxSpan lexicon={demoLexicon} keyPath='title' vars={{ appName: 'My Favorite Things' }} />
       <Faq faqList={demoLexicon.get('faq')} lexicon={demoLexicon} />
       <div>
-        <p {...twainLexicon?.clicked('san_francisco_summer')}>
-          {twainLexicon?.get('san_francisco_summer')}
+        <p>
+          <LxSpan lexicon={demoLexicon} keyPath='quotes.twain.san_francisco_summer' />
         </p>
-        <p {...shakespeareLexicon?.clicked('to_be')}>
-          {shakespeareLexicon?.get('to_be')}
+        <p>
+          <LxSpan lexicon={demoLexicon} keyPath='quotes.shakespeare.to_be' />
         </p>
       </div>
     </div>
