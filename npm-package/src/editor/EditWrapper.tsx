@@ -317,6 +317,7 @@ export default class EditWrapper extends React.Component<EditWrapperProps, EditW
               selectedLocale={lexicon.currentLocaleCode}
               switchLocale={this.switchLocale}
               toggleEditor={this.toggleEditor}
+              visible={isEditorVisible}
             />
             <div className="save-box">
               <span> v{VERSION} </span>

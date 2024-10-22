@@ -28,9 +28,9 @@ describe('<LxEditPanel>', () => {
   beforeEach(() => {
     lexiconHub = new LexiconHub({
       repoPath: 'sample.json',
-      en: { greeting: 'hello' },
-      es: { greeting: 'hola' },
-      haw: { greeting: 'aloha' }
+      en: { greeting: 'hello', valediction: 'bye' },
+      es: { greeting: 'hola', valediction: 'adios' },
+      haw: { greeting: 'aloha', valedition: 'aloha-also' }
     }, "en")
 
     setLexiconHub = jest.fn()
@@ -86,6 +86,22 @@ describe('<LxEditPanel>', () => {
       await userEvent.click(selectedInputField)
       expect(spy).toHaveBeenCalledWith(true, {current: selectedInputField})
       spy.mockRestore()
+    })
+
+    it('when selecting an input element the background is highlighted', async () => {
+      const screen = testSubject()
+      const firstSelectedInputField = screen.queryAllByText('hello')[0]
+      await userEvent.click(firstSelectedInputField)
+      expect(firstSelectedInputField.style.background).toEqual("rgb(255, 255, 221)")
+    })
+
+    it('when a second input element is selected the previously selected element is no longer highlighted', async () => {
+      const screen = testSubject()
+      const firstSelectedInputField = screen.queryAllByText('hello')[0]
+      await userEvent.click(firstSelectedInputField)
+      const secondSelectedInputField = screen.queryAllByText('bye')[0]
+      await userEvent.click(secondSelectedInputField)
+      expect(firstSelectedInputField.style.background).toEqual("")
     })
 
     it('shows saving status', async () => {
