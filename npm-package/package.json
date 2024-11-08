@@ -1,6 +1,6 @@
 {
   "name": "@nitidbit/lexicon",
-  "version": "3.0.0-alpha2",
+  "version": "3.0.0-alpha3",
   "description": "Nitid Lexicon Library for text-based content management via web UI",
   "author": "Nitid Bit LLC <info@nitidbit.com> (nitidbit.com)",
   "license": "AGPL-3.0-or-later",
@@ -30,9 +30,19 @@
     ],
     "transform": {
       "\\.tsx?$": "ts-jest",
-       "\\.(css|scss)$": "jest-css-modules-transform"
+      "\\.(css|scss)$": "jest-css-modules-transform"
     },
-    "moduleFileExtensions": ["js", "mjs", "cjs", "jsx", "ts", "tsx", "json", "node", "scss"],
+    "moduleFileExtensions": [
+      "js",
+      "mjs",
+      "cjs",
+      "jsx",
+      "ts",
+      "tsx",
+      "json",
+      "node",
+      "scss"
+    ],
     "moduleNameMapper": {
       "\\.(scss|css|jpg|png|gif)$": "identity-obj-proxy"
     },

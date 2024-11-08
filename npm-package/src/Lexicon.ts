@@ -89,7 +89,7 @@ export class Lexicon {
   //
 
   /* Return a new Lexicon with same contents, but different default language code */
-  locale(localeCode: LocaleCode): Lexicon | null {
+  locale(localeCode: LocaleCode) {
     if (!isLocaleCode(localeCode))
       throw new Error(`'localeCode' should be e.g. 'en', not: ${localeCode}`)
 

@@ -161,7 +161,6 @@ export class LexiconEditor extends React.Component<
   }
 
   clickEditHandler = (e: MouseEvent) => {
-    console.log('does this happen')
     if (!e.shiftKey && !e.metaKey) return
 
     const htmlTarget = e.target as HTMLElement

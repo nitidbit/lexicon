@@ -1,8 +1,8 @@
-export { Lexicon } from "./Lexicon"
-export { default as EditWrapper } from "./editor/EditWrapper"
-export { LxProvider, useLexicon } from "./LxProvider"
+export { Lexicon } from './Lexicon'
+export { default as EditWrapper } from './editor/EditWrapper'
+export { LxProvider, useLexicon } from './LxProvider'
 
-export const VERSION = "3.0.0-alpha2";
+export const VERSION = '3.0.0-alpha3'
 
 /*
   Change History - API changes since last version

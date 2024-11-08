@@ -23,12 +23,19 @@ export class LexiconHub extends Lexicon {
 
   register(
     contentByLocale: ContentByLocale,
-    localeCode: LocaleCode = DEFAULT_LOCALE_CODE
+    localeCode: LocaleCode | null = null
   ): Lexicon {
+    const desiredLocale = localeCode || this.currentLocaleCode
     const existingLexicon = this.lexiconWithRepoPath(contentByLocale.repoPath)
-    if (existingLexicon) return existingLexicon
 
-    const newLexicon = new Lexicon(contentByLocale, localeCode)
+    if (existingLexicon) {
+      if (existingLexicon.currentLocaleCode === desiredLocale) {
+        return existingLexicon
+      }
+      return existingLexicon.locale(desiredLocale) // same lexicon path, but different locale
+    }
+
+    const newLexicon = new Lexicon(contentByLocale, desiredLocale)
     this.addBranch(newLexicon, this.rootKey(newLexicon))
     return newLexicon
   }

@@ -40,13 +40,15 @@ describe('<LxProvider>', () => {
     },
   }
 
-  const SampleApp = ({ localeCode = 'en' }) => {
-    lexicon = useLexicon({
-      repoPath: 'blah.json',
-      en: { banner: 'I <3 CATS' },
-      es: { banner: 'YO <3 LOS GATOS' },
-      localeCode: localeCode,
-    })
+  const SampleApp = ({ localeCode = '' }) => {
+    lexicon = useLexicon(
+      {
+        repoPath: 'blah.json',
+        en: { banner: 'I <3 CATS' },
+        es: { banner: 'YO <3 LOS GATOS' },
+      },
+      localeCode
+    )
 
     return <div className="SampleApp">{lexicon.get('banner')}</div>
   }
@@ -63,14 +65,14 @@ describe('<LxProvider>', () => {
     )
   }
 
-  const testSubject = (token = 'SAMPLE SERVER TOKEN') => {
+  const testSubject = (token = 'SAMPLE SERVER TOKEN', localeCode = 'en') => {
     if (token) {
       sessionStorage.setItem('lexiconServerToken', token)
     }
 
     return render(
       <LxProvider apiUpdateUrl="SAMPLE_URL">
-        <SampleApp />
+        <SampleApp localeCode={localeCode} />
       </LxProvider>
     )
   }
@@ -161,6 +163,39 @@ describe('<LxProvider>', () => {
       expect(
         screen.queryByRole('button', { name: 'Nothing to Save' })
       ).not.toBeInTheDocument()
+    })
+  })
+
+  describe('handling locales', () => {
+    test('useLexicon returns a Lexicon with the proper locale', () => {
+      const screen = render(
+        <LxProvider apiUpdateUrl="SAMPLE_URL">
+          <SampleApp localeCode="en" />
+          <SampleApp localeCode="es" />
+        </LxProvider>
+      )
+
+      expect(screen.queryByText('I <3 CATS')).toBeInTheDocument()
+      expect(screen.queryByText('YO <3 LOS GATOS')).toBeInTheDocument()
+    })
+
+    test('consumer observes the locale in LxProvider; if it changes, consumer re-renders in new locale', () => {
+      const screen = render(
+        <LxProvider apiUpdateUrl="SAMPLE_URL" localeCode="en">
+          <SampleApp />
+        </LxProvider>
+      )
+
+      expect(screen.queryByText('I <3 CATS')).toBeInTheDocument()
+
+      screen.rerender(
+        <LxProvider apiUpdateUrl="SAMPLE_URL" localeCode="es">
+          <SampleApp />
+        </LxProvider>
+      )
+
+      expect(screen.queryByText('I <3 CATS')).not.toBeInTheDocument()
+      expect(screen.queryByText('YO <3 LOS GATOS')).toBeInTheDocument()
     })
   })
 

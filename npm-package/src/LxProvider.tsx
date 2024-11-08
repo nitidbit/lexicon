@@ -1,9 +1,9 @@
-import React, { useState, createContext, useContext } from 'react'
+import React, { useState, createContext, useContext, useEffect } from 'react'
 import { getURLParameter } from './util'
 import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
 import { LexiconHub } from './editor/LexiconHub'
 import { LxEditPanel } from './editor/LxEditPanel'
-// import './LxProviderStyles.scss'
+
 import './LxProviderStyles'
 
 const empty_lexicon_hub = (localeCode: string = '') => {
@@ -19,7 +19,7 @@ const LxContext = createContext(empty_lexicon_hub())
 // in editor.
 export const useLexicon = (
   contentByLocale: ContentByLocale,
-  localeCode: LocaleCode = DEFAULT_LOCALE_CODE
+  localeCode: LocaleCode = null
 ) => {
   const lexiconHub = useContext(LxContext)
   return lexiconHub.register(contentByLocale, localeCode)
@@ -36,6 +36,10 @@ export const LxProvider = ({
   const [lexiconHub, setLexiconHub] = useState(empty_lexicon_hub(localeCode))
 
   grabLexiconServerTokenAndReload()
+
+  useEffect(() => {
+    setLexiconHub(lexiconHub.locale(localeCode))
+  }, [localeCode])
 
   //    RENDER
   return (
