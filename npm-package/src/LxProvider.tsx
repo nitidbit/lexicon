@@ -1,13 +1,16 @@
-import React, { useState, createContext, useContext } from 'react';
-import { getURLParameter } from './util';
+import React, { useState, createContext, useContext } from 'react'
+import { getURLParameter } from './util'
 import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
 import { LexiconHub } from './editor/LexiconHub'
 import { LxEditPanel } from './editor/LxEditPanel'
 // import './LxProviderStyles.scss'
 import './LxProviderStyles'
 
-const empty_lexicon_hub = (localeCode: string = '') => { 
-  return new LexiconHub({repoPath: 'SHARED LEXICON', en: {}, es: {}}, localeCode)
+const empty_lexicon_hub = (localeCode: string = '') => {
+  return new LexiconHub(
+    { repoPath: 'SHARED LEXICON', en: {}, es: {} },
+    localeCode
+  )
 }
 
 const LxContext = createContext(empty_lexicon_hub())
@@ -24,8 +27,11 @@ export const useLexicon = (
 
 // Place this ContextProvider around your app to allow inner components to access
 // the shared root lexicon, and also the editor
-export const LxProvider = ({apiUpdateUrl, children, localeCode=DEFAULT_LOCALE_CODE}) => {
-
+export const LxProvider = ({
+  apiUpdateUrl,
+  children,
+  localeCode = DEFAULT_LOCALE_CODE,
+}) => {
   //    STATE
   const [lexiconHub, setLexiconHub] = useState(empty_lexicon_hub(localeCode))
 
@@ -34,8 +40,8 @@ export const LxProvider = ({apiUpdateUrl, children, localeCode=DEFAULT_LOCALE_CO
   //    RENDER
   return (
     <div className="LxProvider">
-      <LxContext.Provider value={ lexiconHub }>
-        { children }
+      <LxContext.Provider value={lexiconHub}>
+        {children}
         <EditButton
           lexiconHub={lexiconHub}
           setLexiconHub={setLexiconHub}
@@ -56,14 +62,16 @@ export const LxProvider = ({apiUpdateUrl, children, localeCode=DEFAULT_LOCALE_CO
 const grabLexiconServerTokenAndReload = () => {
   let lexiconServerToken = getURLParameter('lexiconServerToken')
   if (lexiconServerToken) {
-    sessionStorage.setItem('lexiconServerToken', lexiconServerToken); // Save token
+    sessionStorage.setItem('lexiconServerToken', lexiconServerToken) // Save token
 
     // Reload to remove token from URL
-    let locationWithoutToken = window.location.href.split("?")[0];
-    window.history.replaceState(null, null, locationWithoutToken);
+    let locationWithoutToken = window.location.href.split('?')[0]
+    window.history.replaceState(null, null, locationWithoutToken)
 
     if (document.location.protocol != 'https:') {
-      console.warn('You should use HTTPS otherwise the lexiconServerToken is passed insecurely');
+      console.warn(
+        'You should use HTTPS otherwise the lexiconServerToken is passed insecurely'
+      )
     }
   }
 }
@@ -81,26 +89,25 @@ export const EditButton = ({
   lexiconHub,
   setLexiconHub,
   apiUpdateUrl,
-}:{
-  lexiconHub: LexiconHub,
-  setLexiconHub: (l: LexiconHub) => void,
+}: {
+  lexiconHub: LexiconHub
+  setLexiconHub: (l: LexiconHub) => void
   apiUpdateUrl: string
 }) => {
-
   //    State
   const [isEditorVisible, setIsEditorVisible] = useState(false)
 
   //    Stateful Functions
-  const toggleEditor = () => setIsEditorVisible( !isEditorVisible )
+  const toggleEditor = () => setIsEditorVisible(!isEditorVisible)
 
   //    Render
   if (isEditingBlocked()) return null
 
   return (
     <div className="EditButton">
-      <div className='buttons'>
+      <div className="buttons">
         <button onClick={toggleEditor} className="edit-lexicon-btn">
-          { isEditorVisible ? 'Hide Lexicon' : 'Edit Lexicon' }
+          {isEditorVisible ? 'Hide Lexicon' : 'Edit Lexicon'}
         </button>
       </div>
 
@@ -115,4 +122,3 @@ export const EditButton = ({
     </div>
   )
 }
-
