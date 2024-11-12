@@ -56,7 +56,7 @@ function DemoComponent({ localeCode }) {
   )
 }
 
-const UPDATE_URL = 'update'
+const UPDATE_URL = 'demo'
 
 export function DemoApp() {
   const queryString = window.location.search

@@ -110,6 +110,16 @@ export const LxEditPanel = ({
         }
       })
     const payload = { changes: listOfChanges };
+    if (apiUpdateUrl === 'demo') {
+      setSavingState(SavingState.Error)
+      setErrorMessage("You are using a demo.  In a production application your changes would be written to Github directly into the JSON files on the branch you have indicated.  apiUpdateUrl should be set the the Lexicon server you are using.  You can run your own, or you can use NitidBit's server for a small fee.")
+      return
+    }
+    if (!apiUpdateUrl) {
+      setSavingState(SavingState.Error)
+      setErrorMessage("<LxProvider apiUpdateUrl=???> has no URL set, so nothing can be saved. Once the URL is set, your changes will be written to Github directly into the JSON files on whatever branch you indicate.  apiUpdateUrl should be set to the Lexicon server you are using. You can run your own, or you can use NitidBit's server for a small fee.")
+      return
+    }
 
     fetch(apiUpdateUrl, {
       method: 'PUT',
