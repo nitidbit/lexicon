@@ -44,14 +44,13 @@ function DemoComponent({ localeCode }) {
       <br />
       <LxSpan lexicon={demoLexicon} keyPath='title' vars={{ appName: 'My Favorite Things' }} />
       <Faq faqList={demoLexicon.get('faq')} lexicon={demoLexicon} />
-      <div>
-        <p>
-          <LxSpan lexicon={demoLexicon} keyPath='quotes.twain.san_francisco_summer' />
-        </p>
-        <p>
-          <LxSpan lexicon={demoLexicon} keyPath='quotes.shakespeare.to_be' />
-        </p>
-      </div>
+
+      <p>
+        <LxSpan lexicon={demoLexicon} keyPath='quotes.twain.san_francisco_summer' />
+      </p>
+      <p>
+        <LxSpan lexicon={demoLexicon} keyPath='quotes.shakespeare.to_be' />
+      </p>
     </div>
   )
 }
