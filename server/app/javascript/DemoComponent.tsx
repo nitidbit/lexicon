@@ -56,7 +56,7 @@ function DemoComponent({ localeCode }) {
 }
 
 const UPDATE_URL = 'demo'
-const badDemoApp = () => {
+const DemoApp = () => {
   const lex = useLexicon(demoStrings, 'en')
   return (
     <LxProvider apiUpdateUrl="">
@@ -65,7 +65,7 @@ const badDemoApp = () => {
   )
 }
 
-export function DemoApp() {
+export function noDemoApp() {
   const queryString = window.location.search
   const urlParams = new URLSearchParams(queryString)
   const localeCode = urlParams.get('locale') === 'es' ? 'es' : 'en'

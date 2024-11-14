@@ -65,6 +65,22 @@ describe('<LxProvider>', () => {
     )
   }
 
+  const contextlessApp = () => {
+    lexicon = useLexicon(
+      {
+        repoPath: 'blah.json',
+        en: { banner: 'I <3 CATS' },
+        es: { banner: 'YO <3 LOS GATOS' },
+      },
+      'en'
+    )
+    return (
+      <LxProvider apiUpdateUrl="SAMPLE_URL">
+        <div className="SampleApp">{lexicon.get('banner')}</div>
+      </LxProvider>
+    )
+  }
+
   const testSubject = (token = 'SAMPLE SERVER TOKEN', localeCode = 'en') => {
     if (token) {
       sessionStorage.setItem('lexiconServerToken', token)
@@ -127,6 +143,16 @@ describe('<LxProvider>', () => {
       ).toBeInTheDocument()
     })
   })
+
+  describe('when useLexicon is not wrapped inside LxProvider and has no context', () => {
+    test.only('it crashes with a helpful message', () => {
+      expect(() => {
+        contextlessApp();
+      }).toThrow(
+        "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
+      );
+    });
+  });
 
   describe('when lexiconServerToken is in URL', () => {
     beforeEach(() => {
