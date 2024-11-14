@@ -56,6 +56,14 @@ function DemoComponent({ localeCode }) {
 }
 
 const UPDATE_URL = 'demo'
+const badDemoApp = () => {
+  const lex = useLexicon(demoStrings, 'en')
+  return (
+    <LxProvider apiUpdateUrl="">
+      { lex.get('faq') }
+    </LxProvider>
+  )
+}
 
 export function DemoApp() {
   const queryString = window.location.search

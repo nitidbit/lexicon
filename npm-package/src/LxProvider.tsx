@@ -21,7 +21,14 @@ export const useLexicon = (
   contentByLocale: ContentByLocale,
   localeCode: LocaleCode = null
 ) => {
-  const lexiconHub = useContext(LxContext)
+  let lexiconHub: LexiconHub
+  try {
+    lexiconHub = useContext(LxContext)
+  } catch (error) {
+    throw new Error(
+      "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
+    )
+  }
   return lexiconHub.register(contentByLocale, localeCode)
 }
 
