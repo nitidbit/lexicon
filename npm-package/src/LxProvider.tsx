@@ -13,7 +13,8 @@ const empty_lexicon_hub = (localeCode: string = '') => {
   )
 }
 
-const LxContext = createContext(empty_lexicon_hub())
+const NO_CONTEXT_DEFINED = null
+const LxContext = createContext(NO_CONTEXT_DEFINED)
 
 // Finds or creates a lexicon for your content. Also registers it with LexiconHub so it will appear
 // in editor.
@@ -25,6 +26,11 @@ export const useLexicon = (
   try {
     lexiconHub = useContext(LxContext)
   } catch (error) {
+    throw new Error(
+      "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
+    )
+  }
+  if (lexiconHub === NO_CONTEXT_DEFINED) {
     throw new Error(
       "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
     )

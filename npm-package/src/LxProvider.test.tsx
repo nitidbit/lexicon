@@ -155,6 +155,17 @@ describe('<LxProvider>', () => {
     });
   });
 
+  describe('when demo is not wrapped inside LxProvider and has no context', () => {
+
+    test('it crashes with a helpful message', () => {
+      expect(() => render(
+        <SampleApp />
+      )).toThrow(
+        "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
+      );
+    })
+  });
+
   describe('when lexiconServerToken is in URL', () => {
     beforeEach(() => {
       ;(getURLParameter as jest.Mock).mockImplementationOnce(
