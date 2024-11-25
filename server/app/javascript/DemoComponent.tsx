@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { createRoot } from 'react-dom/client'
 import './DemoComponent.scss'
 
-import { useLexicon, LxProvider } from '@nitidbit/lexicon'
+import { useLexicon, LxProvider, LxTag } from '@nitidbit/lexicon'
 import demoStrings from './DemoComponent.json'
 
 type FaqList = [{ question: String; answer: String; lexicon: object }]
@@ -51,6 +51,7 @@ function DemoComponent({ localeCode }) {
       <p>
         <LxSpan lexicon={demoLexicon} keyPath='quotes.shakespeare.to_be' />
       </p>
+      <LxTag tagName="div">Custom LxTag content</LxTag>
     </div>
   )
 }

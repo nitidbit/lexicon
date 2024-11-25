@@ -1,6 +1,7 @@
 export { Lexicon } from './Lexicon'
 export { default as EditWrapper } from './editor/EditWrapper'
 export { LxProvider, useLexicon } from './LxProvider'
+export { LxTag } from './LxTag'
 
 export const VERSION = '3.0.0-alpha3'
 
