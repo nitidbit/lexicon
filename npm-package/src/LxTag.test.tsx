@@ -18,6 +18,18 @@ describe('<LxTag>', () => {
     )
   }
 
+  const testSpanishSubject = (token = 'SAMPLE SERVER TOKEN', localeCode = 'es') => {
+    if (token) {
+      sessionStorage.setItem('lexiconServerToken', token)
+    }
+
+    return render(
+      <LxProvider apiUpdateUrl="SAMPLE_URL">
+        <SampleApp localeCode={localeCode} />
+      </LxProvider>
+    )
+  }
+
   const SampleApp = ({ localeCode = '' }) => {
     lexicon = useLexicon(
       {
@@ -30,10 +42,7 @@ describe('<LxTag>', () => {
 
     return (
       <div className="SampleApp">
-        {lexicon.get('banner')}
-        <LxTag tagName="div">
-          test
-        </LxTag>
+        <LxTag tagName="div" lexicon={lexicon} keyPath="banner" />
       </div>
     ) 
   }
@@ -47,6 +56,29 @@ describe('<LxTag>', () => {
       const div = sampleAppElem.querySelector('div');
       expect(div).toBeInTheDocument();
     })
+
+    test('the correct text is inserted', () => {
+      const screen = testSubject()
+
+      const sampleAppElem = screen.container.querySelector(
+        '.SampleApp'
+      ) as HTMLElement
+      expect(within(sampleAppElem).queryByText('I <3 CATS')).toBeInTheDocument()
+    })
+
+    describe('with spanish local', () => {
+      test('the correct text is inserted', () => {
+        const screen = testSpanishSubject()
+
+        const sampleAppElem = screen.container.querySelector(
+          '.SampleApp'
+        ) as HTMLElement
+        expect(within(sampleAppElem).queryByText('YO <3 LOS GATOS')).toBeInTheDocument()
+      })
+
+    })
+
+    
   })
 
 })

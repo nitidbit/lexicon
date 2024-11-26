@@ -51,7 +51,7 @@ function DemoComponent({ localeCode }) {
       <p>
         <LxSpan lexicon={demoLexicon} keyPath='quotes.shakespeare.to_be' />
       </p>
-      <LxTag tagName="div">Custom LxTag content</LxTag>
+      <LxTag tagName="div" keyPath="title" vars={{ appName: 'My Favorite Things' }} lexicon={demoLexicon} />
     </div>
   )
 }
