@@ -4,7 +4,7 @@ import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
 import { LexiconHub } from './editor/LexiconHub'
 import { LxEditPanel } from './editor/LxEditPanel'
 
-import './LxProviderStyles'
+import './LxProviderStyles.css'
 
 const empty_lexicon_hub = (localeCode: string = '') => {
   return new LexiconHub(
