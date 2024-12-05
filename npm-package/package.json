@@ -17,6 +17,7 @@
   "scripts": {
     "test": "jest --verbose --no-watchman",
     "test:watch": "jest --verbose --watch",
+    "test:coverage": "npm test -- --coverage",
     "scss": "sass --update --style=expanded src/:build/src",
     "scss:watch": "npm run scss -- --watch",
     "build": "tsc; npm run scss",

@@ -9,6 +9,7 @@ lint.py
 .rubocop.yml
 
 npm-package/build
+npm-package/coverage
 
 server/app/assets/builds
 server/builds
