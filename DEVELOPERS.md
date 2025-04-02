@@ -10,6 +10,29 @@ Developing the Lexicon NPM Package
 ----------------------------------
 If you are just using Lexicon in your project, you can ignore this file.
 
+### Coding Lexicon and your Project at the same time
+Sometimes you are working on your project, which uses Lexicon, but you are tweaking Lexicon at the
+same time. You want a change in Lexicon source code to be immediately reflected in your project.
+Normally you'd have to change Lexicon, publish the change to the NPM registry, and reinstall Lexicon
+for your project. But here's a way to temporarily link them directly:
+
+(1) In Lexicon folder:
+
+    cd "__SOMEWHERE__/lexicon/"
+    npm link __YOUR_PROJECT__/node_modules/react    # having two versions of React will bork things
+    npm link __YOUR_PROJECT__/node_modules/react-dom
+    ./runit.sh                                      # automatically build JS files when editing TSX
+
+(1) In your_project's folder:
+
+    cd "__YOUR_PROJECT__/"
+    npm link __SOMEWHERE__/lexicon/npm-package
+
+To reset things:
+    cd "__SOMEWHERE__/lexicon/"
+    npm unlink
+    cd "__YOUR_PROJECT__/"
+    npm unlink
 
 ### Compilation
 
