@@ -22,6 +22,10 @@ gem "sass-rails", "~> 5.0"
 gem "sendgrid-actionmailer" # https://github.com/eddiezane/sendgrid-actionmailer
 gem "sendgrid-ruby" # SendGrid's official api gem -- https://github.com/sendgrid/sendgrid-ruby
 
+# TEMPORARY VERSION PIN concurrent-ruby for issue https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
+# TODO: remove this once we upgrade to Rails 7.1
+gem "concurrent-ruby", "1.3.4"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[mri mingw x64_mingw]
