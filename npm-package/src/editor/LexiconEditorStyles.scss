@@ -1,4 +1,4 @@
-@import './sharedStyles';
+@import "./sharedStyles";
 
 /* global rule which will apply on user's app */
 [data-lexicon]:hover {
@@ -14,9 +14,8 @@
   }
 }
 
-
 #LexiconEditor {
-  font-family: 'helvetica neue';
+  font-family: "helvetica neue";
   font-size: 14px;
   text-align: left;
   padding-right: 10px;
@@ -50,10 +49,12 @@
         direction: rtl;
       }
 
-      input, textarea, select {
+      input,
+      textarea,
+      select {
         flex: 1;
         display: block;
-        font-family: 'helvetica neue';
+        font-family: "helvetica neue";
         font-weight: 400;
         font-size: 14px;
         width: 100%;
