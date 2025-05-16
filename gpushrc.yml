@@ -2,7 +2,6 @@
 #
 # Install -- brew install nitidbit/gpush/gpush
 
-
 parallel_run:
   - name: Uncommitted git changes
     shell: "git diff --name-only --exit-code"
@@ -16,8 +15,11 @@ parallel_run:
   - name: bundle leak
     shell: "cd server; bundle exec bundle leak --update"
 
-  - name: npm audit
-    shell: "npm audit --audit-level=high"
+  - name: npm audit npm-package
+    shell: "cd npm-package; npm audit --audit-level=high"
+
+  - name: npm audit server
+    shell: "cd server; npm audit --audit-level=high"
 
   - name: "Rspec"
     shell: "cd server; bundle exec rspec --format documentation"
