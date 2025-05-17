@@ -68,20 +68,24 @@ const TabNavigation = ({
 };
 
 function LocaleChooser({ lexicon, switchLocale, selectedLocale }) {
-  return lexicon.locales().map((locale: string) => (
-    <label htmlFor={`localeRadio__${locale}`} key={locale}>
-      <input
-        type="radio"
-        id={`localeRadio__${locale}`}
-        value={locale}
-        checked={locale == selectedLocale}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          switchLocale(e.target.value)
-        }
-      />
-      {locale}
-    </label>
-  ));
+  return (
+    <div className="LocaleChooserContainer">
+      {lexicon.locales().map((locale: string) => (
+        <label htmlFor={`localeRadio__${locale}`} key={locale}>
+          <input
+            type="radio"
+            id={`localeRadio__${locale}`}
+            value={locale}
+            checked={locale == selectedLocale}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              switchLocale(e.target.value)
+            }
+          />
+          {locale}
+        </label>
+      ))}
+    </div>
+  );
 }
 
 const FormRow = (props: { label: string; children: any }) => (
