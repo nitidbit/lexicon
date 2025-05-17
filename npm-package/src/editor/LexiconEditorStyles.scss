@@ -22,6 +22,49 @@
   background: $lexicon_editor_background;
   overflow-y: scroll;
 
+  // Tab navigation styles
+  .LexiconEditorTabs {
+    display: flex;
+    border-bottom: 1px solid darken($lexicon_editor_background, 10%);
+    margin-bottom: 10px;
+  }
+
+  .LexiconEditorTab {
+    padding: 8px 16px;
+    background: darken($lexicon_editor_background, 5%);
+    border: 1px solid darken($lexicon_editor_background, 10%);
+    border-bottom: none;
+    margin-right: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 80px;
+    text-align: center;
+    font-weight: 400;
+
+    &::before {
+      display: block;
+      content: attr(data-text);
+      font-weight: bold;
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+    }
+
+    &:hover {
+      background: darken($lexicon_editor_background, 8%);
+    }
+
+    &.active {
+      background: $lexicon_editor_background;
+      border-bottom: 1px solid $lexicon_editor_background;
+      margin-bottom: -1px;
+      position: relative;
+      font-weight: bold;
+    }
+  }
+
   h2 {
     margin: 5px 0;
     padding-left: 10px;

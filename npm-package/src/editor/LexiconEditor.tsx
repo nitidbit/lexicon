@@ -37,6 +37,36 @@ type HtmlOnChangeCallback = (
   event: React.ChangeEvent<HTMLTextAreaElement>
 ) => void;
 
+type TabType = "all" | "thisPage";
+
+// Tab navigation component
+const TabNavigation = ({
+  activeTab,
+  setActiveTab,
+}: {
+  activeTab: TabType;
+  setActiveTab: (tab: TabType) => void;
+}) => {
+  return (
+    <div className="LexiconEditorTabs">
+      <button
+        className={`LexiconEditorTab ${activeTab === "all" ? "active" : ""}`}
+        onClick={() => setActiveTab("all")}
+        data-text="All"
+      >
+        All
+      </button>
+      <button
+        className={`LexiconEditorTab ${activeTab === "thisPage" ? "active" : ""}`}
+        onClick={() => setActiveTab("thisPage")}
+        data-text="This Page"
+      >
+        This Page
+      </button>
+    </div>
+  );
+};
+
 function LocaleChooser({ lexicon, switchLocale, selectedLocale }) {
   return lexicon.locales().map((locale: string) => (
     <label htmlFor={`localeRadio__${locale}`} key={locale}>
@@ -128,18 +158,107 @@ export interface LexiconEditorProps {
 
 export class LexiconEditor extends React.Component<
   LexiconEditorProps,
-  { justClickedElement: string }
+  {
+    justClickedElement: string;
+    activeTab: TabType;
+    pageKeys: string[];
+  }
 > {
+  private mutationObserver: MutationObserver | null = null;
+
   constructor(props) {
     super(props);
-    this.state = { justClickedElement: "" };
+    this.state = {
+      justClickedElement: "",
+      activeTab: "all",
+      pageKeys: [],
+    };
   }
 
   setJustClickedElement = (value: string) =>
     this.setState({ justClickedElement: value });
 
+  setActiveTab = (tab: TabType) => this.setState({ activeTab: tab });
+
   componentDidMount() {
     this.makeElementsClickEditable();
+    this.updatePageKeys();
+    this.setupMutationObserver();
+  }
+
+  setupMutationObserver() {
+    // Create a mutation observer to watch for changes to the DOM
+    this.mutationObserver = new MutationObserver((mutations) => {
+      // Check if any of the mutations involve elements with data-lexicon attributes
+      const shouldUpdate = mutations.some((mutation) => {
+        // Check added nodes
+        if (mutation.addedNodes.length > 0) {
+          for (const node of Array.from(mutation.addedNodes)) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              const element = node as HTMLElement;
+              // Check if the element or any of its children have data-lexicon
+              if (
+                element.hasAttribute("data-lexicon") ||
+                element.querySelector("[data-lexicon]")
+              ) {
+                return true;
+              }
+            }
+          }
+        }
+
+        // Check removed nodes
+        if (mutation.removedNodes.length > 0) {
+          for (const node of Array.from(mutation.removedNodes)) {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              const element = node as HTMLElement;
+              // Check if the element or any of its children have data-lexicon
+              if (
+                element.hasAttribute("data-lexicon") ||
+                element.querySelector("[data-lexicon]")
+              ) {
+                return true;
+              }
+            }
+          }
+        }
+
+        // Check attribute changes
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "data-lexicon"
+        ) {
+          return true;
+        }
+
+        return false;
+      });
+
+      if (shouldUpdate) {
+        this.updatePageKeys();
+        this.makeElementsClickEditable();
+      }
+    });
+
+    // Start observing
+    this.mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-lexicon"],
+    });
+  }
+
+  updatePageKeys() {
+    // Get all keys present on the current page from data-lexicon attributes
+    const allDataLexicon = document.querySelectorAll("[data-lexicon]");
+    const pageKeys = Array.from(allDataLexicon).map((element) => {
+      const htmlElement = element as HTMLElement;
+      return htmlElement.getAttribute("data-lexicon");
+    });
+
+    // Store unique keys
+    this.setState({ pageKeys: [...new Set(pageKeys)] });
   }
 
   makeElementsClickEditable() {
@@ -157,6 +276,12 @@ export class LexiconEditor extends React.Component<
       const htmlElement = element as HTMLElement;
       htmlElement.removeEventListener("click", this.clickEditHandler);
     });
+
+    // Disconnect the mutation observer
+    if (this.mutationObserver) {
+      this.mutationObserver.disconnect();
+      this.mutationObserver = null;
+    }
   }
 
   clickEditHandler = (e: MouseEvent) => {
@@ -168,6 +293,9 @@ export class LexiconEditor extends React.Component<
     this.props.toggleEditor();
     inputElement.scrollIntoView();
     this.setJustClickedElement(lexiconAttribute);
+
+    // Switch to "This Page" tab if we click on a page element
+    this.setActiveTab("thisPage");
   };
 
   sendLexiconEditorChange = (event) => {
@@ -183,21 +311,32 @@ export class LexiconEditor extends React.Component<
   };
 
   render() {
-    const fields = this.props.lexicon
-      .keys()
-      .map((key: string) => (
-        <Field
-          localPath={key}
-          value={this.props.lexicon.get(key)}
-          onChange={this.sendLexiconEditorChange}
-          justClickedElement={this.state.justClickedElement}
-          setJustClickedElement={this.setJustClickedElement}
-          visible={this.props.visible}
-        />
-      ));
+    // Filter keys based on active tab
+    const keys = this.props.lexicon.keys();
+    const filteredKeys =
+      this.state.activeTab === "thisPage"
+        ? keys.filter((key) => this.state.pageKeys.includes(key))
+        : keys;
+
+    const fields = filteredKeys.map((key: string) => (
+      <Field
+        key={key}
+        localPath={key}
+        value={this.props.lexicon.get(key)}
+        onChange={this.sendLexiconEditorChange}
+        justClickedElement={this.state.justClickedElement}
+        setJustClickedElement={this.setJustClickedElement}
+        visible={this.props.visible}
+      />
+    ));
 
     return (
       <div id="LexiconEditor">
+        <TabNavigation
+          activeTab={this.state.activeTab}
+          setActiveTab={this.setActiveTab}
+        />
+
         <LocaleChooser
           lexicon={this.props.lexicon}
           selectedLocale={this.props.selectedLocale}
@@ -209,6 +348,9 @@ export class LexiconEditor extends React.Component<
             {field}
           </FormRow>
         ))}
+        {!fields.length && (
+          <div className="no-keys-message">No keys found.</div>
+        )}
       </div>
     );
   }
