@@ -16,23 +16,43 @@ same time. You want a change in Lexicon source code to be immediately reflected 
 Normally you'd have to change Lexicon, publish the change to the NPM registry, and reinstall Lexicon
 for your project. But here's a way to temporarily link them directly:
 
-(1) In Lexicon folder:
-
-    cd "__SOMEWHERE__/lexicon/"
-    npm link __YOUR_PROJECT__/node_modules/react    # having two versions of React will bork things
-    npm link __YOUR_PROJECT__/node_modules/react-dom
-    ./runit.sh                                      # automatically build JS files when editing TSX
-
-(1) In your_project's folder:
+### NPM Link local Lexicon your project
 
     cd "__YOUR_PROJECT__/"
     npm link __SOMEWHERE__/lexicon/npm-package
 
-To reset things:
-    cd "__SOMEWHERE__/lexicon/"
-    npm unlink
-    cd "__YOUR_PROJECT__/"
-    npm unlink
+If your node project is using Vite, you might need to add this to your vite.config.js
+
+
+```
+  return defineConfig({
+    ...
+    optimizeDeps: {
+      include: ['@nitidbit/lexicon'],
+    },
+    ...
+  })
+```
+
+
+### To reset NPM Link:
+* See what things are currently linked
+
+    npm ls -g --depth=0 --link=true
+
+  which should say something like:
+
+    /Users/winstonw/.nodenv/versions/20.18.2/lib
+    └── @nitidbit/lexicon@3.0.0-alpha6 -> ./../../../../nitidbit/git/lexicon/npm-package
+
+* Remove the file as below. Some of the directory names (e.g. version #) may differ.
+  Note: 'npm unlink' should do this, but it wasn't working for Winston in 2025.
+
+    rm -rf  ~/.nodenv/versions/20.18.2/lib/node_modules/@nitidbit/lexicon
+
+* Verify no more links
+    npm ls -g --depth=0 --link=true
+
 
 ### Compilation
 
