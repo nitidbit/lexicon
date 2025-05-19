@@ -8,6 +8,7 @@ import {
   DEFAULT_LOCALE_CODE,
 } from '../Lexicon'
 
+// Used by LxProvider to cache Lexicons currently in use.
 export class LexiconHub extends Lexicon {
   constructor(
     contentByLocale: ContentByLocale = {

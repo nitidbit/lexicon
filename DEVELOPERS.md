@@ -11,28 +11,19 @@ Developing the Lexicon NPM Package
 If you are just using Lexicon in your project, you can ignore this file.
 
 ### Coding Lexicon and your Project at the same time
-Sometimes you are working on your project, which uses Lexicon, but you are tweaking Lexicon at the
-same time. You want a change in Lexicon source code to be immediately reflected in your project.
-Normally you'd have to change Lexicon, publish the change to the NPM registry, and reinstall Lexicon
-for your project. But here's a way to temporarily link them directly:
+Sometimes you are working on your project, which uses Lexicon, but you are
+tweaking Lexicon at the same time. You want a change in Lexicon source code to
+be immediately reflected in your project.  Normally you'd have to change
+Lexicon, publish the change to the NPM registry, and reinstall Lexicon for your
+project.  Or `npm link` is supposed to help but it doesn't work when React is
+involved.  "`yalc` acts as very simple local repository for your locally
+developed packages that you want to share across your local environment."
 
-(1) In Lexicon folder:
+Setup:
+  npm i -g yalc nodemon
+  cd <lexicon folder>/npm-package
+  heroku local --procfile=Procfile-yalc-abfinder
 
-    cd "__SOMEWHERE__/lexicon/"
-    npm link __YOUR_PROJECT__/node_modules/react    # having two versions of React will bork things
-    npm link __YOUR_PROJECT__/node_modules/react-dom
-    ./runit.sh                                      # automatically build JS files when editing TSX
-
-(1) In your_project's folder:
-
-    cd "__YOUR_PROJECT__/"
-    npm link __SOMEWHERE__/lexicon/npm-package
-
-To reset things:
-    cd "__SOMEWHERE__/lexicon/"
-    npm unlink
-    cd "__YOUR_PROJECT__/"
-    npm unlink
 
 ### Compilation
 
@@ -71,7 +62,7 @@ available to people using the package. This is already done if you've been runni
     cd npm-package
     npm run build
     npm publish
-    VER='x.y.x'     # use actual numbers
+    VER=$(jq '.["version"]' package.json)    # or set to version
     git add . && git commit -m "Version $VER"
     git tag "$VER"
     git push && git push origin "$VER"

@@ -79,7 +79,6 @@ export class Lexicon {
       throw new Error("'contentByLocale' must contain 'en: {...}' locale")
     }
 
-    // delete contentByLocale["repoPath"]
     this._data = contentByLocale
     this._subsetRoot = col.keyPathAsArray(subset)
   }

@@ -30,4 +30,7 @@ class WelcomeController < ApplicationController
 
   def testing
   end
+
+  def demo_multiple_providers
+  end
 end

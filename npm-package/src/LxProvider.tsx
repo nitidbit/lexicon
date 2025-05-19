@@ -6,15 +6,17 @@ import { LxEditPanel } from './editor/LxEditPanel'
 
 import './LxProviderStyles.css'
 
-const empty_lexicon_hub = (localeCode: string = '') => {
+let nextProviderNum = 1
+const emptyLexiconHub = (localeCode: string = '') => {
   return new LexiconHub(
-    { repoPath: 'SHARED LEXICON', en: {}, es: {} },
+    { repoPath: `LEXICON HUB ${nextProviderNum++}`, en: {}, es: {} },
+    // { repoPath: 'SHARED LEXICON', en: {}, es: {} },
     localeCode
   )
 }
 
-const NO_CONTEXT_DEFINED = null
-const LxContext = createContext(NO_CONTEXT_DEFINED)
+const NULL_CONTEXT = null
+const LxContext = createContext(NULL_CONTEXT)
 
 // Finds or creates a lexicon for your content. Also registers it with LexiconHub so it will appear
 // in editor.
@@ -30,7 +32,7 @@ export const useLexicon = (
       "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
     )
   }
-  if (lexiconHub === NO_CONTEXT_DEFINED) {
+  if (lexiconHub === NULL_CONTEXT) {
     throw new Error(
       "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
     )
@@ -44,9 +46,10 @@ export const LxProvider = ({
   apiUpdateUrl,
   children,
   localeCode = DEFAULT_LOCALE_CODE,
+  className = ""
 }) => {
   //    STATE
-  const [lexiconHub, setLexiconHub] = useState(empty_lexicon_hub(localeCode))
+  const [lexiconHub, setLexiconHub] = useState(emptyLexiconHub(localeCode))
 
   grabLexiconServerTokenAndReload()
 
@@ -56,7 +59,7 @@ export const LxProvider = ({
 
   //    RENDER
   return (
-    <div className="LxProvider">
+    <div className={`LxProvider ${className}`}>
       <LxContext.Provider value={lexiconHub}>
         {children}
         <EditButton

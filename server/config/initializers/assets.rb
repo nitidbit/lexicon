@@ -15,6 +15,8 @@ Rails.application.config.assets.paths << Rails.root.join("node_modules")
 Rails.application.config.assets.precompile += %w[
   DemoComponent.js
   DemoComponent.css
+  DemoMultipleProviders.js
+  DemoMultipleProviders.css
   testing.js
   testing.css
 ]

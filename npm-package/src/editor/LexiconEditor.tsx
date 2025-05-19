@@ -37,32 +37,37 @@ type HtmlOnChangeCallback = (
   event: React.ChangeEvent<HTMLTextAreaElement>
 ) => void;
 
-type TabType = "all" | "thisPage";
+type TabType = string; // filename like "messages.json"
+
+// Remove text before the first dot from a key path
+const stripFilePrefix = (keyPath: string): string => {
+  const dotIndex = keyPath.indexOf('.');
+  return dotIndex > -1 ? keyPath.substring(dotIndex + 1) : keyPath;
+};
 
 // Tab navigation component
 const TabNavigation = ({
   activeTab,
   setActiveTab,
+  tabNames,
 }: {
   activeTab: TabType;
   setActiveTab: (tab: TabType) => void;
+  tabNames: string[];
 }) => {
   return (
     <div className="LexiconEditorTabs">
-      <button
-        className={`LexiconEditorTab ${activeTab === "all" ? "active" : ""}`}
-        onClick={() => setActiveTab("all")}
-        data-text="All"
-      >
-        All
-      </button>
-      <button
-        className={`LexiconEditorTab ${activeTab === "thisPage" ? "active" : ""}`}
-        onClick={() => setActiveTab("thisPage")}
-        data-text="This Page"
-      >
-        This Page
-      </button>
+      {tabNames.map((tabName) => (
+        <button
+          key={tabName}
+          className={`LexiconEditorTab ${activeTab === tabName ? "active" : ""}`}
+          onClick={() => setActiveTab(tabName)}
+          data-text={tabName}
+          title={tabName}
+        >
+          {tabName}
+        </button>
+      ))}
     </div>
   );
 };
@@ -166,17 +171,40 @@ export class LexiconEditor extends React.Component<
     justClickedElement: string;
     activeTab: TabType;
     pageKeys: string[];
+    tabNames: string[];
   }
 > {
   private mutationObserver: MutationObserver | null = null;
 
   constructor(props) {
     super(props);
+    const tabNames = this.getTabNames();
     this.state = {
       justClickedElement: "",
-      activeTab: "all",
+      activeTab: tabNames.length > 0 ? tabNames[0] : "",
       pageKeys: [],
+      tabNames: tabNames,
     };
+  }
+
+  getTabNames(): string[] {
+    // Extract unique filenames from all sub-lexicons in the hub
+    const filenames = new Set<string>();
+    const keys = this.props.lexicon.keys();
+
+    for (const key of keys) {
+      try {
+        const source = this.props.lexicon.source(key);
+        const filename = source.filename;
+        // Extract just the filename without the path
+        const basename = filename.split('/').pop() || filename;
+        filenames.add(basename);
+      } catch (e) {
+        // Skip keys that can't be sourced
+      }
+    }
+
+    return Array.from(filenames).sort();
   }
 
   setJustClickedElement = (value: string) =>
@@ -315,12 +343,18 @@ export class LexiconEditor extends React.Component<
   };
 
   render() {
-    // Filter keys based on active tab
+    // Filter keys based on active tab filename
     const keys = this.props.lexicon.keys();
-    const filteredKeys =
-      this.state.activeTab === "thisPage"
-        ? keys.filter((key) => this.state.pageKeys.includes(key))
-        : keys;
+    let filteredKeys = keys.filter((key: string) => {
+      try {
+        const source = this.props.lexicon.source(key);
+        const filename = source.filename;
+        const basename = filename.split('/').pop() || filename;
+        return basename === this.state.activeTab;
+      } catch (e) {
+        return false;
+      }
+    });
 
     const fields = filteredKeys.map((key: string) => (
       <Field
@@ -339,6 +373,7 @@ export class LexiconEditor extends React.Component<
         <TabNavigation
           activeTab={this.state.activeTab}
           setActiveTab={this.setActiveTab}
+          tabNames={this.state.tabNames}
         />
 
         <LocaleChooser
@@ -348,7 +383,7 @@ export class LexiconEditor extends React.Component<
         />
 
         {fields.map((field) => (
-          <FormRow key={field.props.localPath} label={field.props.localPath}>
+          <FormRow key={field.props.localPath} label={stripFilePrefix(field.props.localPath)}>
             {field}
           </FormRow>
         ))}

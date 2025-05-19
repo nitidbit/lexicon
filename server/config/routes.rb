@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   #
   root "welcome#index"
   get "/demo", to: "welcome#demo"
+  get "/demo_multiple_providers", to: "welcome#demo_multiple_providers"
   get "/edit", to: "welcome#edit"
   get "/testing", to: "welcome#testing"
 
