@@ -37,7 +37,7 @@ type HtmlOnChangeCallback = (
   event: React.ChangeEvent<HTMLTextAreaElement>
 ) => void;
 
-type TabType = "all" | "thisPage";
+type TabType = "all" | "thisPage" | "RECENT";
 
 // Tab navigation component
 const TabNavigation = ({
@@ -50,6 +50,13 @@ const TabNavigation = ({
   return (
     <div className="LexiconEditorTabs">
       <button
+        className={`LexiconEditorTab ${activeTab === "RECENT" ? "active" : ""}`}
+        onClick={() => setActiveTab("RECENT")}
+        data-text="Recent"
+      >
+        Recent
+      </button>
+      <button
         className={`LexiconEditorTab ${activeTab === "all" ? "active" : ""}`}
         onClick={() => setActiveTab("all")}
         data-text="All"
@@ -61,7 +68,7 @@ const TabNavigation = ({
         onClick={() => setActiveTab("thisPage")}
         data-text="This Page"
       >
-        This Page
+        Clickable
       </button>
     </div>
   );
@@ -317,10 +324,23 @@ export class LexiconEditor extends React.Component<
   render() {
     // Filter keys based on active tab
     const keys = this.props.lexicon.keys();
-    const filteredKeys =
-      this.state.activeTab === "thisPage"
-        ? keys.filter((key) => this.state.pageKeys.includes(key))
-        : keys;
+    let filteredKeys = []
+    switch(this.state.activeTab) {
+      case "all":
+        filteredKeys = keys
+        break
+      case "thisPage":
+        filteredKeys = keys.filter((key) => this.state.pageKeys.includes(key))
+        break
+      case "RECENT":
+        filteredKeys = this.props.lexicon.recentKeys()
+        break
+    }
+    console.log('!!! num filtered keys=', filteredKeys.length)
+    // const filteredKeys =
+    //   this.state.activeTab === "thisPage"
+    //     ? keys.filter((key) => this.state.pageKeys.includes(key))
+    //     : keys;
 
     const fields = filteredKeys.map((key: string) => (
       <Field

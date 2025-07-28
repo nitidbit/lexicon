@@ -15,6 +15,7 @@ import {
   KeyPathString,
 } from './collection'
 import { evaluateTemplate } from './util'
+import { RecentKeyTracker } from './editor/RecentKeyTracker'
 
 export type ContentByLocale = {
   repoPath?: string
@@ -46,6 +47,7 @@ export class Lexicon {
   protected _data: ContentByLocale
   protected _subsetRoot: KeyPathArray
   protected _filename: string
+  protected _recentKeys: RecentKeyTracker
 
   constructor(
     contentByLocale: ContentByLocale,
@@ -79,9 +81,9 @@ export class Lexicon {
       throw new Error("'contentByLocale' must contain 'en: {...}' locale")
     }
 
-    // delete contentByLocale["repoPath"]
     this._data = contentByLocale
     this._subsetRoot = col.keyPathAsArray(subset)
+    this._recentKeys = new RecentKeyTracker()
   }
 
   //
@@ -123,7 +125,10 @@ export class Lexicon {
   }
 
   get(keyPath: KeyPath, templateSubstitutions?: object): any {
+    console.log('!!! lexicon get RR', keyPath)
     if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
+
+    this._recentKeys.add(keyPath)
 
     let info = this.find(this.currentLocaleCode, keyPath)
 
@@ -191,6 +196,10 @@ export class Lexicon {
   // rootKey(lexicon) {
   rootKey(lexicon) {
     return lexicon.filename().replace('.', '_') // dots would be confused with key paths
+  }
+
+  recentKeys() {
+    return this._recentKeys.recent()
   }
 
   /* Determine the complete "key path" to retrieve our value */

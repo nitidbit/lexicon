@@ -11,47 +11,18 @@ Developing the Lexicon NPM Package
 If you are just using Lexicon in your project, you can ignore this file.
 
 ### Coding Lexicon and your Project at the same time
-Sometimes you are working on your project, which uses Lexicon, but you are tweaking Lexicon at the
-same time. You want a change in Lexicon source code to be immediately reflected in your project.
-Normally you'd have to change Lexicon, publish the change to the NPM registry, and reinstall Lexicon
-for your project. But here's a way to temporarily link them directly:
+Sometimes you are working on your project, which uses Lexicon, but you are
+tweaking Lexicon at the same time. You want a change in Lexicon source code to
+be immediately reflected in your project.  Normally you'd have to change
+Lexicon, publish the change to the NPM registry, and reinstall Lexicon for your
+project.  Or `npm link` is supposed to help but it doesn't work when React is
+involved.  "`yalc` acts as very simple local repository for your locally
+developed packages that you want to share across your local environment."
 
-### NPM Link local Lexicon your project
-
-    cd "__YOUR_PROJECT__/"
-    npm link __SOMEWHERE__/lexicon/npm-package
-
-If your node project is using Vite, you might need to add this to your vite.config.js
-
-
-```
-  return defineConfig({
-    ...
-    optimizeDeps: {
-      include: ['@nitidbit/lexicon'],
-    },
-    ...
-  })
-```
-
-
-### To reset NPM Link:
-* See what things are currently linked
-
-    npm ls -g --depth=0 --link=true
-
-  which should say something like:
-
-    /Users/winstonw/.nodenv/versions/20.18.2/lib
-    └── @nitidbit/lexicon@3.0.0-alpha6 -> ./../../../../nitidbit/git/lexicon/npm-package
-
-* Remove the file as below. Some of the directory names (e.g. version #) may differ.
-  Note: 'npm unlink' should do this, but it wasn't working for Winston in 2025.
-
-    rm -rf  ~/.nodenv/versions/20.18.2/lib/node_modules/@nitidbit/lexicon
-
-* Verify no more links
-    npm ls -g --depth=0 --link=true
+Setup:
+  npm i -g yalc nodemon
+  cd <lexicon folder>/npm-package
+  heroku local --procfile=Procfile-yalc-abfinder
 
 
 ### Compilation
