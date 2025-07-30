@@ -125,7 +125,6 @@ export class Lexicon {
   }
 
   get(keyPath: KeyPath, templateSubstitutions?: object): any {
-    console.log('!!! lexicon get RR', keyPath)
     if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
 
     this._recentKeys.add(keyPath)
