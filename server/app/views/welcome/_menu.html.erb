@@ -1,11 +1,37 @@
-<div class="menu" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #6A5ACD; margin: -8px -8px 0 -8px">
-  <h1 style="font-size: 24px; color: #87CEEB; margin: 0; letter-spacing: 6px; text-shadow: 1px 1px 2px rgba(211, 211, 211, 0.7);">
+<style>
+  .menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #6A5ACD;
+    margin: -8px -8px 0 -8px
+  }
+
+  .menu h1 {
+    font-size: 24px;
+    color: #87CEEB;
+    margin: 0;
+    letter-spacing: 6px;
+    text-shadow: 1px 1px 2px rgba(211, 211, 211, 0.7);
+  }
+
+  .menu a {
+    text-decoration: none;
+    color: #e0e0e0;
+    font-size: 16px;
+  }
+</style>
+<div class="menu">
+  <h1>
     LEXICON
   </h1>
   <div style="display: flex; gap: 20px;">
-    <%= link_to "Home", "/", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
-    <%= link_to "Features", "features", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
-    <%= link_to "Pricing", "pricing", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
-    <%= link_to "Contact", "contact", style: "text-decoration: none; color: #e0e0e0; font-size: 16px;" %>
+    <%= link_to "Home", "/" %>
+    <%= link_to "Features", "features" %>
+    <%= link_to "Demo", demo_path  %>
+    <%= link_to "Multiple LxProviders Demo", demo_multiple_providers_path %>
+    <%= link_to "Pricing", "pricing" %>
+    <%= link_to "Contact", "contact" %>
   </div>
 </div>

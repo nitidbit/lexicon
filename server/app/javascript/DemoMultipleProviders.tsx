@@ -14,10 +14,10 @@ function Quotations() {
     })
 
   return (
-    <div className="Quotations box">
-      <h2>
-        { lex.get('title', {appName: "Quotations"}) }
-      </h2>
+    <fieldset className="Quotations box">
+      <legend>
+        <h2> { lex.get('title', {appName: "Quotations"}) } </h2>
+      </legend>
 
       <LxProvider apiUpdateUrl={UPDATE_URL} className="ShakespeareProvider" >
         <Shakespeare />
@@ -26,7 +26,7 @@ function Quotations() {
       <LxProvider apiUpdateUrl={UPDATE_URL} className="TwainProvider" >
         <Twain />
       </LxProvider>
-    </div>
+    </fieldset>
   )
 }
 
@@ -37,9 +37,10 @@ function Shakespeare() {
     })
 
   return (
-    <div className="Shakespeare box">
+    <fieldset className="Shakespeare box">
+      <legend> &lt; Shakespeare &gt; </legend>
       { lex.get('shakespeare') }
-    </div>
+    </fieldset>
   )
 }
 
@@ -50,9 +51,10 @@ function Twain() {
     })
 
   return (
-    <div className="Twain box">
+    <fieldset className="Twain box">
+      <legend> &lt; Twain &gt; </legend>
       { lex.get('quote') }
-    </div>
+    </fieldset>
   )
 }
 
@@ -67,6 +69,6 @@ export function DemoMultipleProviders() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  createRoot(document.querySelector(".placeholder-DemoComponent"))
+  createRoot(document.querySelector(".placeholder-DemoMultipleProviders"))
     .render(DemoMultipleProviders())
 })
