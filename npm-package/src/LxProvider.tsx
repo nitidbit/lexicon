@@ -50,7 +50,6 @@ export const LxProvider = ({
 }) => {
   //    STATE
   const [lexiconHub, setLexiconHub] = useState(emptyLexiconHub(localeCode))
-  console.log('LxProvider() className=', className)
 
   grabLexiconServerTokenAndReload()
 

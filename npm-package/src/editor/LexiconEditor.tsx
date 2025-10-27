@@ -336,11 +336,6 @@ export class LexiconEditor extends React.Component<
         filteredKeys = this.props.lexicon.recentKeys()
         break
     }
-    console.log('!!! num filtered keys=', filteredKeys.length)
-    // const filteredKeys =
-    //   this.state.activeTab === "thisPage"
-    //     ? keys.filter((key) => this.state.pageKeys.includes(key))
-    //     : keys;
 
     const fields = filteredKeys.map((key: string) => (
       <Field
