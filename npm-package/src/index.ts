@@ -3,7 +3,7 @@ export { default as EditWrapper } from './editor/EditWrapper'
 export { LxProvider, useLexicon } from './LxProvider'
 export { LxTag } from './LxTag'
 
-export const VERSION = '3.0.0-alpha6'
+export const VERSION = '3.0.0-alpha7'
 
 /*
   Change History - API changes since last version
