@@ -256,7 +256,7 @@ export const LxEditPanel = ({
         visible={visible}
       />
       <div className="save-box">
-        <span> v{VERSION} </span>
+        <span className="version"> v{VERSION} </span>
         <button onClick={saveChanges} disabled={ !buttonEnabled }>
           {buttonText}
         </button>

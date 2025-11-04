@@ -26,11 +26,10 @@
   .LexiconEditorTabs {
     display: flex;
     border-bottom: 1px solid darken($lexicon_editor_background, 10%);
-    margin-bottom: 10px;
   }
 
   .LexiconEditorTab {
-    padding: 8px 16px;
+    padding: 2px 8px;
     background: darken($lexicon_editor_background, 5%);
     border: 1px solid darken($lexicon_editor_background, 10%);
     border-bottom: none;
@@ -38,7 +37,7 @@
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     min-width: 80px;
     text-align: center;
     font-weight: 400;
@@ -103,10 +102,11 @@
       display: flex;
       flex-direction: row;
       width: 100%;
+      font-size: 90%;
 
       .label {
         flex: 0 0;
-        font-weight: 300;
+        height: 1.7em;
         text-align: right;
         padding-top: 2px;
         padding-right: 5px;
