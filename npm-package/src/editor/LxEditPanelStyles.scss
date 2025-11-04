@@ -2,6 +2,7 @@
 
 .LxEditPanel {
   position: fixed;
+  z-index: 1000;  // Hope this is high enough--depends on the host app
   border-radius: 4px;
   border: thin solid $gray_25;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
