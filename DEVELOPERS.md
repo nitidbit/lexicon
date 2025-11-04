@@ -62,10 +62,8 @@ available to people using the package. This is already done if you've been runni
     cd npm-package
     npm run build
     npm publish
-    VER=$(jq '.["version"]' package.json)    # or set to version
-    git add . && git commit -m "Version $VER"
-    git tag "$VER"
-    git push && git push origin "$VER"
+    git add . && git commit -m "Version (the version)"
+    git push
 
 
 Thoughts
