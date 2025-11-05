@@ -115,7 +115,10 @@ describe('<LxProvider>', () => {
 
       // edit some content
       await userEvent.click(screen.queryByText('Edit Lexicon'))
-      const bannerInput = screen.queryByLabelText('blah_json.banner')
+      await waitFor( () => {
+        expect(screen.container.querySelector('.LxEditPanel')).toBeInTheDocument()
+      })
+      const bannerInput = screen.queryByLabelText('banner')
       await userEvent.clear(bannerInput)
       await userEvent.type(bannerInput, 'I <3 TREES')
 

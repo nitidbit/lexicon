@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { VERSION } from '../index'
 import {LexiconEditor, OnChangeCallback, SwitchLocaleCallback} from './LexiconEditor'
 import {Lexicon, LocaleCode, DEFAULT_LOCALE_CODE} from '../Lexicon'
+import { LxEditPanelType } from '../index'
 import {LexiconHub} from './LexiconHub'
 import './LxEditPanelStyles.css'
 
@@ -34,21 +35,13 @@ interface LexiconAPIResponse {
     - choose locale
     - resize the panel
 */
-export const LxEditPanel = ({
+export const LxEditPanel:LxEditPanelType = ({
   lexiconHub,
   setLexiconHub,
   visible,              // Slide in or out?
   lexiconServerToken,
   apiUpdateUrl,
   toggleEditPanel,      // called when user closes 
-}:{
-  lexiconHub: LexiconHub,
-  setLexiconHub,
-  visible: boolean,
-  lexiconServerToken: string,
-  apiUpdateUrl: string,
-
-  toggleEditPanel: () => void
 }) => {
 
   //

@@ -1,16 +1,26 @@
-import React, { useState, createContext, useContext, useEffect } from 'react'
+import React, {
+  useState,
+  createContext,
+  useContext,
+  useEffect,
+  lazy,
+  Suspense } from 'react'
 import { getURLParameter } from './util'
 import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
+import { LxEditPanelType } from './index'
 import { LexiconHub } from './editor/LexiconHub'
-import { LxEditPanel } from './editor/LxEditPanel'
 
 import './LxProviderStyles.css'
+
+const LxEditPanel: LxEditPanelType = lazy(
+  () => import('./editor/LxEditPanel')
+    .then(module => ({default: module.LxEditPanel}))
+)
 
 let nextProviderNum = 1
 const emptyLexiconHub = (localeCode: string = '') => {
   return new LexiconHub(
     { repoPath: `LEXICON HUB ${nextProviderNum++}`, en: {}, es: {} },
-    // { repoPath: 'SHARED LEXICON', en: {}, es: {} },
     localeCode
   )
 }
@@ -131,14 +141,16 @@ export const EditButton = ({
         </button>
       </div>
 
-      <LxEditPanel
-        visible={isEditorVisible}
-        lexiconHub={lexiconHub}
-        setLexiconHub={setLexiconHub}
-        lexiconServerToken={getToken()}
-        apiUpdateUrl={apiUpdateUrl}
-        toggleEditPanel={toggleEditor}
-      />
+      <Suspense fallback={null}>
+        <LxEditPanel
+          visible={isEditorVisible}
+          lexiconHub={lexiconHub}
+          setLexiconHub={setLexiconHub}
+          lexiconServerToken={getToken()}
+          apiUpdateUrl={apiUpdateUrl}
+          toggleEditPanel={toggleEditor}
+        />
+      </Suspense>
     </div>
   )
 }

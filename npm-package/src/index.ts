@@ -1,9 +1,20 @@
+import { LexiconHub } from './editor/LexiconHub'
+
 export { Lexicon } from './Lexicon'
 export { default as EditWrapper } from './editor/EditWrapper'
 export { LxProvider, useLexicon } from './LxProvider'
 export { LxTag } from './LxTag'
 
-export const VERSION = '3.0.0-alpha9'
+export type LxEditPanelType = React.FC<{
+  lexiconHub: LexiconHub,
+  setLexiconHub,
+  visible: boolean,
+  lexiconServerToken: string,
+  apiUpdateUrl: string,
+  toggleEditPanel: () => void
+}>
+
+export const VERSION = '3.0.0-alpha10'
 
 /*
   Change History - API changes since last version
