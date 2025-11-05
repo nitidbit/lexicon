@@ -14,7 +14,7 @@ export type LxEditPanelType = React.FC<{
   toggleEditPanel: () => void
 }>
 
-export const VERSION = '3.0.0-alpha10'
+export const VERSION = '3.0.0-alpha11'
 
 /*
   Change History - API changes since last version

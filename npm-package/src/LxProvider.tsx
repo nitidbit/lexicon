@@ -141,16 +141,18 @@ export const EditButton = ({
         </button>
       </div>
 
-      <Suspense fallback={null}>
-        <LxEditPanel
-          visible={isEditorVisible}
-          lexiconHub={lexiconHub}
-          setLexiconHub={setLexiconHub}
-          lexiconServerToken={getToken()}
-          apiUpdateUrl={apiUpdateUrl}
-          toggleEditPanel={toggleEditor}
-        />
-      </Suspense>
+      {isEditorVisible &&
+        <Suspense fallback={null}>
+          <LxEditPanel
+            visible={isEditorVisible}
+            lexiconHub={lexiconHub}
+            setLexiconHub={setLexiconHub}
+            lexiconServerToken={getToken()}
+            apiUpdateUrl={apiUpdateUrl}
+            toggleEditPanel={toggleEditor}
+          />
+        </Suspense>
+      }
     </div>
   )
 }

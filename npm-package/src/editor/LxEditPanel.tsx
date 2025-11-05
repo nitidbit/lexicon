@@ -44,6 +44,8 @@ export const LxEditPanel:LxEditPanelType = ({
   toggleEditPanel,      // called when user closes 
 }) => {
 
+  console.log('!!! rendering LxEditPanel')
+
   //
   //    State
   //
