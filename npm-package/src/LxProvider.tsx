@@ -7,12 +7,12 @@ import React, {
   Suspense } from 'react'
 import { getURLParameter } from './util'
 import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
-import { LxEditPanelType } from './index'
 import { LexiconHub } from './editor/LexiconHub'
 
 import './LxProviderStyles.css'
 
-const LxEditPanel: LxEditPanelType = lazy(
+// 99.99% of sessions won't use editing - lazy load this chunk
+const LazyLxEditPanel = lazy(
   () => import('./editor/LxEditPanel')
     .then(module => ({default: module.LxEditPanel}))
 )
@@ -143,7 +143,7 @@ export const EditButton = ({
 
       {isEditorVisible &&
         <Suspense fallback={null}>
-          <LxEditPanel
+          <LazyLxEditPanel
             visible={isEditorVisible}
             lexiconHub={lexiconHub}
             setLexiconHub={setLexiconHub}
