@@ -1,8 +1,8 @@
-@import './sharedStyles';
+@import "./sharedStyles";
 
 .LxEditPanel {
   position: fixed;
-  z-index: 1000;  // Hope this is high enough--depends on the host app
+  z-index: 1000; // Hope this is high enough--depends on the host app
   display: flex;
   flex-direction: column;
   border-radius: 4px;
@@ -15,7 +15,10 @@
 
   visibility: hidden;
   opacity: 0;
-  transition: 0.1s visibility, 0.1s opacity, 0.1s position;
+  transition:
+    0.1s visibility,
+    0.1s opacity,
+    0.1s position;
 
   &.is-visible {
     visibility: visible;

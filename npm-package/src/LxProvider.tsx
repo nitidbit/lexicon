@@ -4,7 +4,8 @@ import React, {
   useContext,
   useEffect,
   lazy,
-  Suspense } from 'react'
+  Suspense,
+} from 'react'
 import { getURLParameter } from './util'
 import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
 import { LexiconHub } from './editor/LexiconHub'
@@ -12,9 +13,10 @@ import { LexiconHub } from './editor/LexiconHub'
 import './LxProviderStyles.css'
 
 // 99.99% of sessions won't use editing - lazy load this chunk
-const LazyLxEditPanel = lazy(
-  () => import('./editor/LxEditPanel')
-    .then(module => ({default: module.LxEditPanel}))
+const LazyLxEditPanel = lazy(() =>
+  import('./editor/LxEditPanel').then((module) => ({
+    default: module.LxEditPanel,
+  }))
 )
 
 let nextProviderNum = 1
@@ -39,12 +41,12 @@ export const useLexicon = (
     lexiconHub = useContext(LxContext)
   } catch (error) {
     throw new Error(
-      "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
+      'Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component.'
     )
   }
   if (lexiconHub === NULL_CONTEXT) {
     throw new Error(
-      "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
+      'Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component.'
     )
   }
   return lexiconHub.register(contentByLocale, localeCode)
@@ -56,7 +58,7 @@ export const LxProvider = ({
   apiUpdateUrl,
   children,
   localeCode = DEFAULT_LOCALE_CODE,
-  className = ""
+  className = '',
 }) => {
   //    STATE
   const [lexiconHub, setLexiconHub] = useState(emptyLexiconHub(localeCode))
@@ -141,7 +143,7 @@ export const EditButton = ({
         </button>
       </div>
 
-      {isEditorVisible &&
+      {isEditorVisible && (
         <Suspense fallback={null}>
           <LazyLxEditPanel
             visible={isEditorVisible}
@@ -152,7 +154,7 @@ export const EditButton = ({
             toggleEditPanel={toggleEditor}
           />
         </Suspense>
-      }
+      )}
     </div>
   )
 }
