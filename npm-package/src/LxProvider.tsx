@@ -62,12 +62,23 @@ export const LxProvider = ({
 }) => {
   //    STATE
   const [lexiconHub, setLexiconHub] = useState(emptyLexiconHub(localeCode))
+  const [isMounted, setIsMounted] = useState(false)
 
   grabLexiconServerTokenAndReload()
 
   useEffect(() => {
+    setIsMounted(true)
+
+    const el = document.createElement('div')
+    el.setAttribute('id', 'nitid-lexicon-portal')
+    document.body.appendChild(el)
+  }, [])
+
+  useEffect(() => {
     setLexiconHub(lexiconHub.locale(localeCode))
   }, [localeCode])
+
+  if (!isMounted) return null
 
   //    RENDER
   return (
