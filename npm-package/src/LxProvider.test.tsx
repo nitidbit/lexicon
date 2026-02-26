@@ -65,13 +65,20 @@ describe('<LxProvider>', () => {
     )
   }
 
-  const testSubject = (token = 'SAMPLE SERVER TOKEN', localeCode = 'en') => {
+  const testSubject = (
+    token = 'SAMPLE SERVER TOKEN',
+    localeCode = 'en',
+    lexiconNameOnEditButton = undefined
+  ) => {
     if (token) {
       sessionStorage.setItem('lexiconServerToken', token)
     }
 
     return render(
-      <LxProvider apiUpdateUrl="SAMPLE_URL">
+      <LxProvider
+        apiUpdateUrl="SAMPLE_URL"
+        lexiconNameOnEditButton={lexiconNameOnEditButton}
+      >
         <SampleApp localeCode={localeCode} />
       </LxProvider>
     )
@@ -104,106 +111,113 @@ describe('<LxProvider>', () => {
     )
   }
 
-  describe('when editor changes a value', () => {
-    test('components that use Lexicon will render the new value', async () => {
-      const screen = testSubject()
+  test('when editor changes a value, components that use Lexicon will render the new value', async () => {
+    const screen = testSubject()
 
-      const sampleAppElem = screen.container.querySelector(
-        '.SampleApp'
-      ) as HTMLElement
-      expect(within(sampleAppElem).queryByText('I <3 CATS')).toBeInTheDocument()
+    const sampleAppElem = screen.container.querySelector(
+      '.SampleApp'
+    ) as HTMLElement
+    expect(within(sampleAppElem).queryByText('I <3 CATS')).toBeInTheDocument()
 
-      // edit some content
-      await userEvent.click(screen.queryByText('Edit Lexicon'))
-      await waitFor( () => {
-        expect(screen.container.querySelector('.LxEditPanel')).toBeInTheDocument()
+    // edit some content
+    await userEvent.click(screen.queryByText('Edit Lexicon'))
+    await waitFor(() => {
+      expect(screen.container.querySelector('.LxEditPanel')).toBeInTheDocument()
+    })
+    const bannerInput = screen.queryByLabelText('banner')
+    await userEvent.clear(bannerInput)
+    await userEvent.type(bannerInput, 'I <3 TREES')
+
+    expect(
+      within(sampleAppElem).queryByText('I <3 CATS')
+    ).not.toBeInTheDocument()
+    expect(within(sampleAppElem).queryByText('I <3 TREES')).toBeInTheDocument()
+  })
+
+  describe('lexicon name on edit button', () => {
+    test('when lexicon name on edit button is not set, the edit button renders the default name', () => {
+      const screen = testSubject('SAMPLE SERVER TOKEN', 'en')
+      expect(screen.queryByText('Edit Lexicon')).toBeInTheDocument()
+    })
+    test('when lexicon name on edit button is set, the edit button renders the proper name', () => {
+      const screen = testSubject('SAMPLE SERVER TOKEN', 'en', 'My Lexicon')
+      expect(screen.queryByText('Edit My Lexicon')).toBeInTheDocument()
+    })
+  })
+
+  describe('guarding against useLexicon without LxProvider', () => {
+    describe('when useLexicon is not wrapped inside LxProvider and has no context', () => {
+      const contextlessApp = () => {
+        lexicon = useLexicon(
+          {
+            repoPath: 'blah.json',
+            en: { banner: 'I <3 CATS' },
+            es: { banner: 'YO <3 LOS GATOS' },
+          },
+          'en'
+        )
+        return (
+          <LxProvider apiUpdateUrl="SAMPLE_URL">
+            <div className="SampleApp">{lexicon.get('banner')}</div>
+          </LxProvider>
+        )
+      }
+
+      test('it crashes with a helpful message', () => {
+        expect(() => {
+          contextlessApp()
+        }).toThrow(
+          'Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component.'
+        )
       })
-      const bannerInput = screen.queryByLabelText('banner')
-      await userEvent.clear(bannerInput)
-      await userEvent.type(bannerInput, 'I <3 TREES')
+    })
 
-      expect(
-        within(sampleAppElem).queryByText('I <3 CATS')
-      ).not.toBeInTheDocument()
-      expect(
-        within(sampleAppElem).queryByText('I <3 TREES')
-      ).toBeInTheDocument()
+    describe('when demo is not wrapped inside LxProvider and has no context', () => {
+      test('it crashes with a helpful message', () => {
+        expect(() => render(<SampleApp />)).toThrow(
+          'Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component.'
+        )
+      })
     })
   })
 
-  describe('when useLexicon is not wrapped inside LxProvider and has no context', () => {
+  describe('detecting lexiconServerToken', () => {
+    describe('when lexiconServerToken is in URL', () => {
+      beforeEach(() => {
+        ;(getURLParameter as jest.Mock).mockImplementationOnce(
+          (name) => 'SAMPLE_TOKEN'
+        )
 
-    const contextlessApp = () => {
-      lexicon = useLexicon(
-        {
-          repoPath: 'blah.json',
-          en: { banner: 'I <3 CATS' },
-          es: { banner: 'YO <3 LOS GATOS' },
-        },
-        'en'
-      )
-      return (
-        <LxProvider apiUpdateUrl="SAMPLE_URL">
-          <div className="SampleApp">{lexicon.get('banner')}</div>
-        </LxProvider>
-      )
-    }
+        testSubject(/*dont set sessionStorage:*/ null)
+      })
 
-    test('it crashes with a helpful message', () => {
-      expect(() => {
-        contextlessApp();
-      }).toThrow(
-        "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
-      );
-    });
-  });
+      it('stores token for later', () => {
+        expect(sessionStorage.getItem('lexiconServerToken')).toEqual(
+          'SAMPLE_TOKEN'
+        )
+      })
 
-  describe('when demo is not wrapped inside LxProvider and has no context', () => {
+      xit('reloads the browser so token is no longer in URL', () => {})
 
-    test('it crashes with a helpful message', () => {
-      expect(() => render(
-        <SampleApp />
-      )).toThrow(
-        "Lexicon Error: useLexicon does not have the required context. You should be able to fix this by wrapping your useLexicon call inside a LxProvider component."
-      );
-    })
-  });
-
-  describe('when lexiconServerToken is in URL', () => {
-    beforeEach(() => {
-      ;(getURLParameter as jest.Mock).mockImplementationOnce(
-        (name) => 'SAMPLE_TOKEN'
-      )
-
-      testSubject(/*dont set sessionStorage:*/ null)
+      it('renders the Lexicon Edit button', () => {
+        expect(
+          screen.queryByRole('button', { name: 'Nothing to Save' })
+        ).toBeInTheDocument()
+      })
     })
 
-    it('stores token for later', () => {
-      expect(sessionStorage.getItem('lexiconServerToken')).toEqual(
-        'SAMPLE_TOKEN'
-      )
-    })
+    describe('when there is no token', () => {
+      beforeEach(() => {
+        sessionStorage.clear()
+        expect(sessionStorage.getItem('lexiconServerToken')).toEqual(null)
+        testSubject(/*dont set sessionStorage:*/ null)
+      })
 
-    xit('reloads the browser so token is no longer in URL', () => {})
-
-    it('renders the Lexicon Edit button', () => {
-      expect(
-        screen.queryByRole('button', { name: 'Nothing to Save' })
-      ).toBeInTheDocument()
-    })
-  })
-
-  describe('when there is no token', () => {
-    beforeEach(() => {
-      sessionStorage.clear()
-      expect(sessionStorage.getItem('lexiconServerToken')).toEqual(null)
-      testSubject(/*dont set sessionStorage:*/ null)
-    })
-
-    it('does not render Edit Lexicon button', () => {
-      expect(
-        screen.queryByRole('button', { name: 'Nothing to Save' })
-      ).not.toBeInTheDocument()
+      it('does not render Edit Lexicon button', () => {
+        expect(
+          screen.queryByRole('button', { name: 'Nothing to Save' })
+        ).not.toBeInTheDocument()
+      })
     })
   })
 
@@ -237,6 +251,17 @@ describe('<LxProvider>', () => {
 
       expect(screen.queryByText('I <3 CATS')).not.toBeInTheDocument()
       expect(screen.queryByText('YO <3 LOS GATOS')).toBeInTheDocument()
+    })
+
+    test('when editing opens in spanish, the editor renders spanish', async () => {
+      const screen = testSpanishSubject()
+
+      const sampleAppEditPanel = screen.container.querySelector(
+        '.LxEditPanel'
+      ) as HTMLElement
+      expect(
+        within(sampleAppEditPanel).queryByText('YO <3 LOS GATOS')
+      ).toBeInTheDocument()
     })
   })
 
@@ -285,6 +310,8 @@ describe('<LxProvider>', () => {
       const fieldToEdit = within(editor).queryByText(
         'the coldest winter I ever spent was a summer in san francisco'
       )
+      expect(fieldToEdit).toBeInTheDocument()
+
       const shiftClickEvent = new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
@@ -296,34 +323,6 @@ describe('<LxProvider>', () => {
       await waitFor(() => {
         expect(spy).toHaveBeenCalledWith(true, { current: fieldToEdit })
       })
-    })
-  })
-
-  describe('when editor opened in spanish', () => {
-    test('it renders spanish', async () => {
-      const screen = testSpanishSubject()
-
-      const sampleAppEditPanel = screen.container.querySelector(
-        '.LxEditPanel'
-      ) as HTMLElement
-      expect(
-        within(sampleAppEditPanel).queryByText('YO <3 LOS GATOS')
-      ).toBeInTheDocument()
-    })
-  })
-
-  describe('when using a subset of a lexicon', () => {
-    test('it renders lexicon content correctly', async () => {
-      const screen = testSubsetSubject()
-
-      const subsetSampleApp = screen.container.querySelector(
-        '.SubsetSampleApp'
-      ) as HTMLElement
-      expect(
-        within(subsetSampleApp).queryByText(
-          'the coldest winter I ever spent was a summer in san francisco'
-        )
-      ).toBeInTheDocument()
     })
   })
 })

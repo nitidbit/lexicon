@@ -59,6 +59,7 @@ export const LxProvider = ({
   children,
   localeCode = DEFAULT_LOCALE_CODE,
   className = '',
+  lexiconNameOnEditButton = 'Lexicon',
 }) => {
   //    STATE
   const [lexiconHub, setLexiconHub] = useState(emptyLexiconHub(localeCode))
@@ -84,6 +85,7 @@ export const LxProvider = ({
           lexiconHub={lexiconHub}
           setLexiconHub={setLexiconHub}
           apiUpdateUrl={apiUpdateUrl}
+          lexiconNameOnEditButton={lexiconNameOnEditButton}
         />
       </LxContext.Provider>
     </div>
@@ -127,10 +129,12 @@ export const EditButton = ({
   lexiconHub,
   setLexiconHub,
   apiUpdateUrl,
+  lexiconNameOnEditButton,
 }: {
   lexiconHub: LexiconHub
   setLexiconHub: (l: LexiconHub) => void
   apiUpdateUrl: string
+  lexiconNameOnEditButton: string
 }) => {
   //    State
   const [isEditorVisible, setIsEditorVisible] = useState(false)
@@ -145,7 +149,9 @@ export const EditButton = ({
     <div className="EditButton">
       <div className="buttons">
         <button onClick={toggleEditor} className="edit-lexicon-btn">
-          {isEditorVisible ? 'Hide Lexicon' : 'Edit Lexicon'}
+          {isEditorVisible
+            ? `Hide ${lexiconNameOnEditButton}`
+            : `Edit ${lexiconNameOnEditButton}`}
         </button>
       </div>
 
