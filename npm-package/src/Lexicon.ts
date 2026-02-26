@@ -12,6 +12,7 @@ import { evaluateTemplate } from './util'
 
 export type ContentByLocale = {
   repoPath?: string
+  editorNote?: string
   [localeCode: string]: Collection | string | undefined
 }
 
@@ -271,9 +272,9 @@ export class Lexicon {
         `Lexicon: Could not find keyPath: '${keyPath}' in file: '${this.filename()}'`
       )
     return {
-      filename: info.lexicon.filename(),
       localPath: [info.locale].concat(info.keyPath),
       updatePath: info.updatePath,
+      lexicon: info.lexicon,
     }
   }
 
@@ -298,6 +299,12 @@ export class Lexicon {
   /* Optional note from ContentByLocale, shown in the editor when present */
   editorNote(): string | undefined {
     return this._data?.editorNote
+  }
+
+  /* Lexicon for the given tab (filename basename). For a single Lexicon, returns this if it matches. */
+  lexiconForTab(tabName: string): Lexicon | null {
+    const basename = this._filename.split('/').pop() || this._filename
+    return basename === tabName ? this : null
   }
 
   /* Return list of dotted keys, e.g. ['mycomponent.title', 'mycomponent.page1.intro'] */

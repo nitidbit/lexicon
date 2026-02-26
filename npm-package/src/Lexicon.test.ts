@@ -240,10 +240,10 @@ describe('Lexicon module', () => {
   })
 
   describe('source()', () => {
-    test('returns keyPath and filename for editing the file', () => {
+    test('returns keyPath and lexicon for editing the file', () => {
       const info = lex.source('foo')
 
-      expect(info.filename).toEqual('blah.json')
+      expect(info.lexicon.filename()).toEqual('blah.json')
       expect(info.localPath).toEqual(['en', 'foo'])
 
       const lex2 = lex.set(info.updatePath, 'NEW VALUE')
@@ -257,7 +257,7 @@ describe('Lexicon module', () => {
     test('works with locale("es")', () => {
       const info = lex.locale('es').source('foo')
 
-      expect(info.filename).toEqual('blah.json')
+      expect(info.lexicon.filename()).toEqual('blah.json')
       expect(info.localPath).toEqual(['es', 'foo'])
 
       const lex2 = lex.set(info.updatePath, 'NEW VALUE')
@@ -267,7 +267,7 @@ describe('Lexicon module', () => {
     test('works with subset("nested")', () => {
       let info = lex.subset('nested').source('wom')
 
-      expect(info.filename).toEqual('blah.json')
+      expect(info.lexicon.filename()).toEqual('blah.json')
       expect(info.localPath).toEqual(['en', 'nested', 'wom'])
 
       const lex2 = lex.set(info.updatePath, 'NEW VALUE')
@@ -277,7 +277,7 @@ describe('Lexicon module', () => {
     test('works with Lexicons inside Lexicons', () => {
       let info = lex.source('subLex.subFoo')
 
-      expect(info.filename).toEqual('subLex.json')
+      expect(info.lexicon.filename()).toEqual('subLex.json')
       expect(info.localPath).toEqual(['en', 'subFoo'])
 
       const lex2 = lex.set(info.updatePath, 'NEW VALUE')
@@ -292,8 +292,8 @@ describe('Lexicon module', () => {
         A = new Lexicon({ repoPath: 'A.json', en: { a: BC.subset('b') } })
       })
 
-      test('returns filename and key path', () => {
-        expect(A.source('a.c').filename).toEqual('BC.json')
+      test('returns lexicon and key path', () => {
+        expect(A.source('a.c').lexicon.filename()).toEqual('BC.json')
         expect(A.source('a.c').localPath).toEqual(['en', 'b', 'c'])
       })
 

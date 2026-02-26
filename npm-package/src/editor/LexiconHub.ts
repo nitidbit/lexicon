@@ -52,6 +52,20 @@ export class LexiconHub extends Lexicon {
     return null // not found
   }
 
+  lexiconForTab(tabName: string): Lexicon | null {
+    const found = super.lexiconForTab(tabName)
+    if (found) return found
+    for (const [key, node] of lodash_fp.entries(
+      this._data[DEFAULT_LOCALE_CODE] as col.Collection
+    )) {
+      if (node instanceof Lexicon) {
+        const child = node.lexiconForTab(tabName)
+        if (child) return child
+      }
+    }
+    return null
+  }
+
   //
   //    Private methods
   //

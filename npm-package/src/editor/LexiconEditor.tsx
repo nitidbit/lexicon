@@ -195,7 +195,7 @@ export class LexiconEditor extends React.Component<
     for (const key of keys) {
       try {
         const source = this.props.lexicon.source(key)
-        const filename = source.filename
+        const filename = source.lexicon.filename()
         // Extract just the filename without the path
         const basename = filename.split('/').pop() || filename
         filenames.add(basename)
@@ -334,7 +334,7 @@ export class LexiconEditor extends React.Component<
     const { name: localPath, value: newValue } = event.target
     const source = this.props.lexicon.source(localPath)
     const changeInfo = {
-      filename: source.filename,
+      filename: source.lexicon.filename(),
       localPath: keyPathAsString(source.localPath),
       updatePath: keyPathAsString(source.updatePath),
       newValue: newValue as string,
@@ -342,13 +342,21 @@ export class LexiconEditor extends React.Component<
     this.props.onChange(changeInfo)
   }
 
+  editorNote(): string | undefined {
+    const lexicon =
+      this.props.lexicon.lexiconForTab(this.state.activeTab) ??
+      this.props.lexicon
+    return lexicon.editorNote()
+  }
+
   render() {
+    const editorNote = this.editorNote()
     // Filter keys based on active tab filename
     const keys = this.props.lexicon.keys()
     let filteredKeys = keys.filter((key: string) => {
       try {
         const source = this.props.lexicon.source(key)
-        const filename = source.filename
+        const filename = source.lexicon.filename()
         const basename = filename.split('/').pop() || filename
         return basename === this.state.activeTab
       } catch (e) {
@@ -375,6 +383,8 @@ export class LexiconEditor extends React.Component<
           setActiveTab={this.setActiveTab}
           tabNames={this.state.tabNames}
         />
+
+        {editorNote && <div className="LexiconEditorNote">{editorNote}</div>}
 
         <LocaleChooser
           lexicon={this.props.lexicon}
