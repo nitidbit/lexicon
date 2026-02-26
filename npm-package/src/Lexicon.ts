@@ -7,13 +7,7 @@ import lodash_concat from 'lodash/concat'
 import lodash_map from 'lodash/map'
 import lodash_get from 'lodash/get'
 import * as col from './collection'
-import {
-  Collection,
-  KeyPath,
-  keyPathAsArray,
-  KeyPathArray,
-  KeyPathString,
-} from './collection'
+import { Collection, KeyPath, KeyPathArray, KeyPathString } from './collection'
 import { evaluateTemplate } from './util'
 
 export type ContentByLocale = {
@@ -299,6 +293,11 @@ export class Lexicon {
   // filename and path of the JSON file that contains this data, e.g. 'path/to/content.json'
   filename(): string {
     return this._filename
+  }
+
+  /* Optional note from ContentByLocale, shown in the editor when present */
+  editorNote(): string | undefined {
+    return this._data?.editorNote
   }
 
   /* Return list of dotted keys, e.g. ['mycomponent.title', 'mycomponent.page1.intro'] */
