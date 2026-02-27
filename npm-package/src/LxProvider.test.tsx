@@ -68,7 +68,7 @@ describe('<LxProvider>', () => {
   const testSubject = (
     token = 'SAMPLE SERVER TOKEN',
     localeCode = 'en',
-    lexiconNameOnEditButton = undefined
+    lexiconNameToDisplay = undefined
   ) => {
     if (token) {
       sessionStorage.setItem('lexiconServerToken', token)
@@ -77,7 +77,7 @@ describe('<LxProvider>', () => {
     return render(
       <LxProvider
         apiUpdateUrl="SAMPLE_URL"
-        lexiconNameOnEditButton={lexiconNameOnEditButton}
+        lexiconNameToDisplay={lexiconNameToDisplay}
       >
         <SampleApp localeCode={localeCode} />
       </LxProvider>

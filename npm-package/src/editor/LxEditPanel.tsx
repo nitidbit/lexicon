@@ -44,6 +44,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
   lexiconServerToken,
   apiUpdateUrl,
   toggleEditPanel, // called when user closes
+  lexiconNameToDisplay,
 }) => {
   console.log('!!! rendering LxEditPanel')
 
@@ -239,7 +240,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
       style={{ width: editorWidth, height: editorHeight }}
     >
       <hgroup>
-        <h2 className="wrapper-heading">Lexicon</h2>
+        <h2 className="wrapper-heading">{lexiconNameToDisplay}</h2>
 
         <div className="position">
           {[

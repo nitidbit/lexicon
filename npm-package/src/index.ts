@@ -6,12 +6,13 @@ export { LxProvider, useLexicon } from './LxProvider'
 export { LxTag } from './LxTag'
 
 export type LxEditPanelType = React.FC<{
-  lexiconHub: LexiconHub,
-  setLexiconHub,
-  visible: boolean,
-  lexiconServerToken: string,
-  apiUpdateUrl: string,
+  lexiconHub: LexiconHub
+  setLexiconHub
+  visible: boolean
+  lexiconServerToken: string
+  apiUpdateUrl: string
   toggleEditPanel: () => void
+  lexiconNameToDisplay: string
 }>
 
 export const VERSION = '3.0.0-alpha12'
