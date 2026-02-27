@@ -145,6 +145,54 @@ describe('<LxProvider>', () => {
     })
   })
 
+  describe('multiple LxProviders', () => {
+    test('when one editor is open, other edit buttons are disabled with tooltip', async () => {
+      sessionStorage.setItem('lexiconServerToken', 'SAMPLE SERVER TOKEN')
+      const screen = render(
+        <>
+          <LxProvider
+            apiUpdateUrl="SAMPLE_URL"
+            lexiconNameToDisplay="Lexicon A"
+          >
+            <SampleApp />
+          </LxProvider>
+          <LxProvider
+            apiUpdateUrl="SAMPLE_URL"
+            lexiconNameToDisplay="Lexicon B"
+          >
+            <SampleApp />
+          </LxProvider>
+        </>
+      )
+
+      const editButtons = Array.from(
+        screen.container.querySelectorAll('.edit-lexicon-btn')
+      ) as HTMLButtonElement[]
+      expect(editButtons).toHaveLength(2)
+      const [buttonA, buttonB] = editButtons
+      expect(buttonA).not.toBeDisabled()
+      expect(buttonB).not.toBeDisabled()
+
+      await userEvent.click(buttonA)
+
+      await waitFor(() => {
+        expect(buttonA).not.toBeDisabled()
+        expect(buttonB).toBeDisabled()
+        expect(buttonB).toHaveAttribute(
+          'data-tooltip',
+          'disabled because you opened editor with another button'
+        )
+      })
+
+      await userEvent.click(buttonA) // Hide
+
+      await waitFor(() => {
+        expect(buttonA).not.toBeDisabled()
+        expect(buttonB).not.toBeDisabled()
+      })
+    })
+  })
+
   describe('guarding against useLexicon without LxProvider', () => {
     describe('when useLexicon is not wrapped inside LxProvider and has no context', () => {
       const contextlessApp = () => {

@@ -1,7 +1,40 @@
-@import './editor/sharedStyles';
+@import "./editor/sharedStyles";
 
 .LxProvider {
   .edit-lexicon-btn {
     @include button;
+
+    // Disabled state - visually distinct
+    &:disabled {
+      opacity: 0.5;
+      background-color: $gray_50;
+    }
+
+    // CSS tooltip for disabled state
+    &[data-tooltip] {
+      position: relative;
+
+      &::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-4px);
+        padding: 6px 10px;
+        background: $gray_25;
+        color: white;
+        font-size: 12px;
+        white-space: nowrap;
+        border-radius: 4px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        z-index: 1001;
+      }
+
+      &:hover::after {
+        opacity: 1;
+      }
+    }
   }
 }

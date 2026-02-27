@@ -5,7 +5,14 @@ import React, {
   useEffect,
   lazy,
   Suspense,
+  useId,
+  useRef,
 } from 'react'
+import {
+  setActiveEditor,
+  getActiveEditorId,
+  useActiveEditorSubscription,
+} from './activeEditorStore'
 import { getURLParameter } from './util'
 import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
 import { LexiconHub } from './editor/LexiconHub'
@@ -138,9 +145,26 @@ export const EditButton = ({
 }) => {
   //    State
   const [isEditorVisible, setIsEditorVisible] = useState(false)
+  const myId = useRef(useId()).current
+  useActiveEditorSubscription()
+
+  const activeEditorId = getActiveEditorId()
+  const isDisabled = activeEditorId !== null && activeEditorId !== myId
 
   //    Stateful Functions
-  const toggleEditor = () => setIsEditorVisible(!isEditorVisible)
+  const toggleEditor = () => {
+    const nextVisible = !isEditorVisible
+    setIsEditorVisible(nextVisible)
+    setActiveEditor(nextVisible ? myId : null)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (getActiveEditorId() === myId) {
+        setActiveEditor(null)
+      }
+    }
+  }, [myId])
 
   //    Render
   if (isEditingBlocked()) return null
@@ -148,7 +172,16 @@ export const EditButton = ({
   return (
     <div className="EditButton">
       <div className="buttons">
-        <button onClick={toggleEditor} className="edit-lexicon-btn">
+        <button
+          onClick={toggleEditor}
+          className="edit-lexicon-btn"
+          disabled={isDisabled}
+          data-tooltip={
+            isDisabled
+              ? 'Disabled because you opened editor with another button'
+              : undefined
+          }
+        >
           {isEditorVisible
             ? `Hide ${lexiconNameToDisplay}`
             : `Edit ${lexiconNameToDisplay}`}
