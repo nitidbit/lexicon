@@ -168,3 +168,31 @@
     }
   }
 }
+
+// Native dialog with ::backdrop for overlay (use showModal())
+.LxEditPanel-dialog {
+  padding: 1.5rem;
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+  border-radius: 4px;
+  border: thin solid $gray_25;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  background: $lexicon_editor_background;
+
+  p {
+    margin: 0 0 1rem;
+  }
+
+  button {
+    @include button;
+    display: block;
+    width: 100%;
+    margin: 0.5rem 0;
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+}

@@ -1,13 +1,18 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { keyPathAsString } from '../collection'
 import { VERSION } from '../index'
 import { LexiconEditor, OnChangeCallback } from './LexiconEditor'
+import { LexiconHub } from './LexiconHub'
 
 import { LxEditPanelType } from '../index'
 
 import './LxEditPanelStyles.css'
 
-type UserChanges = Map<string, { originalValue: string; newValue: string }>
+type UserChanges = Map<
+  string,
+  { originalValue: string; newValue: string; updatePath: string }
+>
 
 enum Position {
   Left = 'left',
@@ -59,6 +64,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
   const [position, setPosition] = useState<Position>(Position.Right)
   const [editorWidth, setEditorWidth] = useState<number | null>(null)
   const [editorHeight, setEditorHeight] = useState<number | null>(null)
+  const dialogRef = useRef<HTMLDialogElement>(null)
 
   //
   //    Stateful Functions
@@ -84,7 +90,11 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
     } else {
       originalValue =
         originalValue || lexiconHub.getExact(change.localPath.slice(3)) // the slice trims off locale aka 'en.'
-      newChanges.set(fileKey, { originalValue, newValue: change.newValue })
+      newChanges.set(fileKey, {
+        originalValue,
+        newValue: change.newValue,
+        updatePath: keyPathAsString(change.updatePath),
+      })
     }
 
     setLexiconHub(newLexiconHub)
@@ -94,7 +104,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
     )
   }
 
-  const saveChanges = () => {
+  const saveChanges = (onSuccess?: () => void) => {
     setSavingState(SavingState.InProgress)
 
     const headers = {
@@ -140,6 +150,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
           setSavingState(SavingState.Done)
           setUnsavedChanges(new Map())
           setErrorMessage(null)
+          onSuccess?.()
         } else {
           setSavingState(SavingState.Error)
           setErrorMessage(json.error)
@@ -200,6 +211,33 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
     setLexiconHub(lexiconHub.locale(newLocale))
   }
 
+  const handleCloseRequest = () => {
+    if (unsavedChanges.size > 0) {
+      dialogRef.current?.showModal()
+    } else {
+      toggleEditPanel()
+    }
+  }
+
+  const throwAwayAndClose = () => {
+    let revertedHub: LexiconHub = lexiconHub
+    for (const [, { originalValue, updatePath }] of unsavedChanges.entries()) {
+      revertedHub = revertedHub.set(updatePath, originalValue) as LexiconHub
+    }
+    setLexiconHub(revertedHub)
+    setUnsavedChanges(new Map())
+    setSavingState(SavingState.NoChanges)
+    dialogRef.current?.close()
+    toggleEditPanel()
+  }
+
+  const saveAndClose = () => {
+    saveChanges(() => {
+      dialogRef.current?.close()
+      toggleEditPanel()
+    })
+  }
+
   //
   //    Rendering
   //
@@ -257,7 +295,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
         <label className="close-btn">
           {' '}
           &times;
-          <button onClick={toggleEditPanel} />
+          <button onClick={handleCloseRequest} />
         </label>
       </hgroup>
 
@@ -266,18 +304,25 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
         onChange={updateTextFromEditor}
         selectedLocale={lexiconHub.currentLocaleCode}
         switchLocale={setLocale}
-        toggleEditor={toggleEditPanel}
+        toggleEditor={handleCloseRequest}
         visible={visible}
       />
       <div className="save-box">
         <span className="version"> v{VERSION} </span>
-        <button onClick={saveChanges} disabled={!buttonEnabled}>
+        <button onClick={() => saveChanges()} disabled={!buttonEnabled}>
           {buttonText}
         </button>
       </div>
       {savingState == SavingState.Error && (
         <p className="error-message">{errorMessage}</p>
       )}
+      <dialog ref={dialogRef} className="LxEditPanel-dialog">
+        <p>You have unsaved changes</p>
+        <button onClick={saveAndClose}>Save changes and close</button>
+        <button onClick={throwAwayAndClose}>
+          Throw away changes and close
+        </button>
+      </dialog>
       <div
         className={`resizer resizer-${position}`}
         onMouseDown={startResizing}
