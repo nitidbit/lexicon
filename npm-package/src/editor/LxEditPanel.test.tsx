@@ -3,15 +3,15 @@ import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import { Lexicon } from "../index"
-import { LexiconHub } from "./LexiconHub"
-import { LxEditPanel } from "./LxEditPanel"
+import { Lexicon } from '../index'
+import { LexiconHub } from './LexiconHub'
+import { LxEditPanel } from './LxEditPanel'
 
 describe('<LxEditPanel>', () => {
   let lexiconHub: LexiconHub
   let setLexiconHub: (l: LexiconHub) => void
 
-  const testSubject = (overrideProps={}) => {
+  const testSubject = (overrideProps = {}) => {
     return render(
       <LxEditPanel
         visible={true}
@@ -20,20 +20,32 @@ describe('<LxEditPanel>', () => {
         lexiconServerToken="FAKE_TOKEN"
         apiUpdateUrl="FAKE_URL"
         toggleEditPanel={jest.fn()}
+        lexiconNameToDisplay="Lexicon"
         {...overrideProps}
       />
     )
   }
 
   beforeEach(() => {
-    lexiconHub = new LexiconHub({
-      repoPath: 'sample.json',
-      en: { greeting: 'hello', valediction: 'bye' },
-      es: { greeting: 'hola', valediction: 'adios' },
-      haw: { greeting: 'aloha', valedition: 'aloha-also' }
-    }, "en")
+    const portal = document.createElement('div')
+    portal.setAttribute('id', 'nitid-lexicon-portal')
+    document.body.appendChild(portal)
+
+    lexiconHub = new LexiconHub(
+      {
+        repoPath: 'sample.json',
+        en: { greeting: 'hello', valediction: 'bye' },
+        es: { greeting: 'hola', valediction: 'adios' },
+        haw: { greeting: 'aloha', valedition: 'aloha-also' },
+      },
+      'en'
+    )
 
     setLexiconHub = jest.fn()
+  })
+
+  afterEach(() => {
+    document.getElementById('nitid-lexicon-portal')?.remove()
   })
 
   it('shows locale radio buttons for the LexiconHubs locale', async () => {
@@ -46,7 +58,7 @@ describe('<LxEditPanel>', () => {
 
   it("shows content for the hub's current Locale", async () => {
     const screen = testSubject({
-      lexiconHub: lexiconHub.locale('haw')
+      lexiconHub: lexiconHub.locale('haw'),
     })
 
     expect(screen.queryByText('aloha')).toBeInTheDocument()
@@ -55,36 +67,38 @@ describe('<LxEditPanel>', () => {
   })
 
   describe('when editing some text and Saving', () => {
-    const editGreeting = async (response = { successful: true, error: null }) => {
+    const editGreeting = async (
+      response = { successful: true, error: null }
+    ) => {
       const screen = testSubject()
 
-      global.fetch = jest.fn(
-          () => Promise.resolve({ json: () => Promise.resolve(response) })
+      global.fetch = jest.fn(() =>
+        Promise.resolve({ json: () => Promise.resolve(response) })
       ) as jest.Mock
 
-      await userEvent.type(screen.getByLabelText("greeting"), "Good day sir")
+      await userEvent.type(screen.getByLabelText('greeting'), 'Good day sir')
       return screen
     }
 
-    afterEach( () => {
+    afterEach(() => {
       global.fetch = undefined
     })
 
     it('sends the changes to Lexicon Server', async () => {
       const screen = await editGreeting()
-      await userEvent.click(screen.getByText("Save changes"))
+      await userEvent.click(screen.getByText('Save changes'))
       expect((global.fetch as jest.Mock).mock.calls).toHaveLength(1)
     })
 
     it('when selecting an input element in the editor it resizes if needed', async () => {
-      // jest cannot get the actual height which depends on scrollHeight and is only 
+      // jest cannot get the actual height which depends on scrollHeight and is only
       // available in the browser, so just test that the expandedStyle method
       // gets called with the right parameters
-      const spy = jest.spyOn(require('./LexiconEditor'), 'expandedStyle');
+      const spy = jest.spyOn(require('./LexiconEditor'), 'expandedStyle')
       const screen = testSubject()
       const selectedInputField = screen.queryAllByText('hello')[0]
       await userEvent.click(selectedInputField)
-      expect(spy).toHaveBeenCalledWith(true, {current: selectedInputField})
+      expect(spy).toHaveBeenCalledWith(true, { current: selectedInputField })
       spy.mockRestore()
     })
 
@@ -92,7 +106,9 @@ describe('<LxEditPanel>', () => {
       const screen = testSubject()
       const firstSelectedInputField = screen.queryAllByText('hello')[0]
       await userEvent.click(firstSelectedInputField)
-      expect(firstSelectedInputField.style.background).toEqual("rgb(255, 255, 221)")
+      expect(firstSelectedInputField.style.background).toEqual(
+        'rgb(255, 255, 221)'
+      )
     })
 
     it('when a second input element is selected the previously selected element is no longer highlighted', async () => {
@@ -101,7 +117,7 @@ describe('<LxEditPanel>', () => {
       await userEvent.click(firstSelectedInputField)
       const secondSelectedInputField = screen.queryAllByText('bye')[0]
       await userEvent.click(secondSelectedInputField)
-      expect(firstSelectedInputField.style.background).toEqual("")
+      expect(firstSelectedInputField.style.background).toEqual('')
     })
 
     it('shows saving status', async () => {
@@ -110,7 +126,7 @@ describe('<LxEditPanel>', () => {
       // after editing, the save button is active
       expect(screen.queryByText('Save changes')).toBeInTheDocument()
 
-      await userEvent.click(screen.getByText("Save changes"))
+      await userEvent.click(screen.getByText('Save changes'))
 
       // Then indicates completion
       expect(screen.queryByText('Saved!')).toBeInTheDocument()
@@ -118,13 +134,48 @@ describe('<LxEditPanel>', () => {
 
     it('shows errors from the server to the user', async () => {
       const screen = await editGreeting({ successful: false, error: 'BLAH' })
-      await userEvent.click(screen.getByText("Save changes"))
+      await userEvent.click(screen.getByText('Save changes'))
 
       // The server error is shown to user
       expect(screen.queryByText('BLAH')).toBeInTheDocument()
 
       // The save button is still active since the save failed
       expect(screen.queryByText('Save changes')).toBeInTheDocument()
+    })
+  })
+
+  describe('editPanelExcludeLexicons', () => {
+    it('excludes specified lexicons from edit panel tabs', () => {
+      const hubWithTwoLexicons = new LexiconHub(
+        { repoPath: 'hub.json', en: {}, es: {} },
+        'en'
+      )
+      hubWithTwoLexicons.register({
+        repoPath: 'A.json',
+        en: { title: 'From A' },
+      })
+      hubWithTwoLexicons.register({
+        repoPath: 'B.json',
+        en: { banner: 'From B' },
+      })
+
+      const screen = render(
+        <LxEditPanel
+          visible={true}
+          lexiconHub={hubWithTwoLexicons}
+          setLexiconHub={jest.fn()}
+          lexiconServerToken="FAKE_TOKEN"
+          apiUpdateUrl="FAKE_URL"
+          toggleEditPanel={jest.fn()}
+          lexiconNameToDisplay="Lexicon"
+          editPanelExcludeLexicons={['B.json']}
+        />
+      )
+
+      expect(screen.getByRole('button', { name: 'A.json' })).toBeInTheDocument()
+      expect(
+        screen.queryByRole('button', { name: 'B.json' })
+      ).not.toBeInTheDocument()
     })
   })
 

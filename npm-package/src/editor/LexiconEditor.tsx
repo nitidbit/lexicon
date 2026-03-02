@@ -156,6 +156,16 @@ function Field({
   )
 }
 
+export function isLexiconExcluded(
+  filename: string,
+  excludeList: string[] | undefined
+): boolean {
+  if (!excludeList || excludeList.length === 0) return false
+  return excludeList.some(
+    (item) => filename === item || filename.endsWith('/' + item)
+  )
+}
+
 export interface LexiconEditorProps {
   lexicon: Lexicon
   onChange: OnChangeCallback
@@ -163,6 +173,7 @@ export interface LexiconEditorProps {
   switchLocale: SwitchLocaleCallback
   toggleEditor: () => void
   visible: boolean
+  editPanelExcludeLexicons?: string[]
 }
 
 export class LexiconEditor extends React.Component<
@@ -191,11 +202,13 @@ export class LexiconEditor extends React.Component<
     // Extract unique filenames from all sub-lexicons in the hub
     const filenames = new Set<string>()
     const keys = this.props.lexicon.keys()
+    const excludeList = this.props.editPanelExcludeLexicons
 
     for (const key of keys) {
       try {
         const source = this.props.lexicon.source(key)
         const filename = source.lexicon.filename()
+        if (isLexiconExcluded(filename, excludeList)) continue
         // Extract just the filename without the path
         const basename = filename.split('/').pop() || filename
         filenames.add(basename)
@@ -216,6 +229,19 @@ export class LexiconEditor extends React.Component<
     this.makeElementsClickEditable()
     this.updatePageKeys()
     this.setupMutationObserver()
+  }
+
+  componentDidUpdate(prevProps: LexiconEditorProps) {
+    if (
+      prevProps.lexicon !== this.props.lexicon ||
+      prevProps.editPanelExcludeLexicons !== this.props.editPanelExcludeLexicons
+    ) {
+      const tabNames = this.getTabNames()
+      const activeTab = tabNames.includes(this.state.activeTab)
+        ? this.state.activeTab
+        : (tabNames[0] ?? '')
+      this.setState({ tabNames, activeTab })
+    }
   }
 
   setupMutationObserver() {
@@ -353,10 +379,12 @@ export class LexiconEditor extends React.Component<
     const editorNote = this.editorNote()
     // Filter keys based on active tab filename
     const keys = this.props.lexicon.keys()
+    const excludeList = this.props.editPanelExcludeLexicons
     let filteredKeys = keys.filter((key: string) => {
       try {
         const source = this.props.lexicon.source(key)
         const filename = source.lexicon.filename()
+        if (isLexiconExcluded(filename, excludeList)) return false
         const basename = filename.split('/').pop() || filename
         return basename === this.state.activeTab
       } catch (e) {

@@ -171,6 +171,9 @@
 
 // Native dialog with ::backdrop for overlay (use showModal())
 .LxEditPanel-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
   padding: 1.5rem;
 
   &::backdrop {

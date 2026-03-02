@@ -8,6 +8,7 @@
     &:disabled {
       opacity: 0.5;
       background-color: $gray_50;
+      cursor: not-allowed;
     }
 
     // CSS tooltip for disabled state

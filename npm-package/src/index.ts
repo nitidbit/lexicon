@@ -13,6 +13,7 @@ export type LxEditPanelType = React.FC<{
   apiUpdateUrl: string
   toggleEditPanel: () => void
   lexiconNameToDisplay: string
+  editPanelExcludeLexicons?: string[]
 }>
 
 export const VERSION = '3.0.0-alpha12'

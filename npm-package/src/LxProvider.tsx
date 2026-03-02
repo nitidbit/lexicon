@@ -67,6 +67,14 @@ export const LxProvider = ({
   localeCode = DEFAULT_LOCALE_CODE,
   className = '',
   lexiconNameToDisplay = 'Lexicon',
+  editPanelExcludeLexicons,
+}: {
+  apiUpdateUrl?: string
+  children: React.ReactNode
+  localeCode?: string
+  className?: string
+  lexiconNameToDisplay?: string
+  editPanelExcludeLexicons?: string[]
 }) => {
   //    STATE
   const [lexiconHub, setLexiconHub] = useState(emptyLexiconHub(localeCode))
@@ -93,6 +101,7 @@ export const LxProvider = ({
           setLexiconHub={setLexiconHub}
           apiUpdateUrl={apiUpdateUrl}
           lexiconNameToDisplay={lexiconNameToDisplay}
+          editPanelExcludeLexicons={editPanelExcludeLexicons}
         />
       </LxContext.Provider>
     </div>
@@ -137,11 +146,13 @@ export const EditButton = ({
   setLexiconHub,
   apiUpdateUrl,
   lexiconNameToDisplay,
+  editPanelExcludeLexicons,
 }: {
   lexiconHub: LexiconHub
   setLexiconHub: (l: LexiconHub) => void
   apiUpdateUrl: string
   lexiconNameToDisplay: string
+  editPanelExcludeLexicons?: string[]
 }) => {
   //    State
   const [isEditorVisible, setIsEditorVisible] = useState(false)
@@ -198,6 +209,7 @@ export const EditButton = ({
             apiUpdateUrl={apiUpdateUrl}
             toggleEditPanel={toggleEditor}
             lexiconNameToDisplay={lexiconNameToDisplay}
+            editPanelExcludeLexicons={editPanelExcludeLexicons}
           />
         </Suspense>
       )}

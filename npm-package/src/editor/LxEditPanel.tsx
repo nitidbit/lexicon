@@ -50,6 +50,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
   apiUpdateUrl,
   toggleEditPanel, // called when user closes
   lexiconNameToDisplay,
+  editPanelExcludeLexicons,
 }) => {
   console.log('!!! rendering LxEditPanel')
 
@@ -306,6 +307,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
         switchLocale={setLocale}
         toggleEditor={handleCloseRequest}
         visible={visible}
+        editPanelExcludeLexicons={editPanelExcludeLexicons}
       />
       <div className="save-box">
         <span className="version"> v{VERSION} </span>
