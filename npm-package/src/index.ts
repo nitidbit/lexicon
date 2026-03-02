@@ -16,7 +16,7 @@ export type LxEditPanelType = React.FC<{
   editPanelExcludeLexicons?: string[]
 }>
 
-export const VERSION = '3.0.0-alpha18'
+export const VERSION = '3.0.0-alpha19'
 
 /*
   Change History - API changes since last version
