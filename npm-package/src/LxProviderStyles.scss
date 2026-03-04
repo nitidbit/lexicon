@@ -3,6 +3,7 @@
 .LxProvider {
   .edit-lexicon-btn {
     @include button;
+    margin-left: 1px;
 
     // Disabled state - visually distinct
     &:disabled {
@@ -19,8 +20,8 @@
         content: attr(data-tooltip);
         position: absolute;
         bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%) translateY(-4px);
+        left: 0;
+        transform: translateY(-4px);
         padding: 6px 10px;
         background: $gray_25;
         color: white;
