@@ -3,6 +3,11 @@ import { render, within } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { LxProvider, Lexicon, useLexicon, LxTag } from './index'
 
+jest.mock('./util', () => ({
+  ...jest.requireActual('./util'),
+  getURLParameter: jest.fn(),
+}))
+
 describe('<LxTag>', () => {
   let lexicon: Lexicon
 

@@ -52,8 +52,6 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
   lexiconNameToDisplay,
   editPanelExcludeLexicons,
 }) => {
-  console.log('!!! rendering LxEditPanel')
-
   //
   //    State
   //

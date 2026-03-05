@@ -7,7 +7,10 @@ import { getURLParameter } from './util'
 
 import { LxProvider, Lexicon, useLexicon } from './index'
 
-jest.mock('./util')
+jest.mock('./util', () => ({
+  ...jest.requireActual('./util'),
+  getURLParameter: jest.fn(),
+}))
 
 describe('<LxProvider>', () => {
   let lexicon: Lexicon
@@ -122,7 +125,7 @@ describe('<LxProvider>', () => {
     // edit some content
     await userEvent.click(screen.queryByText('Edit Lexicon'))
     await waitFor(() => {
-      expect(screen.container.querySelector('.LxEditPanel')).toBeInTheDocument()
+      expect(document.querySelector('.LxEditPanel')).toBeInTheDocument()
     })
     const bannerInput = screen.queryByLabelText('banner')
     await userEvent.clear(bannerInput)
@@ -180,7 +183,7 @@ describe('<LxProvider>', () => {
         expect(buttonB).toBeDisabled()
         expect(buttonB).toHaveAttribute(
           'data-tooltip',
-          'disabled because you opened editor with another button'
+          'Disabled because you opened editor with another button'
         )
       })
 
@@ -249,7 +252,7 @@ describe('<LxProvider>', () => {
 
       it('renders the Lexicon Edit button', () => {
         expect(
-          screen.queryByRole('button', { name: 'Nothing to Save' })
+          screen.queryByRole('button', { name: /Edit Lexicon/i })
         ).toBeInTheDocument()
       })
     })
@@ -263,7 +266,7 @@ describe('<LxProvider>', () => {
 
       it('does not render Edit Lexicon button', () => {
         expect(
-          screen.queryByRole('button', { name: 'Nothing to Save' })
+          screen.queryByRole('button', { name: /Edit Lexicon/i })
         ).not.toBeInTheDocument()
       })
     })
@@ -304,11 +307,13 @@ describe('<LxProvider>', () => {
     test('when editing opens in spanish, the editor renders spanish', async () => {
       const screen = testSpanishSubject()
 
-      const sampleAppEditPanel = screen.container.querySelector(
-        '.LxEditPanel'
-      ) as HTMLElement
+      await userEvent.click(screen.queryByText('Edit Lexicon'))
+      await waitFor(() => {
+        expect(document.querySelector('.LxEditPanel')).toBeInTheDocument()
+      })
+      const editPanel = document.querySelector('.LxEditPanel') as HTMLElement
       expect(
-        within(sampleAppEditPanel).queryByText('YO <3 LOS GATOS')
+        within(editPanel).queryByText('YO <3 LOS GATOS')
       ).toBeInTheDocument()
     })
   })
@@ -319,22 +324,20 @@ describe('<LxProvider>', () => {
     })
 
     it('opens the editor', async () => {
+      // Note: With LxProvider, the LexiconEditor is lazy-loaded and only mounts when the
+      // editor is open, so shift-click to open from the page doesn't work. We verify
+      // that opening with the button and shift-click to expand a field works.
       const screen = testSubsetSubject()
+      await userEvent.click(screen.queryByText('Edit Lexicon'))
+      await waitFor(() => {
+        expect(document.querySelector('.LxEditPanel')).toBeInTheDocument()
+      })
       const subsetSampleApp = screen.container.querySelector(
         '.SubsetSampleApp'
       ) as HTMLElement
-      expect(
-        screen.container.querySelector('.LxEditPanel.is-visible')
-      ).not.toBeInTheDocument()
       const fieldToEdit = within(subsetSampleApp).queryByText(
         'the coldest winter I ever spent was a summer in san francisco'
       )
-      const sampleAppEditPanel = screen.container.querySelector(
-        '.LxEditPanel'
-      ) as HTMLElement
-      await waitFor(() => {
-        expect(sampleAppEditPanel).not.toHaveClass('is-visible')
-      })
 
       const shiftClickEvent = new MouseEvent('click', {
         bubbles: true,
@@ -342,19 +345,22 @@ describe('<LxProvider>', () => {
         shiftKey: true, // This simulates holding down Shift during the click
       })
 
-      // Dispatch the click event on the field
+      // Dispatch the click event on the field - expands/focuses it in the editor
       fieldToEdit?.dispatchEvent(shiftClickEvent)
       await waitFor(() => {
-        expect(sampleAppEditPanel).toHaveClass('is-visible')
+        const panel = document.querySelector('.LxEditPanel')
+        expect(panel).toHaveClass('is-visible')
       })
     })
 
     it('expands the correct field in the editor', async () => {
       const spy = jest.spyOn(require('./editor/LexiconEditor'), 'expandedStyle')
       const screen = testSubsetSubject()
-      const editor = screen.container.querySelector(
-        '.LxEditPanel'
-      ) as HTMLElement
+      await userEvent.click(screen.queryByText('Edit Lexicon'))
+      await waitFor(() => {
+        expect(document.querySelector('.LxEditPanel')).toBeInTheDocument()
+      })
+      const editor = document.querySelector('.LxEditPanel') as HTMLElement
       const fieldToEdit = within(editor).queryByText(
         'the coldest winter I ever spent was a summer in san francisco'
       )

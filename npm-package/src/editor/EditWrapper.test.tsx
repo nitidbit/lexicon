@@ -7,6 +7,7 @@ import { Lexicon } from '../Lexicon'
 import EditWrapper from './EditWrapper'
 
 jest.mock('../util', () => ({
+  ...jest.requireActual('../util'),
   getURLParameter: () => 'SAMPLE_LEXICON_SERVER_TOKEN',
 }))
 
