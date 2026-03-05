@@ -1,8 +1,17 @@
-import lodash_get from 'lodash/get'
-
 //
 //      Other functions
 //
+
+/** Gets value at path. Path: 'a.b.c' or ['a','b','c']. Returns undefined if not found. */
+export function get(obj: any, path: string | string[]): any {
+  if (obj == null) return undefined
+  const arr = Array.isArray(path) ? path : String(path).split('.')
+  for (const key of arr) {
+    if (obj == null) return undefined
+    obj = obj[key]
+  }
+  return obj
+}
 
 /** Returns true if the path exists in obj (each step is own property). */
 export function hasAtPath(obj: any, path: string | string[]): boolean {
@@ -45,7 +54,7 @@ export const evaluateTemplate = (
       }
 
       const path = template.substring(startPos, i - 1),
-        value = lodash_get(substitutions, path)
+        value = get(substitutions, path)
 
       segments.push(value)
       i--

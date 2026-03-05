@@ -1,7 +1,6 @@
-import lodash_get from 'lodash/get'
 import * as col from './collection'
 import { Collection, KeyPath, KeyPathArray, KeyPathString } from './collection'
-import { evaluateTemplate, hasAtPath } from './util'
+import { evaluateTemplate, get, hasAtPath } from './util'
 
 export type ContentByLocale = {
   repoPath?: string
@@ -237,13 +236,13 @@ export class Lexicon {
         localPrefix = []
         rootPrefix = rootPrefix.concat(['_data', locale])
         keyPath = [...col.keyPathAsArray(lexicon._subsetRoot), ...keyPath]
-        nextNode = lodash_get(lexicon._data, locale)
+        nextNode = get(lexicon._data, locale)
       } else {
         const firstKey = keyPath[0]
         keyPath = keyPath.slice(1)
         rootPrefix = rootPrefix.concat([firstKey]) // use concat to not modify old value
         localPrefix = localPrefix.concat([firstKey])
-        nextNode = lodash_get(node, firstKey)
+        nextNode = get(node, firstKey)
       }
 
       return recursiveFind(nextNode, keyPath, lexicon, rootPrefix, localPrefix)
