@@ -1,4 +1,3 @@
-import lodash_fp from 'lodash/fp'
 import { KeyPath } from '../collection'
 import * as col from '../collection'
 import {
@@ -42,7 +41,7 @@ export class LexiconHub extends Lexicon {
   }
 
   lexiconWithRepoPath(repoPath: string): Lexicon {
-    for (const [key, node] of lodash_fp.entries(
+    for (const [key, node] of Object.entries(
       this._data[DEFAULT_LOCALE_CODE] as col.Collection
     )) {
       if (node instanceof Lexicon && node.filename() == repoPath) {
@@ -55,7 +54,7 @@ export class LexiconHub extends Lexicon {
   lexiconForTab(tabName: string): Lexicon | null {
     const found = super.lexiconForTab(tabName)
     if (found) return found
-    for (const [key, node] of lodash_fp.entries(
+    for (const [key, node] of Object.entries(
       this._data[DEFAULT_LOCALE_CODE] as col.Collection
     )) {
       if (node instanceof Lexicon) {

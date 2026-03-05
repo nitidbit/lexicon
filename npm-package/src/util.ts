@@ -4,6 +4,17 @@ import lodash_get from 'lodash/get'
 //      Other functions
 //
 
+/** Returns true if the path exists in obj (each step is own property). */
+export function hasAtPath(obj: any, path: string | string[]): boolean {
+  const arr = Array.isArray(path) ? path : String(path).split('.')
+  for (const key of arr) {
+    if (obj == null || !Object.prototype.hasOwnProperty.call(obj, key))
+      return false
+    obj = obj[key]
+  }
+  return true
+}
+
 export const evaluateTemplate = (
   template: string,
   substitutions: object

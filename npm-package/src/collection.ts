@@ -1,10 +1,3 @@
-import isString from 'lodash/isString'
-import isMap from 'lodash/isMap'
-import isArray from 'lodash/isArray'
-import isObject from 'lodash/isObject'
-import isNil from 'lodash/isNil'
-import lodash_compact from 'lodash/compact'
-
 /*
     Functions that can manipulate the '_data' part of a Lexicon, which is mix of:
       Objects, Arrays, and other Lexicons.
@@ -24,28 +17,31 @@ export type KeyPath = KeyPathArray | KeyPathString
 
 /* return in Array form, e.g. 'my.key.path' -> ['my', 'key', 'path'] */
 export function keyPathAsArray(keyPath: KeyPath): Array<string> {
-  if (isString(keyPath)) {
-    keyPath = lodash_compact(keyPath.split('.'))
+  if (typeof keyPath === 'string') {
+    keyPath = keyPath.split('.').filter(Boolean)
   }
   return keyPath
 }
 
 /* return in dotted-string form, e.g. ['my', 'key', 'path'] -> 'my.key.path' */
 export function keyPathAsString(keyPath: KeyPath): string {
-  if (isArray(keyPath)) {
+  if (Array.isArray(keyPath)) {
     keyPath = keyPath.join('.')
   }
   return keyPath
 }
 
 export function isCollection(maybeCollection: any): boolean {
-  return isArray(maybeCollection) || isObject(maybeCollection)
+  return (
+    Array.isArray(maybeCollection) ||
+    (typeof maybeCollection === 'object' && maybeCollection !== null)
+  )
 }
 
 // Like lodash.get(data, 'my.keys.0') but works with nested Lexicons too.
 export function get(data: Collection, keyPath: KeyPath): any {
-  if (isNil(keyPath)) throw new Error("'keyPath' is null/undefined")
-  if (isNil(data)) throw new Error("'data' is null/undefined")
+  if (keyPath == null) throw new Error("'keyPath' is null/undefined")
+  if (data == null) throw new Error("'data' is null/undefined")
 
   if (!isCollection(data)) {
     return undefined // content not found
@@ -53,7 +49,7 @@ export function get(data: Collection, keyPath: KeyPath): any {
 
   keyPath = keyPathAsArray(keyPath)
   const [firstKey, ...rest] = keyPath
-  const subData = isMap(data) ? data.get(firstKey) : data[firstKey]
+  const subData = data instanceof Map ? data.get(firstKey) : data[firstKey]
 
   if (rest.length == 0) {
     return subData // we found it

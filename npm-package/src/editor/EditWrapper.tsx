@@ -1,5 +1,4 @@
 import React, { ChangeEvent } from 'react'
-import lodash_fp from 'lodash/fp'
 import { Lexicon } from '../Lexicon'
 import { VERSION } from '../index'
 import { LexiconEditor, OnChangeCallback } from './LexiconEditor'
@@ -125,10 +124,9 @@ export default class EditWrapper extends React.Component<
 
   updateTextFromEditor: OnChangeCallback = (change) => {
     this.setState((oldState) => {
-      const newLexicon = lodash_fp.set(
+      const newLexicon = oldState.lexicon.set(
         change.updatePath,
-        change.newValue,
-        oldState.lexicon
+        change.newValue
       )
 
       const fileKey = JSON.stringify({
