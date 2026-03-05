@@ -121,7 +121,7 @@ export class Lexicon {
 
     let info = this.find(this.currentLocaleCode, keyPath)
 
-    if (isNil(info)) {
+    if (isNil(info) && this.currentLocaleCode !== DEFAULT_LOCALE_CODE) {
       // could not find it--try English
       info = this.find(DEFAULT_LOCALE_CODE, keyPath)
 
@@ -135,10 +135,13 @@ export class Lexicon {
 
     let val: any = info.value
 
-    if (isArray(val) && !isUndefined(templateSubstitutions)) {
-      val = this.interpolateArray(val, templateSubstitutions)
-    } else if (isString(val) && !isUndefined(templateSubstitutions)) {
-      val = evaluateTemplate(val as string, templateSubstitutions)
+    if (!isUndefined(templateSubstitutions)) {
+      if (isArray(val)) {
+        return this.interpolateArray(val, templateSubstitutions)
+      }
+      if (isString(val)) {
+        return evaluateTemplate(val as string, templateSubstitutions)
+      }
     }
 
     return val

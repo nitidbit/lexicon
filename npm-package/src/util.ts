@@ -9,14 +9,14 @@ export const evaluateTemplate = (
   substitutions: object
 ): string => {
   let escaped = false
-  let replaced = ''
+  const segments: string[] = []
 
   for (let i = 0; i < template.length; i++) {
     if (template[i] == '\\' && !escaped) {
       escaped = true
       continue
     } else if (escaped) {
-      replaced += template[i]
+      segments.push(template[i])
       escaped = false
       continue
     } else if (template[i] == '#' && template[i + 1] == '{') {
@@ -36,15 +36,15 @@ export const evaluateTemplate = (
       const path = template.substring(startPos, i - 1),
         value = lodash_get(substitutions, path)
 
-      replaced += value
+      segments.push(value)
       i--
       continue
     } else {
-      replaced += template[i]
+      segments.push(template[i])
     }
   }
 
-  return replaced
+  return segments.join('')
 }
 
 // Extract and return a query parameter from the current 'location'
