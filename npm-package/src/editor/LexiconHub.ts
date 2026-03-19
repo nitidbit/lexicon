@@ -1,4 +1,4 @@
-import { KeyPath } from '../collection'
+import { KeyPath, keyPathAsArray } from '../collection'
 import * as col from '../collection'
 import {
   Lexicon,
@@ -9,6 +9,41 @@ import {
 
 // Used by LxProvider to cache Lexicons currently in use.
 export class LexiconHub extends Lexicon {
+  /** OVERRIDING SET() to fix live preview for non-default/Spanish edits: 
+      Propagate non-default locale edits to shared _data so register() sees them (live preview). */
+  set(updatePath: KeyPath, newValue: any): Lexicon {
+    const result = super.set(updatePath, newValue) as LexiconHub
+    const path = keyPathAsArray(updatePath)
+    const isNonDefaultLocaleEdit =
+      path.length >= 5 &&
+      path[0] === '_data' &&
+      path[3] === '_data' &&
+      path[1] !== DEFAULT_LOCALE_CODE
+    if (!isNonDefaultLocaleEdit) return result
+
+    const [updatedLocale, branchKey] = [path[1], path[2]]
+    const updatedLexicon = result._data[updatedLocale]?.[branchKey]
+    if (!(updatedLexicon instanceof Lexicon)) return result
+
+    const sharedData = (updatedLexicon as Lexicon & { _data: ContentByLocale })
+      ._data
+    const cloned = { ...result._data } as Record<string, unknown>
+    for (const locale of result.locales()) {
+      if (locale === updatedLocale) continue
+      const branch = { ...(cloned[locale] as object) } as Record<
+        string,
+        Lexicon
+      >
+      branch[branchKey] = new Lexicon(sharedData as ContentByLocale, locale)
+      cloned[locale] = branch
+    }
+
+    return new LexiconHub(
+      cloned as ContentByLocale,
+      result.currentLocaleCode
+    ) as LexiconHub
+  }
+
   constructor(
     contentByLocale: ContentByLocale = {
       repoPath: 'SHARED LEXICON HUB',
