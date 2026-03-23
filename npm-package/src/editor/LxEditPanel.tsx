@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { LxPortalContext } from '../LxPortalContext'
 import { keyPathAsString } from '../collection'
 import { VERSION } from '../index'
 import { LexiconEditor, OnChangeCallback } from './LexiconEditor'
@@ -13,6 +14,19 @@ type UserChanges = Map<
   string,
   { originalValue: string; newValue: string; updatePath: string }
 >
+
+/** Extract original value for a change, using the locale from localPath (e.g. "es.orig_json.favColor") */
+function getOriginalValue(
+  hub: LexiconHub,
+  localPath: string
+): string | undefined {
+  const dotIndex = localPath.indexOf('.')
+  if (dotIndex === -1) return undefined
+  const locale = localPath.substring(0, dotIndex)
+  const pathWithoutLocale = localPath.substring(dotIndex + 1)
+  const localeHub = hub.locale(locale)
+  return localeHub?.getExact(pathWithoutLocale)
+}
 
 enum Position {
   Left = 'left',
@@ -88,7 +102,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
       newChanges.delete(fileKey) // They changed it back to original value--no net change
     } else {
       originalValue =
-        originalValue || lexiconHub.getExact(change.localPath.slice(3)) // the slice trims off locale aka 'en.'
+        originalValue || getOriginalValue(lexiconHub, change.localPath)
       newChanges.set(fileKey, {
         originalValue,
         newValue: change.newValue,
@@ -219,11 +233,16 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
   }
 
   const throwAwayAndClose = () => {
-    let revertedHub: LexiconHub = lexiconHub
-    for (const [, { originalValue, updatePath }] of unsavedChanges.entries()) {
-      revertedHub = revertedHub.set(updatePath, originalValue) as LexiconHub
-    }
-    setLexiconHub(revertedHub)
+    setLexiconHub((prevHub: LexiconHub) => {
+      const localeToPreserve = prevHub.currentLocaleCode
+      let revertedHub: LexiconHub = prevHub
+
+      for (const change of unsavedChanges.values()) {
+        const { originalValue, updatePath } = change
+        revertedHub = revertedHub.set(updatePath, originalValue) as LexiconHub
+      }
+      return revertedHub.locale(localeToPreserve) ?? revertedHub
+    })
     setUnsavedChanges(new Map())
     setSavingState(SavingState.NoChanges)
     dialogRef.current?.close()
@@ -331,8 +350,8 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
   )
 }
 
-export const LxEditPanel: LxEditPanelType = (props) =>
-  createPortal(
-    <LxEditPanelNoPortal {...props} />,
-    document.getElementById('nitid-lexicon-portal')
-  )
+export const LxEditPanel: LxEditPanelType = (props) => {
+  const container = useContext(LxPortalContext)
+  if (!container) return null
+  return createPortal(<LxEditPanelNoPortal {...props} />, container)
+}

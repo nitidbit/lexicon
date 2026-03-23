@@ -4,32 +4,35 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import { Lexicon } from '../index'
+import { LxPortalContext } from '../LxPortalContext'
 import { LexiconHub } from './LexiconHub'
 import { LxEditPanel } from './LxEditPanel'
 
 describe('<LxEditPanel>', () => {
   let lexiconHub: LexiconHub
   let setLexiconHub: (l: LexiconHub) => void
+  let portalEl: HTMLDivElement
 
   const testSubject = (overrideProps = {}) => {
     return render(
-      <LxEditPanel
-        visible={true}
-        lexiconHub={lexiconHub}
-        setLexiconHub={setLexiconHub}
-        lexiconServerToken="FAKE_TOKEN"
-        apiUpdateUrl="FAKE_URL"
-        toggleEditPanel={jest.fn()}
-        lexiconNameToDisplay="Lexicon"
-        {...overrideProps}
-      />
+      <LxPortalContext.Provider value={portalEl}>
+        <LxEditPanel
+          visible={true}
+          lexiconHub={lexiconHub}
+          setLexiconHub={setLexiconHub}
+          lexiconServerToken="FAKE_TOKEN"
+          apiUpdateUrl="FAKE_URL"
+          toggleEditPanel={jest.fn()}
+          lexiconNameToDisplay="Lexicon"
+          {...overrideProps}
+        />
+      </LxPortalContext.Provider>
     )
   }
 
   beforeEach(() => {
-    const portal = document.createElement('div')
-    portal.setAttribute('id', 'nitid-lexicon-portal')
-    document.body.appendChild(portal)
+    portalEl = document.createElement('div')
+    document.body.appendChild(portalEl)
 
     lexiconHub = new LexiconHub(
       {
@@ -45,7 +48,7 @@ describe('<LxEditPanel>', () => {
   })
 
   afterEach(() => {
-    document.getElementById('nitid-lexicon-portal')?.remove()
+    portalEl.remove()
   })
 
   it('shows locale radio buttons for the LexiconHubs locale', async () => {
@@ -160,16 +163,18 @@ describe('<LxEditPanel>', () => {
       })
 
       const screen = render(
-        <LxEditPanel
-          visible={true}
-          lexiconHub={hubWithTwoLexicons}
-          setLexiconHub={jest.fn()}
-          lexiconServerToken="FAKE_TOKEN"
-          apiUpdateUrl="FAKE_URL"
-          toggleEditPanel={jest.fn()}
-          lexiconNameToDisplay="Lexicon"
-          editPanelExcludeLexicons={['B.json']}
-        />
+        <LxPortalContext.Provider value={portalEl}>
+          <LxEditPanel
+            visible={true}
+            lexiconHub={hubWithTwoLexicons}
+            setLexiconHub={jest.fn()}
+            lexiconServerToken="FAKE_TOKEN"
+            apiUpdateUrl="FAKE_URL"
+            toggleEditPanel={jest.fn()}
+            lexiconNameToDisplay="Lexicon"
+            editPanelExcludeLexicons={['B.json']}
+          />
+        </LxPortalContext.Provider>
       )
 
       expect(screen.getByRole('button', { name: 'A.json' })).toBeInTheDocument()

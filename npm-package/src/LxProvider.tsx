@@ -3,6 +3,7 @@ import React, {
   createContext,
   useContext,
   useEffect,
+  useLayoutEffect,
   lazy,
   Suspense,
   useId,
@@ -16,6 +17,7 @@ import {
 import { getURLParameter } from './util'
 import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
 import { LexiconHub } from './editor/LexiconHub'
+import { LxPortalContext } from './LxPortalContext'
 
 import './LxProviderStyles.css'
 
@@ -78,13 +80,19 @@ export const LxProvider = ({
 }) => {
   //    STATE
   const [lexiconHub, setLexiconHub] = useState(emptyLexiconHub(localeCode))
+  const [portalEl, setPortalEl] = useState<HTMLDivElement | null>(null)
 
   grabLexiconServerTokenAndReload()
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = document.createElement('div')
-    el.setAttribute('id', 'nitid-lexicon-portal')
+    el.setAttribute('data-nitid-lexicon-portal', '')
     document.body.appendChild(el)
+    setPortalEl(el)
+    return () => {
+      el.remove()
+      setPortalEl(null)
+    }
   }, [])
 
   useEffect(() => {
@@ -94,16 +102,18 @@ export const LxProvider = ({
   //    RENDER
   return (
     <div className={`LxProvider ${className}`}>
-      <LxContext.Provider value={lexiconHub}>
-        {children}
-        <EditButton
-          lexiconHub={lexiconHub}
-          setLexiconHub={setLexiconHub}
-          apiUpdateUrl={apiUpdateUrl}
-          lexiconNameToDisplay={lexiconNameToDisplay}
-          editPanelExcludeLexicons={editPanelExcludeLexicons}
-        />
-      </LxContext.Provider>
+      <LxPortalContext.Provider value={portalEl}>
+        <LxContext.Provider value={lexiconHub}>
+          {children}
+          <EditButton
+            lexiconHub={lexiconHub}
+            setLexiconHub={setLexiconHub}
+            apiUpdateUrl={apiUpdateUrl}
+            lexiconNameToDisplay={lexiconNameToDisplay}
+            editPanelExcludeLexicons={editPanelExcludeLexicons}
+          />
+        </LxContext.Provider>
+      </LxPortalContext.Provider>
     </div>
   )
 }
