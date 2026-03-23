@@ -137,6 +137,74 @@ describe('<LxProvider>', () => {
     expect(within(sampleAppElem).queryByText('I <3 TREES')).toBeInTheDocument()
   })
 
+  describe('closing LxEditPanel via edit-lexicon-btn', () => {
+    const origShowModal = HTMLDialogElement.prototype.showModal
+    const origClose = HTMLDialogElement.prototype.close
+
+    beforeAll(() => {
+      // jsdom does not implement <dialog>.showModal() / close()
+      HTMLDialogElement.prototype.showModal = function (
+        this: HTMLDialogElement
+      ) {
+        this.setAttribute('open', '')
+      }
+      HTMLDialogElement.prototype.close = function (this: HTMLDialogElement) {
+        this.removeAttribute('open')
+      }
+    })
+
+    afterAll(() => {
+      HTMLDialogElement.prototype.showModal = origShowModal
+      HTMLDialogElement.prototype.close = origClose
+    })
+
+    test('when there are unsaved changes, opens the unsaved-changes dialog', async () => {
+      const screen = testSubject()
+
+      await userEvent.click(screen.getByText('Edit Lexicon'))
+      await waitFor(() => {
+        expect(document.querySelector('.LxEditPanel')).toBeInTheDocument()
+      })
+
+      const bannerInput = screen.getByLabelText('banner')
+      await userEvent.clear(bannerInput)
+      await userEvent.type(bannerInput, 'edited copy')
+
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Hide Lexicon' })
+      )
+
+      await waitFor(() => {
+        const dialog = document.querySelector(
+          '.LxEditPanel-dialog'
+        ) as HTMLDialogElement
+        expect(dialog).toBeInTheDocument()
+        expect(dialog.hasAttribute('open')).toBe(true)
+        expect(screen.getByText('You have unsaved changes')).toBeVisible()
+      })
+    })
+
+    test('when there are no unsaved changes, closes the panel without the dialog', async () => {
+      const screen = testSubject()
+
+      await userEvent.click(screen.getByText('Edit Lexicon'))
+      await waitFor(() => {
+        expect(document.querySelector('.LxEditPanel')).toBeInTheDocument()
+      })
+
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Hide Lexicon' })
+      )
+
+      await waitFor(() => {
+        expect(document.querySelector('.LxEditPanel')).not.toBeInTheDocument()
+      })
+
+      const dialog = document.querySelector('.LxEditPanel-dialog')
+      expect(dialog).not.toBeInTheDocument()
+    })
+  })
+
   describe('lexicon name on edit button', () => {
     test('when lexicon name on edit button is not set, the edit button renders the default name', () => {
       const screen = testSubject('SAMPLE SERVER TOKEN', 'en')

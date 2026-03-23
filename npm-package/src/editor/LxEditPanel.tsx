@@ -1,4 +1,10 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { createPortal } from 'react-dom'
 import { LxPortalContext } from '../LxPortalContext'
 import { keyPathAsString } from '../collection'
@@ -65,6 +71,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
   toggleEditPanel, // called when user closes
   lexiconNameToDisplay,
   editPanelExcludeLexicons,
+  panelApiRef,
 }) => {
   //
   //    State
@@ -224,13 +231,21 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
     setLexiconHub(lexiconHub.locale(newLocale))
   }
 
-  const handleCloseRequest = () => {
+  const handleCloseRequest = useCallback(() => {
     if (unsavedChanges.size > 0) {
       dialogRef.current?.showModal()
     } else {
       toggleEditPanel()
     }
-  }
+  }, [unsavedChanges, toggleEditPanel])
+
+  useEffect(() => {
+    if (!panelApiRef) return
+    panelApiRef.current = { requestClose: handleCloseRequest }
+    return () => {
+      panelApiRef.current = null
+    }
+  }, [panelApiRef, handleCloseRequest])
 
   const throwAwayAndClose = () => {
     setLexiconHub((prevHub: LexiconHub) => {

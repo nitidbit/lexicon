@@ -167,6 +167,7 @@ export const EditButton = ({
   //    State
   const [isEditorVisible, setIsEditorVisible] = useState(false)
   const myId = useRef(useId()).current
+  const editPanelRef = useRef<{ requestClose: () => void } | null>(null)
   useActiveEditorSubscription()
 
   const activeEditorId = getActiveEditorId()
@@ -177,6 +178,14 @@ export const EditButton = ({
     const nextVisible = !isEditorVisible
     setIsEditorVisible(nextVisible)
     setActiveEditor(nextVisible ? myId : null)
+  }
+
+  const handleEditLexiconButtonClick = () => {
+    if (isEditorVisible) {
+      editPanelRef.current?.requestClose()
+    } else {
+      toggleEditor()
+    }
   }
 
   useEffect(() => {
@@ -194,7 +203,7 @@ export const EditButton = ({
     <div className="EditButton">
       <div className="buttons">
         <button
-          onClick={toggleEditor}
+          onClick={handleEditLexiconButtonClick}
           className="edit-lexicon-btn"
           disabled={isDisabled}
           data-tooltip={
@@ -212,6 +221,7 @@ export const EditButton = ({
       {isEditorVisible && (
         <Suspense fallback={null}>
           <LazyLxEditPanel
+            panelApiRef={editPanelRef}
             visible={isEditorVisible}
             lexiconHub={lexiconHub}
             setLexiconHub={setLexiconHub}

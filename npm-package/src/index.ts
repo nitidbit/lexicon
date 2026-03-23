@@ -1,3 +1,4 @@
+import type { MutableRefObject } from 'react'
 import { LexiconHub } from './editor/LexiconHub'
 
 export { Lexicon } from './Lexicon'
@@ -5,7 +6,9 @@ export { default as EditWrapper } from './editor/EditWrapper'
 export { LxProvider, useLexicon } from './LxProvider'
 export { LxTag } from './LxTag'
 
-export type LxEditPanelType = React.FC<{
+export type LxEditPanelHandle = { requestClose: () => void }
+
+export type LxEditPanelProps = {
   lexiconHub: LexiconHub
   setLexiconHub
   visible: boolean
@@ -14,7 +17,11 @@ export type LxEditPanelType = React.FC<{
   toggleEditPanel: () => void
   lexiconNameToDisplay: string
   editPanelExcludeLexicons?: string[]
-}>
+  /** Filled with `{ requestClose }` after mount; use instead of `ref` when the panel is behind `React.lazy()` on React 18. */
+  panelApiRef?: MutableRefObject<LxEditPanelHandle | null>
+}
+
+export type LxEditPanelType = React.FC<LxEditPanelProps>
 
 export const VERSION = '3.0.0-alpha25'
 
