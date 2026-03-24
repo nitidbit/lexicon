@@ -8,19 +8,15 @@ export type UnsavedLexiconChange = {
 }
 
 /**
- * Snapshot original string for a field before the first edit in a session (same idea as LxEditPanel).
- * localPath is like "es.orig_json.favColor" from LexiconEditor.
+ * Snapshot the pre-edit string for a field (same as LxEditPanel). Use the hub field key from the
+ * editor (`change.hubFieldKey`), not `localPath` — localPath is `keyPathAsString(source.localPath)`
+ * and omits branch keys (e.g. `es.title` vs `strings_json.title`).
  */
-export function getOriginalValueForLocalPath(
+export function getOriginalValueForHubFieldKey(
   hub: LexiconHub,
-  localPath: string
+  hubFieldKey: string
 ): string | undefined {
-  const dotIndex = localPath.indexOf('.')
-  if (dotIndex === -1) return undefined
-  const locale = localPath.substring(0, dotIndex)
-  const pathWithoutLocale = localPath.substring(dotIndex + 1)
-  const localeHub = hub.locale(locale)
-  return localeHub?.getExact(pathWithoutLocale)
+  return hub.getExact(hubFieldKey)
 }
 
 /**
@@ -36,8 +32,8 @@ export function throwAwayLexiconHub(
 
   for (const change of unsavedChanges) {
     const { originalValue, updatePath } = change
-    // Use LexiconHub.set (not Lexicon.prototype.set + reSync): same code path as typing in the
-    // editor so branch Lexicons and shared ContentByLocale stay consistent for register().
+    if (originalValue === undefined) continue
+    // Same path as typing: LexiconHub.set runs super.set + propagateSharedBranchLexicons.
     revertedHub = revertedHub.set(updatePath, originalValue) as LexiconHub
   }
   return revertedHub.locale(localeToPreserve) ?? revertedHub

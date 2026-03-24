@@ -132,6 +132,7 @@ export default class EditWrapper extends React.Component<
       const fileKey = JSON.stringify({
         filename: change.filename,
         localPath: change.localPath,
+        hubFieldKey: change.hubFieldKey,
       }) // we stringify here because Javascript never treats multiple objects as the same one even if the keys and values are all identical
 
       const existingChange = oldState.unsavedChanges.get(fileKey)
@@ -142,7 +143,7 @@ export default class EditWrapper extends React.Component<
         newChanges.delete(fileKey) // They changed it back to original value--no net change
       } else {
         originalValue =
-          originalValue || oldState.lexicon.getExact(change.localPath.slice(3)) // the slice trims off locale aka 'en.'
+          originalValue ?? oldState.lexicon.getExact(change.hubFieldKey)
         newChanges.set(fileKey, { originalValue, newValue: change.newValue })
       }
 

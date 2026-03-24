@@ -27,6 +27,8 @@ export const expandedStyle = (isExpanded = true, ref) => {
 
 export type OnChangeCallback = (change: {
   filename: string
+  /** Hub-absolute field key (textarea `name`), e.g. `strings_json.title`. Not the same as `localPath`. */
+  hubFieldKey: KeyPathString
   localPath: KeyPathString
   updatePath: KeyPath
   newValue: string
@@ -357,10 +359,11 @@ export class LexiconEditor extends React.Component<
   }
 
   sendLexiconEditorChange = (event) => {
-    const { name: localPath, value: newValue } = event.target
-    const source = this.props.lexicon.source(localPath)
+    const { name: hubFieldKey, value: newValue } = event.target
+    const source = this.props.lexicon.source(hubFieldKey)
     const changeInfo = {
       filename: source.lexicon.filename(),
+      hubFieldKey,
       localPath: keyPathAsString(source.localPath),
       updatePath: keyPathAsString(source.updatePath),
       newValue: newValue as string,

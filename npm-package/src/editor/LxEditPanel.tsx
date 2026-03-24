@@ -9,10 +9,7 @@ import { createPortal } from 'react-dom'
 import { LxPortalContext } from '../LxPortalContext'
 import { keyPathAsString } from '../collection'
 import { VERSION } from '../index'
-import {
-  getOriginalValueForLocalPath,
-  throwAwayLexiconHub,
-} from './lexiconHubThrowAway'
+import { throwAwayLexiconHub } from './lexiconHubThrowAway'
 import { LexiconEditor, OnChangeCallback } from './LexiconEditor'
 import { LexiconHub } from './LexiconHub'
 
@@ -88,6 +85,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
     const fileKey = JSON.stringify({
       filename: change.filename,
       localPath: change.localPath,
+      hubFieldKey: change.hubFieldKey,
     }) // we stringify here because Javascript never treats multiple objects as the same one even
     // if the keys and values are all identical
 
@@ -99,8 +97,9 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
     if (originalValue == change.newValue) {
       newChanges.delete(fileKey) // They changed it back to original value--no net change
     } else {
+      // ?? not ||: '' is valid; undefined would make revert wipe the value and get() falls back to en.
       originalValue =
-        originalValue || getOriginalValueForLocalPath(lexiconHub, change.localPath)
+        originalValue ?? lexiconHub.getExact(change.hubFieldKey)
       newChanges.set(fileKey, {
         originalValue,
         newValue: change.newValue,
@@ -244,13 +243,13 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
     )
     setUnsavedChanges(new Map())
     setSavingState(SavingState.NoChanges)
-    dialogRef.current?.close()
+    dialogRef.current?.close?.()
     toggleEditPanel()
   }
 
   const saveAndClose = () => {
     saveChanges(() => {
-      dialogRef.current?.close()
+      dialogRef.current?.close?.()
       toggleEditPanel()
     })
   }

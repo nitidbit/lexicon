@@ -1,7 +1,7 @@
 import { keyPathAsString } from '../collection'
 import { LexiconHub } from './LexiconHub'
 import {
-  getOriginalValueForLocalPath,
+  getOriginalValueForHubFieldKey,
   throwAwayLexiconHub,
   type UnsavedLexiconChange,
 } from './lexiconHubThrowAway'
@@ -11,7 +11,7 @@ import {
  * register() / useLexicon() in sync with the reverted strings for each locale.
  *
  * Mirrors LxEditPanel: edit uses LexiconHub.set; unsaved map stores updatePath + originalValue
- * from getOriginalValueForLocalPath + LexiconEditor-shaped localPath; throw away uses throwAwayLexiconHub.
+ * from getOriginalValueForHubFieldKey + hub field key; throw away uses throwAwayLexiconHub.
  *
  */
 describe('throwAwayLexiconHub (throw-away / discard changes)', () => {
@@ -28,11 +28,10 @@ describe('throwAwayLexiconHub (throw-away / discard changes)', () => {
   }): { editedHub: LexiconHub; unsaved: UnsavedLexiconChange[] } {
     const { hubBeforeEdit, fieldKey, newValue } = args
     const source = hubBeforeEdit.source(fieldKey)
-    const localPath = keyPathAsString(source.localPath)
     const updatePath = keyPathAsString(source.updatePath)
-    const originalValue = getOriginalValueForLocalPath(
+    const originalValue = getOriginalValueForHubFieldKey(
       hubBeforeEdit,
-      localPath
+      fieldKey
     ) as string
     const editedHub = hubBeforeEdit.set(updatePath, newValue) as LexiconHub
     const unsaved: UnsavedLexiconChange[] = [
