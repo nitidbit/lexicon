@@ -8,6 +8,7 @@ import React, {
 import { createPortal } from 'react-dom'
 import { LxPortalContext } from '../LxPortalContext'
 import { keyPathAsString } from '../collection'
+import { Lexicon } from '../Lexicon'
 import { VERSION } from '../index'
 import { LexiconEditor, OnChangeCallback } from './LexiconEditor'
 import { LexiconHub } from './LexiconHub'
@@ -254,7 +255,13 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
 
       for (const change of unsavedChanges.values()) {
         const { originalValue, updatePath } = change
-        revertedHub = revertedHub.set(updatePath, originalValue) as LexiconHub
+        // Use Lexicon.set, not LexiconHub.set: hub override propagates non-default-locale
+        // edits to sibling branches for live preview; that propagation breaks revert for es/… paths.
+        revertedHub = Lexicon.prototype.set.call(
+          revertedHub,
+          updatePath,
+          originalValue
+        ) as LexiconHub
       }
       return revertedHub.locale(localeToPreserve) ?? revertedHub
     })
