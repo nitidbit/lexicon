@@ -9,26 +9,32 @@ import {
 
 // Used by LxProvider to cache Lexicons currently in use.
 export class LexiconHub extends Lexicon {
-  /** OVERRIDING SET() to fix live preview for non-default/Spanish edits: 
-      Propagate non-default locale edits to shared _data so register() sees them (live preview). */
-  set(updatePath: KeyPath, newValue: any): Lexicon {
-    const result = super.set(updatePath, newValue) as LexiconHub
+  /**
+   * After a structural update at a branch (via Lexicon.set / super.set), keep every locale’s
+   * branch Lexicon pointing at the same ContentByLocale. Otherwise en/es diverge (clone splits
+   * shared _data) and register() — which reads from the default-locale branch — shows the wrong
+   * language after reverting Spanish edits.
+   */
+  propagateSharedBranchLexicons(
+    hub: LexiconHub,
+    updatePath: KeyPath
+  ): LexiconHub {
     const path = keyPathAsArray(updatePath)
     const isNonDefaultLocaleEdit =
       path.length >= 5 &&
       path[0] === '_data' &&
       path[3] === '_data' &&
       path[1] !== DEFAULT_LOCALE_CODE
-    if (!isNonDefaultLocaleEdit) return result
+    if (!isNonDefaultLocaleEdit) return hub
 
     const [updatedLocale, branchKey] = [path[1], path[2]]
-    const updatedLexicon = result._data[updatedLocale]?.[branchKey]
-    if (!(updatedLexicon instanceof Lexicon)) return result
+    const updatedLexicon = hub._data[updatedLocale]?.[branchKey]
+    if (!(updatedLexicon instanceof Lexicon)) return hub
 
     const sharedData = (updatedLexicon as Lexicon & { _data: ContentByLocale })
       ._data
-    const cloned = { ...result._data } as Record<string, unknown>
-    for (const locale of result.locales()) {
+    const cloned = { ...hub._data } as Record<string, unknown>
+    for (const locale of hub.locales()) {
       if (locale === updatedLocale) continue
       const branch = { ...(cloned[locale] as object) } as Record<
         string,
@@ -40,8 +46,20 @@ export class LexiconHub extends Lexicon {
 
     return new LexiconHub(
       cloned as ContentByLocale,
-      result.currentLocaleCode
+      hub.currentLocaleCode
     ) as LexiconHub
+  }
+
+  /** OVERRIDING SET() to fix live preview for non-default/Spanish edits:
+      Propagate non-default locale edits to shared _data so register() sees them (live preview). */
+  set(updatePath: KeyPath, newValue: any): Lexicon {
+    const result = super.set(updatePath, newValue) as LexiconHub
+    return this.propagateSharedBranchLexicons(result, updatePath)
+  }
+
+  /** Call after `Lexicon.prototype.set` on this hub so branch Lexicons stay aligned (see propagateSharedBranchLexicons). */
+  reSyncBranchesAfterLexiconSet(updatePath: KeyPath): LexiconHub {
+    return this.propagateSharedBranchLexicons(this, updatePath)
   }
 
   constructor(

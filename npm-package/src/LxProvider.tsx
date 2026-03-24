@@ -96,7 +96,7 @@ export const LxProvider = ({
   }, [])
 
   useEffect(() => {
-    setLexiconHub(lexiconHub.locale(localeCode))
+    setLexiconHub((prev) => prev.locale(localeCode) ?? prev)
   }, [localeCode])
 
   //    RENDER

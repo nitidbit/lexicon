@@ -255,13 +255,15 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
 
       for (const change of unsavedChanges.values()) {
         const { originalValue, updatePath } = change
-        // Use Lexicon.set, not LexiconHub.set: hub override propagates non-default-locale
-        // edits to sibling branches for live preview; that propagation breaks revert for es/… paths.
+        // Lexicon.set only: structural clone can split shared ContentByLocale between en/es
+        // branches; LexiconHub.set runs super.set + propagation in one step and was fragile on
+        // revert. Apply structural set, then re-sync branches like LexiconHub.set does.
         revertedHub = Lexicon.prototype.set.call(
           revertedHub,
           updatePath,
           originalValue
         ) as LexiconHub
+        revertedHub = revertedHub.reSyncBranchesAfterLexiconSet(updatePath)
       }
       return revertedHub.locale(localeToPreserve) ?? revertedHub
     })

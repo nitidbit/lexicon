@@ -22,6 +22,37 @@ describe('LexiconHub', () => {
       expect(hub2.get('orig_json.favColor')).toEqual('MAGENTA') // copy is changed
       expect(hub.get('orig_json.favColor')).toEqual('PINK') // original unchanged
     })
+
+    it('reSyncBranchesAfterLexiconSet restores register() Spanish view after Lexicon.prototype.set revert', () => {
+      const content = {
+        repoPath: 'orig.json',
+        en: { favColor: 'PINK' },
+        es: { favColor: 'ROSA' },
+      }
+      const hub = new LexiconHub()
+      hub.register(content)
+      const hubEs = hub.locale('es')!
+      const updatePath = hubEs.source('orig_json.favColor').updatePath
+      const hubEdited = hubEs.set(updatePath, 'MODIFICADO') as LexiconHub
+
+      const revertedStructuralOnly = Lexicon.prototype.set.call(
+        hubEdited,
+        updatePath,
+        'ROSA'
+      ) as LexiconHub
+      // register() returns the branch Lexicon (orig.json), so keys are like "favColor", not "orig_json.favColor"
+      const lexFromEnBranch = revertedStructuralOnly.register(content, 'es')
+      expect(lexFromEnBranch.get('favColor')).not.toEqual('ROSA')
+
+      const revertedSynced = revertedStructuralOnly.reSyncBranchesAfterLexiconSet(
+        updatePath
+      )
+      expect(revertedSynced.locale('es')!.get('orig_json.favColor')).toEqual(
+        'ROSA'
+      )
+      const lexAfterSync = revertedSynced.register(content, 'es')
+      expect(lexAfterSync.get('favColor')).toEqual('ROSA')
+    })
   })
 
   describe('lexiconWithRepoPath()', () => {
