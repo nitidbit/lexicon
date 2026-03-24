@@ -13,8 +13,6 @@ import {
  * Mirrors LxEditPanel: edit uses LexiconHub.set; unsaved map stores updatePath + originalValue
  * from getOriginalValueForLocalPath + LexiconEditor-shaped localPath; throw away uses throwAwayLexiconHub.
  *
- * The Spanish regression is `it.skip` so `npm test` stays green until fixed.
- * Remove `.skip` from that test to run it (expect Hola, currently get Hello).
  */
 describe('throwAwayLexiconHub (throw-away / discard changes)', () => {
   const bilingualContent = {
@@ -47,7 +45,7 @@ describe('throwAwayLexiconHub (throw-away / discard changes)', () => {
     return { editedHub, unsaved }
   }
 
-  it.skip('after discarding a Spanish edit, register(..., "es") shows the original Spanish string, not English', () => {
+  it('after discarding a Spanish edit, register(..., "es") shows the original Spanish string, not English', () => {
     const hub = new LexiconHub()
     hub.register(bilingualContent)
     const hubEs = hub.locale('es')!
@@ -57,6 +55,7 @@ describe('throwAwayLexiconHub (throw-away / discard changes)', () => {
       fieldKey: 'strings_json.title',
       newValue: 'EDITED_ES',
     })
+    expect(unsaved[0].originalValue).toBe('Hola')
 
     const reverted = throwAwayLexiconHub(editedHub, unsaved)
     const lexEs = reverted.register(bilingualContent, 'es')

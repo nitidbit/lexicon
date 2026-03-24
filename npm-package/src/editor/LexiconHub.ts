@@ -34,8 +34,10 @@ export class LexiconHub extends Lexicon {
     const sharedData = (updatedLexicon as Lexicon & { _data: ContentByLocale })
       ._data
     const cloned = { ...hub._data } as Record<string, unknown>
+    // Replace branch Lexicon for every locale (including updatedLocale). Skipping the edited
+    // locale left a Lexicon instance whose _data could disagree with `sharedData` after a
+    // structural Lexicon.prototype.set on revert, so register() (en branch) + .locale("es") saw English.
     for (const locale of hub.locales()) {
-      if (locale === updatedLocale) continue
       const branch = { ...(cloned[locale] as object) } as Record<
         string,
         Lexicon

@@ -23,7 +23,7 @@ export type LxEditPanelProps = {
 
 export type LxEditPanelType = React.FC<LxEditPanelProps>
 
-export const VERSION = '3.0.0-alpha29'
+export const VERSION = '3.0.0-alpha30'
 
 /*
   Change History - API changes since last version

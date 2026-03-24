@@ -1,4 +1,3 @@
-import { Lexicon } from '../Lexicon'
 import { LexiconHub } from './LexiconHub'
 
 /** One tracked edit, matching what LxEditPanel stores in unsavedChanges Map values */
@@ -37,12 +36,9 @@ export function throwAwayLexiconHub(
 
   for (const change of unsavedChanges) {
     const { originalValue, updatePath } = change
-    revertedHub = Lexicon.prototype.set.call(
-      revertedHub,
-      updatePath,
-      originalValue
-    ) as LexiconHub
-    revertedHub = revertedHub.reSyncBranchesAfterLexiconSet(updatePath)
+    // Use LexiconHub.set (not Lexicon.prototype.set + reSync): same code path as typing in the
+    // editor so branch Lexicons and shared ContentByLocale stay consistent for register().
+    revertedHub = revertedHub.set(updatePath, originalValue) as LexiconHub
   }
   return revertedHub.locale(localeToPreserve) ?? revertedHub
 }
