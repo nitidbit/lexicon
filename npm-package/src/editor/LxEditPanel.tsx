@@ -8,8 +8,11 @@ import React, {
 import { createPortal } from 'react-dom'
 import { LxPortalContext } from '../LxPortalContext'
 import { keyPathAsString } from '../collection'
-import { Lexicon } from '../Lexicon'
 import { VERSION } from '../index'
+import {
+  getOriginalValueForLocalPath,
+  throwAwayLexiconHub,
+} from './lexiconHubThrowAway'
 import { LexiconEditor, OnChangeCallback } from './LexiconEditor'
 import { LexiconHub } from './LexiconHub'
 
@@ -21,19 +24,6 @@ type UserChanges = Map<
   string,
   { originalValue: string; newValue: string; updatePath: string }
 >
-
-/** Extract original value for a change, using the locale from localPath (e.g. "es.orig_json.favColor") */
-function getOriginalValue(
-  hub: LexiconHub,
-  localPath: string
-): string | undefined {
-  const dotIndex = localPath.indexOf('.')
-  if (dotIndex === -1) return undefined
-  const locale = localPath.substring(0, dotIndex)
-  const pathWithoutLocale = localPath.substring(dotIndex + 1)
-  const localeHub = hub.locale(locale)
-  return localeHub?.getExact(pathWithoutLocale)
-}
 
 enum Position {
   Left = 'left',
@@ -110,7 +100,7 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
       newChanges.delete(fileKey) // They changed it back to original value--no net change
     } else {
       originalValue =
-        originalValue || getOriginalValue(lexiconHub, change.localPath)
+        originalValue || getOriginalValueForLocalPath(lexiconHub, change.localPath)
       newChanges.set(fileKey, {
         originalValue,
         newValue: change.newValue,
@@ -249,24 +239,9 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
   }, [panelApiRef, handleCloseRequest])
 
   const throwAwayAndClose = () => {
-    setLexiconHub((prevHub: LexiconHub) => {
-      const localeToPreserve = prevHub.currentLocaleCode
-      let revertedHub: LexiconHub = prevHub
-
-      for (const change of unsavedChanges.values()) {
-        const { originalValue, updatePath } = change
-        // Lexicon.set only: structural clone can split shared ContentByLocale between en/es
-        // branches; LexiconHub.set runs super.set + propagation in one step and was fragile on
-        // revert. Apply structural set, then re-sync branches like LexiconHub.set does.
-        revertedHub = Lexicon.prototype.set.call(
-          revertedHub,
-          updatePath,
-          originalValue
-        ) as LexiconHub
-        revertedHub = revertedHub.reSyncBranchesAfterLexiconSet(updatePath)
-      }
-      return revertedHub.locale(localeToPreserve) ?? revertedHub
-    })
+    setLexiconHub((prevHub: LexiconHub) =>
+      throwAwayLexiconHub(prevHub, unsavedChanges.values())
+    )
     setUnsavedChanges(new Map())
     setSavingState(SavingState.NoChanges)
     dialogRef.current?.close()
