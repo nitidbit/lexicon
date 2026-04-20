@@ -3,7 +3,6 @@ import React, {
   createContext,
   useContext,
   useEffect,
-  useLayoutEffect,
   lazy,
   Suspense,
   useId,
@@ -84,7 +83,7 @@ export const LxProvider = ({
 
   grabLexiconServerTokenAndReload()
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const el = document.createElement('div')
     el.setAttribute('data-nitid-lexicon-portal', '')
     document.body.appendChild(el)
