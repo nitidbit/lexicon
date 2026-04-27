@@ -9,7 +9,7 @@ import { createPortal } from 'react-dom'
 import { LxPortalContext } from '../LxPortalContext'
 import { keyPathAsString } from '../collection'
 import { VERSION } from '../index'
-import { throwAwayLexiconHub } from './lexiconHubThrowAway'
+import { throwAwayLexiconHub } from './LexiconHub'
 import { LexiconEditor, OnChangeCallback } from './LexiconEditor'
 import { LexiconHub } from './LexiconHub'
 
