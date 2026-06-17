@@ -85,9 +85,10 @@ export const LxProvider = ({
 
   useEffect(() => {
     const el = document.createElement('div')
-    el.setAttribute('data-nitid-lexicon-portal', '')
+    el.setAttribute('data-lexicon-editor-portal', '')
     document.body.appendChild(el)
     setPortalEl(el)
+
     return () => {
       el.remove()
       setPortalEl(null)
