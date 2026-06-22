@@ -4,8 +4,7 @@ import { VERSION } from '../index'
 import { LexiconEditor, OnChangeCallback } from './LexiconEditor'
 import { getURLParameter } from '../util'
 import { KeyPath, KeyPathString } from '../collection'
-
-import './EditWrapperStyles.css'
+import { ensureEditorStylesLoaded } from './loadEditorStyles'
 
 interface EditWrapperProps {
   component: // This is the React component rendered inside the wrapper.
@@ -67,6 +66,10 @@ export default class EditWrapper extends React.Component<
       )
 
     this.grabLexiconServerTokenAndReload()
+
+    if (this.allowEditing()) {
+      ensureEditorStylesLoaded()
+    }
 
     this.state = {
       isEditorVisible: false,

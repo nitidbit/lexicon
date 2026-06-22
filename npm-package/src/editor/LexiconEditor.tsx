@@ -6,7 +6,6 @@ import React, { useState, useEffect, useRef } from 'react'
 
 import { Lexicon } from '../Lexicon'
 import { KeyPath, KeyPathString, keyPathAsString } from '../collection'
-import './LexiconEditorStyles.css'
 
 export const expandedStyle = (isExpanded = true, ref) => {
   let height = '1.5em'

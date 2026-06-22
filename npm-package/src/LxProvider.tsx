@@ -17,8 +17,10 @@ import { getURLParameter } from './util'
 import { ContentByLocale, LocaleCode, DEFAULT_LOCALE_CODE } from './Lexicon'
 import { LexiconHub } from './editor/LexiconHub'
 import { LxPortalContext } from './LxPortalContext'
-
-import './LxProviderStyles.css'
+import {
+  ensureEditorStylesLoaded,
+  hasLexiconServerToken,
+} from './editor/loadEditorStyles'
 
 // 99.99% of sessions won't use editing - lazy load this chunk
 const LazyLxEditPanel = lazy(() =>
@@ -82,6 +84,12 @@ export const LxProvider = ({
   const [portalEl, setPortalEl] = useState<HTMLDivElement | null>(null)
 
   grabLexiconServerTokenAndReload()
+
+  useEffect(() => {
+    if (hasLexiconServerToken()) {
+      ensureEditorStylesLoaded()
+    }
+  }, [])
 
   useEffect(() => {
     const el = document.createElement('div')

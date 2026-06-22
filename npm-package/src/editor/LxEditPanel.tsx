@@ -14,8 +14,7 @@ import { LexiconEditor, OnChangeCallback } from './LexiconEditor'
 import { LexiconHub } from './LexiconHub'
 
 import { LxEditPanelType } from '../index'
-
-import './LxEditPanelStyles.css'
+import { ensureEditorStylesLoaded } from './loadEditorStyles'
 
 type UserChanges = Map<
   string,
@@ -73,6 +72,10 @@ const LxEditPanelNoPortal: LxEditPanelType = ({
   const [editorWidth, setEditorWidth] = useState<number | null>(null)
   const [editorHeight, setEditorHeight] = useState<number | null>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
+
+  useEffect(() => {
+    ensureEditorStylesLoaded()
+  }, [])
 
   //
   //    Stateful Functions

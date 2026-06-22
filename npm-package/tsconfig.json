@@ -17,6 +17,9 @@
     "**/*.tsx",
     "**/*.sass"
   ],
+  "files": [
+    "src/css.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "build",
